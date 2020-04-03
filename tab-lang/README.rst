@@ -5,27 +5,27 @@
 2020-03-25
 ==========
 
-
 Attendees:
 
-David Beckingsale
-James Brodman
-Robert Cohn
-Tom Deakin
-Hal Finkel
-Mike Kinsner
-Alexey Kukanov
-Erik Lindahl
-Geoff Lowney
-Antonio J. Peña
-John Pennycook
-Pablo Reble
-James Reinders
-Ruyman Reyes
-Alison Richards
-Roland Schulz
-Timmie Smith
-Xinmin Tian
+  * David Beckingsale
+  * James Brodman
+  * Robert Cohn
+  * Tom Deakin
+  * Hal Finkel
+  * Mike Kinsner
+  * Alexey Kukanov
+  * Erik Lindahl
+  * Geoff Lowney
+  * Antonio J. Peña
+  * John Pennycook
+  * Pablo Reble
+  * James Reinders
+  * Ruyman Reyes
+  * Alison Richards
+  * Roland Schulz
+  * Timmie Smith
+  * Xinmin Tian
+
 
 * Github: Robert Cohn
 
@@ -46,7 +46,6 @@ Xinmin Tian
     org. File issues if you have detailed feedback about the
     specifications.
  
-* Specification is published on `github <https://github.com/oneapi-src/oneapi-spec>
 * Unified Shared Memory (USM): James Brodman
 
   `Slides <presentations/2020-03-25-USM-for-TAB.pdf>`__
