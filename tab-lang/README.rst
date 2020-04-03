@@ -5,26 +5,10 @@
 2020-03-25
 ==========
 
-| Attendees:
-|
-|   David Beckingsale
-|   James Brodman
-|   Robert Cohn
-|   Tom Deakin
-|   Hal Finkel
-|   Mike Kinsner
-|   Alexey Kukanov
-|   Erik Lindahl
-|   Geoff Lowney
-|   Antonio J. Peña
-|   John Pennycook
-|   Pablo Reble
-|   James Reinders
-|   Ruyman Reyes
-|   Alison Richards
-|   Roland Schulz
-|   Timmie Smith
-|   Xinmin Tian
+Attendees: David Beckingsale, James Brodman, Robert Cohn, Tom Deakin,
+Hal Finkel, Mike Kinsner, Alexey Kukanov, Erik Lindahl, Geoff Lowney,
+Antonio J. Peña, John Pennycook, Pablo Reble, James Reinders, Ruyman
+Reyes, Alison Richards, Roland Schulz, Timmie Smith, Xinmin Tian
 
 * Github: Robert Cohn
 
