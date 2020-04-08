@@ -9,7 +9,7 @@ oneAPI parallel programming ecosystem.
 
 Meeting notes and presentations materials are published in this repo.
 The general community is invited to join the conservation by reviewing
-the `oneAPI Specification <https://spec.oneapi.com>'__, as well as the
+the `oneAPI Specification <https://spec.oneapi.com>`__, as well as the
 notes/slides in this rep, and then posting comments or questions as
 github issues. General questions can go to this repo and issues
 specific to the specification can go to the `Specification repo
