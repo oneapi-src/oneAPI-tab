@@ -23,4 +23,4 @@ you have a question about TAB, email `oneapi@intel.com
 Meeting notes:
 ==============
 
-`oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) <tab-dpcpp-dpl>`__
+`oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) <tab-dpcpp-onedpl>`__
