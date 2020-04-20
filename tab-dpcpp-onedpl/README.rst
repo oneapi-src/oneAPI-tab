@@ -33,7 +33,7 @@ Reyes, Alison Richards, Roland Schulz, Timmie Smith, Xinmin Tian
 
   `Slides <presentations/2020-03-25-USM-for-TAB.pdf>`__
 
-  * Pointer-based memory management, complimentary to SYCL buffers
+  * Pointer-based memory management, complementary to SYCL buffers
   * What is the latency for pointer queries?
 
     * Have not measured, but it requires calls into driver and is not
