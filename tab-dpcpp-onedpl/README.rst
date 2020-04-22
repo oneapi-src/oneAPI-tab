@@ -5,13 +5,31 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 2020-04-22
 ==========
 
-Attendees: David Beckingsale, James Brodman (Intel), Robert Cohn
-(Intel), Tom Deakin (University of Bristol), Hal Finkel, Mike Kinsner
-(Intel), Alexey Kukanov (Intel), Erik Lindahl, Geoff Lowney (Intel),
-Antonio J. Peña, John Pennycook (Intel), Pablo Reble (Intel), James
-Reinders, Ruyman Reyes, Alison Richards (Intel), Roland Schulz
-(Intel), Gergana Slavova (Intel), Timmie Smith (Intel), Xinmin Tian
-(Intel)
+Attendees:
+
+* Bharat Agrawal
+* David Beckingsale
+* James Brodman (Intel)
+* Robert Cohn (Intel)
+* Tom Deakin (University of Bristol)
+* Hal Finkel
+* Jeff Hammond (Intel)
+* Mike Kinsner (Intel)
+* Alexey Kukanov (Intel)
+* Geoff Lowney (Intel)
+* Antonio J. Peña (Barcelona Supercomputing Center)
+* John Pennycook (Intel)
+* Pablo Reble (Intel)
+* James Reinders
+* Ruyman Reyes
+* Alison Richards (Intel)
+* Andrew Richards
+* Gergana Slavova (Intel)
+* Timmie Smith (Intel)
+* Xinmin Tian (Intel)
+* Phong Vu (BP)
+
+Notes:
 
 * Administrative
 
