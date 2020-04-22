@@ -7,27 +7,27 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 
 Attendees:
 
-  - Bharat Agrawal
-  - David Beckingsale
-  - James Brodman (Intel)
-  - Robert Cohn (Intel)
-  - Tom Deakin (University of Bristol)
-  - Hal Finkel
-  - Jeff Hammond (Intel)
-  - Mike Kinsner (Intel)
-  - Alexey Kukanov (Intel)
-  - Geoff Lowney (Intel)
-  - Antonio J. Peña (Barcelona Supercomputing Center)
-  - John Pennycook (Intel)
-  - Pablo Reble (Intel)
-  - James Reinders
-  - Ruyman Reyes
-  - Alison Richards (Intel)
-  - Andrew Richards
-  - Gergana Slavova (Intel)
-  - Timmie Smith (Intel)
-  - Xinmin Tian (Intel)
-  - Phong Vu (BP)
+* Bharat Agrawal
+* David Beckingsale
+* James Brodman (Intel)
+* Robert Cohn (Intel)
+* Tom Deakin (University of Bristol)
+* Hal Finkel
+* Jeff Hammond (Intel)
+* Mike Kinsner (Intel)
+* Alexey Kukanov (Intel)
+* Geoff Lowney (Intel)
+* Antonio J. Peña (Barcelona Supercomputing Center)
+* John Pennycook (Intel)
+* Pablo Reble (Intel)
+* James Reinders
+* Ruyman Reyes
+* Alison Richards (Intel)
+* Andrew Richards
+* Gergana Slavova (Intel)
+* Timmie Smith (Intel)
+* Xinmin Tian (Intel)
+* Phong Vu (BP)
 
 * Administrative
 
