@@ -2,6 +2,119 @@
 oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 ======================================================================
 
+2020-04-22
+==========
+
+Attendees: David Beckingsale, James Brodman (Intel), Robert Cohn
+(Intel), Tom Deakin (University of Bristol), Hal Finkel, Mike Kinsner
+(Intel), Alexey Kukanov (Intel), Erik Lindahl, Geoff Lowney (Intel),
+Antonio J. Peña, John Pennycook (Intel), Pablo Reble (Intel), James
+Reinders, Ruyman Reyes, Alison Richards (Intel), Roland Schulz
+(Intel), Gergana Slavova (Intel), Timmie Smith (Intel), Xinmin Tian
+(Intel)
+
+* Administrative
+
+  * `Rules of the road <presentations/oneAPI-TAB-Rules-of-the-Road.pdf>`__
+  * Notes published immediately after the meeting on `Github
+    <https://github.com/oneapi-src/oneAPI-tab/tree/master/tab-dpcpp-onedpl>`__
+  * Email Robert.S.Cohn@intel.com or github PR to add/remove name, add
+    affiliation to attendees list
+
+* Data Parallel C++ Library: Alexey Kukanov
+
+  * `Slides <presentations/2020-04-22-oneDPL-for-TAB.pdf>`__
+  * Recap
+  
+    * STL API
+    * Parallel STL
+    * non-standard API extensions
+    
+  * Required C++ version
+  
+    * DPC++ will be C++17
+    * Is it ok for oneDPL?
+    * Will limit host-side environment. Default is C++14 for latest
+      host compilers
+    * Discussion:
+    
+      * Where are livermore compilers?
+      
+        * C++11 is fine, Raja is C++11-based, customers not ready to
+          C++14
+	* What is the issue?
+	
+	  * People running on systems where supported gcc version are
+            old
+	  * But not about the code
+	  
+      * Why is host compiler different?
+      * If we require only 14, Can we still make deduction work
+        smoothly?
+      
+        * Yes
+	 
+      * At Argonne, there is a range of conservatism, we should not
+        impose artificial barriers
+      
+        * provide c++17 features and ease of use when availabe, but
+          value in being more conservative
+	* don't want to create 2 dialects
+	
+  * Top-level namespace
+  
+    * DPC++ has multiple namespaces: sycl::, sycl::intel, std::
+    * DPL adds a namespace
+    * Discussion
+    
+      * strictly standard could be nested, new things own namespace
+      
+        * requires change to sycl spec
+
+      * standard library could be part of standard
+      * standard allows extension sycl::intel
+      * like top-level oneapi namespace
+      
+        * can use c++ using to bring it into sycl::intel if desired
+
+      * oneapi::mkl
+      
+  * standard library classes
+  
+    * issues
+    
+      * some classes cannot be fully supported
+      * 3 different implementations
+      
+    * options
+    
+      * white-listed
+      * freestanding implementation
+      * duplicate, bring standard library into SYCL
+      
+        * spec says whether require implementation or to host to host
+	
+    * analysis of pro/cons, see slide
+    * Proposed combined
+    
+      * whitelist the things that 'just work'
+      * API's that need substantial adjustments are defined in SYCL spec
+      * freestanding for the rest
+      * analysis, see slide
+      
+    * Discussion
+    
+      * Seems like a practical solution
+      * for freestanding, would there be conversions for standard types?
+      
+        * Yes
+	
+    * Slide shows mapping, whitelisted, custom, SYCL
+    
+      * Discussion
+      
+        * functional can't be whitelisted
+	  
 2020-03-25
 ==========
 
