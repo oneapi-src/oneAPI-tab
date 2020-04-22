@@ -29,6 +29,8 @@ Attendees:
 * Xinmin Tian (Intel)
 * Phong Vu (BP)
 
+Notes:
+
 * Administrative
 
   * `Rules of the road <presentations/oneAPI-TAB-Rules-of-the-Road.pdf>`__
