@@ -23,7 +23,7 @@ Reinders, Ruyman Reyes, Alison Richards (Intel), Roland Schulz
 
 * Data Parallel C++ Library: Alexey Kukanov
 
-  * `Slides <presentations/2020-04-22-oneDPL-for-TAB.pptx>`__
+  * `Slides <presentations/2020-04-22-oneDPL-for-TAB.pdf>`__
   * Recap
   
     * STL API
