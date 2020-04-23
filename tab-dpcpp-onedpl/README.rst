@@ -12,7 +12,7 @@ Attendees:
 * James Brodman (Intel)
 * Robert Cohn (Intel)
 * Tom Deakin (University of Bristol)
-* Hal Finkel
+* Hal Finkel (Argonne National Laboratory)
 * Jeff Hammond (Intel)
 * Mike Kinsner (Intel)
 * Alexey Kukanov (Intel)
@@ -77,7 +77,7 @@ Notes:
       
         * provide c++17 features and ease of use when availabe, but
           value in being more conservative
-	* don't want to create 2 dialects
+	* on the other hand, we don't want to create 2 dialects
 	
   * Top-level namespace
   
