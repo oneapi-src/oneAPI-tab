@@ -32,6 +32,7 @@ Attendees:
 Notes:
 
 * Administrative
+
   * `Rules of the road <presentations/oneAPI-TAB-Rules-of-the-Road.pdf>`__
   * Notes published immediately after the meeting on `Github
     <https://github.com/oneapi-src/oneAPI-tab/tree/master/tab-dpcpp-onedpl>`__
@@ -39,65 +40,95 @@ Notes:
     affiliation to attendees list
 
 * Data Parallel C++ Library: Alexey Kukanov
+
   * `Slides <presentations/2020-04-22-oneDPL-for-TAB.pdf>`__
+  
   * Recap
+  
     * STL API
     * Parallel STL
     * non-standard API extensions
+    
   * Required C++ version
+  
     * Minimum DPC++ version will be C++17
     * Is it ok for oneDPL?
     * Will limit host-side environment. Default is C++14 for latest
       host compilers
     * Discussion:
+    
       * Where are livermore compilers?
+      
         * C++11 is fine, RAJA is C++11-based, some customers not ready
 	  for C++14
 	* What is the issue?
+	
 	  * People running on systems where supported gcc version is
             old
 	  * But not about the code
       * Why is host compiler different?
+      
       * If we require only 14, can we still make deduction work
         smoothly?
+	
         * Yes
       * At Argonne, there is a range of conservatism, we should not
         impose artificial barriers
+	
         * Provide C++17 features and ease of use when available, but
           there is value in being more conservative
 	* On the other hand, we don't want to create 2 dialects
   * Top-level namespace
+  
     * DPC++ has multiple namespaces: sycl::, sycl::intel, std::
     * oneDPL adds a namespace
     * Discussion
+    
       * Strictly standard could be nested, new things own namespace
+      
         * Requires change to sycl spec
+	
       * Standard allows to use the sycl::intel extension
       * Recommend top-level oneapi namespace
+      
         * Can use C++ using to bring it into sycl::intel if desired
         * Example: oneapi::mkl
+	
   * Standard library classes
+  
     * Issues
+    
       * Some classes cannot be fully supported
       * 3 different implementations
+      
     * Options
+    
       * White-listed
       * Freestanding implementation
       * Duplicate, bring standard library into SYCL
+      
         * Spec says whether require implementation or to host to host
+	
     * Analysis of pro/cons, see slide
     * Propose to go the combined route:
+    
       * Whitelist the things that 'just work'
       * API's that need substantial adjustments are defined in SYCL spec
       * Freestanding for the rest
       * Analysis, see slide
+      
     * Discussion
+    
       * Seems like a practical solution
       * For freestanding, would there be conversions for standard types?
+      
         * Yes
     * Slide shows mapping, whitelisted, custom, SYCL
+    
       * Discussion
+      
         * Functional can't be whitelisted
+	
   * Not enough time for remaining topics, moved to next meeting
 	  
 2020-03-25
