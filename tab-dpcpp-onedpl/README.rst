@@ -20,7 +20,7 @@ Attendees:
 * Antonio J. Peña (Barcelona Supercomputing Center)
 * John Pennycook (Intel)
 * Pablo Reble (Intel)
-* James Reinders
+* James Reinders (James Reinders Consulting LLC)
 * Ruyman Reyes
 * Andrew Richards
 * Alison Richards (Intel)
