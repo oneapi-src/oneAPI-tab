@@ -1,6 +1,6 @@
-============
- oneapi-tab
-============
+================================
+ oneAPI Technical Advisory Board
+================================
 
 This repository hosts notes and presentation materials from the 
 oneAPI Technical Advisory Board (TAB) meetings.  The Advisory
@@ -13,7 +13,7 @@ the `oneAPI Specification <https://spec.oneapi.com>`__, as well as the
 notes/slides in this repo, and then post comments or questions as
 github issues. General questions can go to this repo and issues
 specific to the specification can go to the `Specification repo
-<https://github.com/oneapi-src/oneapi-spec>`__
+<https://github.com/oneapi-src/oneapi-spec>`__.
 
 To be notified of new meeting notes, become a watcher of this repo. If
 you have a question about TAB, email `oneapi@intel.com
