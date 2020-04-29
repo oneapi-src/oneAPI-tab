@@ -8,7 +8,7 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Attendees:
 
 * Bharat Agrawal
-* David Beckingsale
+* David Beckingsale (Lawrence Livermore National Laboratory)
 * James Brodman (Intel)
 * Robert Cohn (Intel)
 * Tom Deakin (University of Bristol)
@@ -22,116 +22,83 @@ Attendees:
 * Pablo Reble (Intel)
 * James Reinders
 * Ruyman Reyes
-* Alison Richards (Intel)
 * Andrew Richards
+* Alison Richards (Intel)
 * Gergana Slavova (Intel)
 * Timmie Smith (Intel)
 * Xinmin Tian (Intel)
-* Phong Vu (BP)
+* Phuong Vu (BP)
 
 Notes:
 
 * Administrative
-
   * `Rules of the road <presentations/oneAPI-TAB-Rules-of-the-Road.pdf>`__
   * Notes published immediately after the meeting on `Github
     <https://github.com/oneapi-src/oneAPI-tab/tree/master/tab-dpcpp-onedpl>`__
-  * Email Robert.S.Cohn@intel.com or github PR to add/remove name, add
+  * Email Robert.S.Cohn@intel.com or submit a github PR to add/remove name, add
     affiliation to attendees list
 
 * Data Parallel C++ Library: Alexey Kukanov
-
   * `Slides <presentations/2020-04-22-oneDPL-for-TAB.pdf>`__
   * Recap
-  
     * STL API
     * Parallel STL
     * non-standard API extensions
-    
   * Required C++ version
-  
-    * DPC++ will be C++17
+    * Minimum DPC++ version will be C++17
     * Is it ok for oneDPL?
     * Will limit host-side environment. Default is C++14 for latest
       host compilers
     * Discussion:
-    
       * Where are livermore compilers?
-      
-        * C++11 is fine, Raja is C++11-based, customers not ready to
-          C++14
+        * C++11 is fine, RAJA is C++11-based, some customers not ready
+	  for C++14
 	* What is the issue?
-	
-	  * People running on systems where supported gcc version are
+	  * People running on systems where supported gcc version is
             old
 	  * But not about the code
-	  
       * Why is host compiler different?
-      * If we require only 14, Can we still make deduction work
+      * If we require only 14, can we still make deduction work
         smoothly?
-      
         * Yes
-	 
       * At Argonne, there is a range of conservatism, we should not
         impose artificial barriers
-      
-        * provide c++17 features and ease of use when availabe, but
-          value in being more conservative
-	* on the other hand, we don't want to create 2 dialects
-	
+        * Provide C++17 features and ease of use when available, but
+          there is value in being more conservative
+	* On the other hand, we don't want to create 2 dialects
   * Top-level namespace
-  
     * DPC++ has multiple namespaces: sycl::, sycl::intel, std::
-    * DPL adds a namespace
+    * oneDPL adds a namespace
     * Discussion
-    
-      * strictly standard could be nested, new things own namespace
-      
-        * requires change to sycl spec
-
-      * standard library could be part of standard
-      * standard allows extension sycl::intel
-      * like top-level oneapi namespace
-      
-        * can use c++ using to bring it into sycl::intel if desired
-
-      * oneapi::mkl
-      
-  * standard library classes
-  
-    * issues
-    
-      * some classes cannot be fully supported
+      * Strictly standard could be nested, new things own namespace
+        * Requires change to sycl spec
+      * Standard allows to use the sycl::intel extension
+      * Recommend top-level oneapi namespace
+        * Can use C++ using to bring it into sycl::intel if desired
+        * Example: oneapi::mkl
+  * Standard library classes
+    * Issues
+      * Some classes cannot be fully supported
       * 3 different implementations
-      
-    * options
-    
-      * white-listed
-      * freestanding implementation
-      * duplicate, bring standard library into SYCL
-      
-        * spec says whether require implementation or to host to host
-	
-    * analysis of pro/cons, see slide
-    * Proposed combined
-    
-      * whitelist the things that 'just work'
+    * Options
+      * White-listed
+      * Freestanding implementation
+      * Duplicate, bring standard library into SYCL
+        * Spec says whether require implementation or to host to host
+    * Analysis of pro/cons, see slide
+    * Propose to go the combined route:
+      * Whitelist the things that 'just work'
       * API's that need substantial adjustments are defined in SYCL spec
-      * freestanding for the rest
-      * analysis, see slide
-      
+      * Freestanding for the rest
+      * Analysis, see slide
     * Discussion
-    
       * Seems like a practical solution
-      * for freestanding, would there be conversions for standard types?
-      
+      * For freestanding, would there be conversions for standard types?
         * Yes
-	
     * Slide shows mapping, whitelisted, custom, SYCL
-    
       * Discussion
-      
-        * functional can't be whitelisted
+        * Functional can't be whitelisted
+  * Not enough time for remaining topics, moved to next meeting
 	  
 2020-03-25
 ==========
@@ -176,10 +143,10 @@ Reyes, Alison Richards, Roland Schulz, Timmie Smith, Xinmin Tian
 
     * All pointers must be in same context
     * Not likely to work if devices are not all from same vendor
-    * peer-to-peer, GPU's directly accessing each other's memory, is
+    * Peer-to-peer, GPU's directly accessing each other's memory, is
       being considered for inclusion in Level Zero spec, and might be
       added to DPC++ spec
-    * non-restricted shared allocations should work fine
+    * Non-restricted shared allocations should work fine
 
   * What about atomics?
 
@@ -237,7 +204,7 @@ Slides:
 
 * `Overview <presentations/2019-11-17-oneAPI-vision-for-TAB.pdf>`__
 * `DPC++ <presentations/2019-11-17-dpcpp-language-and-extensions.pdf>`__
-* `DPL <presentations/2019-11-17-oneDPL.pdf>`__
+* `oneDPL <presentations/2019-11-17-oneDPL.pdf>`__
 
 
 * What is oneAPI? 
