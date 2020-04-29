@@ -2,15 +2,15 @@
  oneapi-tab
 ============
 
-oneAPI Technical Advisory Board (TAB) meeting notes.  More information
-on oneAPI can be found at `oneapi.com <https://oneapi.com>`__. TAB is
-an invitation-only forum comprised of industry experts for guiding the
-oneAPI parallel programming ecosystem.
+This repository hosts notes and presentation materials from the 
+oneAPI Technical Advisory Board (TAB) meetings.  The Advisory
+Board is an invitation-only forum comprised of industry experts that help
+guide the oneAPI parallel programming ecosystem.  More information
+on oneAPI can be found at `oneapi.com <https://oneapi.com>`__. 
 
-Meeting notes and presentations materials are published in this repo.
-The general community is invited to join the conservation by reviewing
+The general community is invited to join the conversation by reviewing
 the `oneAPI Specification <https://spec.oneapi.com>`__, as well as the
-notes/slides in this repo, and then posting comments or questions as
+notes/slides in this repo, and then post comments or questions as
 github issues. General questions can go to this repo and issues
 specific to the specification can go to the `Specification repo
 <https://github.com/oneapi-src/oneapi-spec>`__
