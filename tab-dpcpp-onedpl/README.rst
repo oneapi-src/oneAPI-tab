@@ -7,7 +7,7 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 
 Attendees:
 
-* Bharat Agrawal
+* Bharat Agrawal (Ansys)
 * David Beckingsale (Lawrence Livermore National Laboratory)
 * James Brodman (Intel)
 * Robert Cohn (Intel)
@@ -21,7 +21,7 @@ Attendees:
 * John Pennycook (Intel)
 * Pablo Reble (Intel)
 * James Reinders (James Reinders Consulting LLC)
-* Ruyman Reyes
+* Ruyman Reyes (Codeplay)
 * Andrew Richards
 * Alison Richards (Intel)
 * Gergana Slavova (Intel)
