@@ -8,7 +8,7 @@ Date
 Attendees:
 
 * Craig Garland (Intel)
-* Sarah
+* Sarah Knepper (Intel)
 
 Notes:
 
