@@ -2,6 +2,82 @@
 oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 ======================================================================
 
+2020-05-27
+==========
+
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* James Brodman (Intel)
+* Robert Cohn (Intel)
+* Tom Deakin (University of Bristol)
+* Hal Finkel (Argonne National Laboratory)
+* Mike Kinsner (Intel)
+* Alexey Kukanov (Intel)
+* Geoff Lowney (Intel)
+* Antonio J. Peña (Barcelona Supercomputing Center)
+* John Pennycook (Intel)
+* Pablo Reble (Intel)
+* James Reinders (James Reinders Consulting LLC)
+* Alison Richards (Intel)
+* Roland Schulz (Intel)
+* Gergana Slavova (Intel)
+* Timmie Smith (Intel)
+
+* Namespaces
+
+  * oneapi:: vs one:
+  * Don't like one: too much chance for collision
+  * people will make jokes about one
+  * one has poor searchability
+  * people can make alias if they want something shorter
+  
+* Top level include directory
+
+  * one/dpl/ vs oneapi/dpl vs onedpl vs dpl
+  * follow the namespace structure: oneapi/dpl
+  * can use symlinks/header that includes header for support old code
+  
+* oneDPL execution policy
+* predefined execution policy
+
+  * verbose: default_policy cpu_policy, ...
+  * concise: cpu, gpu, default. namespace will make it unique
+  * don't like pol, preferred spell it out, default_ preferred to deflt
+  * code read more than written
+  * like to distinguish between type and variable. C++17 std way with _v
+  * What about policy_gpu?
+  
+    * not a big difference
+    
+  * short names are not that short because you would normally have namespace
+  
+* sync vs async
+
+  * some block, some do not block
+  * options
+  
+    * describe current behavior
+    * allow implementation to decide
+    * require all algorithms to block
+    * above, but define async APIs
+    
+  * Standard API should be blocking, have an async API. For current implementation, move into namespace?
+  * No code out there now. Making sync is performance but not correctness issue. Like async, but if goal is to follow C++,
+    then require all blocking
+  
+* Range-based API for algorithms
+
+  * allows concise expression of pipelines
+  * Did we miss algorithms?
+  * Add ranges now, or as extension/experimental?
+  * No experience in HPC community with using ranges, having it available would give people a chance to experiment
+  * would be useful for graph library
+  * no disagreement about delaying making it part of spec
+  
+* extension APIs
+
+  * See slide
+ 
+
 2020-04-22
 ==========
 
