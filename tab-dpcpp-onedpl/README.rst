@@ -5,6 +5,8 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 2020-05-27
 ==========
 
+Attendees:
+
 * David Beckingsale (Lawrence Livermore National Laboratory)
 * James Brodman (Intel)
 * Robert Cohn (Intel)
@@ -21,6 +23,8 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 * Roland Schulz (Intel)
 * Gergana Slavova (Intel)
 * Timmie Smith (Intel)
+
+Notes:
 
 * Namespaces
 
