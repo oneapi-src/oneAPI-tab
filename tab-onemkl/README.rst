@@ -1,19 +1,9 @@
-======================================================================
-oneAPI Technical Advisory Board Meeting (oneDPL) Meeting Notes
-======================================================================
+==============================================================
+oneAPI Technical Advisory Board Meeting (oneMKL) Meeting Notes
+==============================================================
 
-Date
-====
+Meeting notes:
+==============
 
-Attendees:
-
-* Craig Garland (Intel)
-* Sarah Knepper (Intel)
-
-Notes:
-
-* Administrative
-
-  * `Rules of the road <../tab-dpcpp-onedpl/presentations/oneAPI-TAB-Rules-of-the-Road.pdf>`__
-
+`May 20, 2020 <minutes/2020_05_20_Minutes.rst>`__
 
