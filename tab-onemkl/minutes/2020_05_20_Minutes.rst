@@ -1,0 +1,114 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2020-05-20
+==========
+
+Slides:
+
+* `TAB participation <../presentations/2020-05-20_Slides.pdf>`__
+* `Overview of oneAPI/DPC++ programming model <../presentations/Hammond%20Intro%20DPC%2B%2B%20May%202020%20oneMKL%20TAB.pdf>`__
+
+Attendees:
+
+* Annamalai Anita (Intel)
+* Peter Caday (Intel)
+* Marius Cornea (Intel)
+* Craig Garland (Intel)
+* Jeff Hammond (Intel)
+* Mark Hoemmen (Stellar Science)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (Argonne National Laboratory)
+* Piotr Luszczek (University of Tennessee Knoxville)
+* Spencer Patty (Intel)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+* Nichols Romero (Argonne National Laboratory)
+* Shane Story (Intel)
+
+Agenda:
+
+* Introduction of TAB Members - all
+* What participation in the TAB means - Craig Garland
+* Overview of oneAPI/DPC++ programming model - Jeff Hammond
+* Overview of oneMKL programming model [did not cover in this meeting]
+* Next steps for TAB
+
+Introduction, including how you use math libraries:
+
+* Mark Hoemmen - Contractor at Stellar Science, doing scientific software engineering work; not just linear algebra, but also random number generators (RNGs) and others. Provides services to National Labs.
+* Nevin Liber - Argonne National Laboratory (ANL); works on the Kokkos backend.
+* Piotr Luszczek - University of Tennessee in linear algebra group; contributes to PLASMA, MAGMA, SLATE, LAPACK, BLAS; also does benchmarks based on those, like HPL, HPCG, HPL-AI.
+* Pat Quillen - Manager of Matlab group at MathWorks; uses BLAS, LAPACK, FFTW, RNGs, a whole host of stuff.
+* Nichols (Nic) Romero - Staff scientist at ANL who has used Intel MKL for a couple of decades, primarily for computational chemistry first, then for the Aurora project. Liaison between Intel MKL team and Argonne.
+
+TAB Participation:
+
+* Thanks for joining and helping shape the direction of a new parallel ecosystem. We're driving a solution to a problem that needs to be solved. This is our (Intel's) proposed solution to the hardware architecture challenge. We want to extend existing models rather than create a brand new model. Different architectures work better than others for some problems.
+
+* Everything needs to be public; it's an open discussion and we'll publish minutes and meeting materials. We are asking for feedback on the specification (spec), not so much on how a library would implement it. Pay the most attention to the highlighted sections on the legal notices and disclaimers slide. oneAPI spec uses a Creative Commons Attribution 4.0 International License. Be aware that everything you contribute to the spec we will be able to use.
+
+* We're driving 3 things: the specification, an open source interfaces project, and the proprietary product.
+
+1.  Specification - there is a spec published (version 0.7 currently) - with a goal to get to version 1.0 by September. It is a big spec that includes all of the components that we're creating and putting under the oneAPI umbrella; it includes the language itself, as well as all the APIs for libraries that work with it.
+2.  For oneMKL, we've created an open source interfaces project. This is an implementation, starting with BLAS; it builds a hardware targeted library based on the API. It allows you to build for an Intel CPU, Intel GPU, or for an Nvidia GPU. Can see the spec being applied to the implementation.  We hope to get community involvement, with more hardware backends and more domains covered.
+3.  Finally, we also have the proprietary product.  It supports this programming model for a wider range of domains. Over time, Intel is building out more parts of Intel® oneAPI Math Kernel Library(Beta) that target Intel GPU. The proprietary product targets Intel hardware while the open source targets more.
+
+* That's the scope of oneMKL universe. We are looking for your input on the oneMKL spec, that serves both our proprietary product and the broader community (more diverse hardware).
+
+* Does the open source project support the interface on Nvidia GPUs?
+   * Yes.  You can build a oneMKL library targeting an Nvidia GPU; it builds the oneMKL APIs and maps them to cuBLAS calls.  This ends up with a library where you can use oneMKL calls and run on Nvidia hardware.
+   * CodePlay started the NVIDIA cuBLAS wrapper work already, as described `here <https://codeplay.com/portal/04-22-20-codeplay-implements-mkl-blas-for-nvidia-gpus-using-sycl-and-dpcpp>`__ (they misstated oneMKL as MKL-BLAS).
+   * This looks like a great idea.  DOE code that uses lots of linear algebra has lots of different interfaces (rocBLAS, cuBLAS, Intel MKL).
+   * This is essentially the higher-level statement that we are trying to solve. We hope to have other HW vendors get on board: a single API that maps down to other HWs.
+   * `This <https://github.com/oneapi-src/oneMKL/blob/master/docs/create_new_backend.rst>`__ describes how to add a new backend.
+
+* oneMKL is a math library built on oneAPI, is that right?
+   * We added data parallel C++ (DPC++) interfaces to Intel MKL. Intel MKL traditionally has Fortran and C APIs; we added a new DPC++ interface that works on different hardware. We are also extending C and Fortran to support the OpenMP offload model, so people don't have to use the new DPC++ language to target Intel GPUs.
+
+* What about interoperability between OpenMP offload and DPC++? Just basic interoperability would be helpful for porting and crossing languages.
+   * Interoperability is an interesting topic.  It depends on how you want to compose them.  Reasonable things work, but a complex nested recursive composition of DPC++ and OpenMP target almost certainly will not.
+   * They have the same backend compiler and runtime.
+
+* Intel's driving an industry initiative - this isn't the only TAB, there are others for the language, runtimes, and other libraries. We are working closely with Khronos SYCL standard bodies; we're extending SYCL in certain ways, and then working with Khronos to upstream extensions back to the SYCL standard.
+
+* The governance of the spec is loosely modeled after the MPI forum - we want low overhead, no big foundation. Your participation drives voting rights, in case we need to vote. Your voice will be weighted by your participation. We may preview and test ideas and get to agreements on managing the specification going forward. For now, the TAB is private - by invitation only. If you think other industry reps would be good, please let us know and we can invite. We are trying to keep it manageable so feedback can be more targeted.
+
+* Can the TAB members share these slides with others not on the TAB?
+   * While invitations to the TAB are private, all of the materials and notes will be published publicly.
+
+Overview of oneAPI/DPC++ programming model:
+
+* If you want a full discussion, we can set up another meeting since the full topic takes longer than 30 minutes.  Additionally, can view the `webinar <https://techdecoded.intel.io/essentials/introducing-oneapi-a-unified-cross-architecture-performance-programming-model/#gs.79nepj>`__. One big motivation of oneAPI for Intel is that we have lots of different hardware and want one software stack. Ten years ago, having multiple stacks was fine - people used different HW for different tasks.  Now, with people wanting to do AI everywhere, people don't want to have to re-write code in lots of different languages and targeting lots of different HW systems.  But there's no free lunch, as it's not possible to have a perfectly performance portable solution. Having a full SW stack for CPUs and GPUs for HPC is where the community is focused now, focusing on things people will use and different abstraction ideas.
+
+* The oneAPI stack has a foundation that sits on top of different devices; frameworks like Tensorflow that sit on top of that; and applications on top of that. People in linear algebra do a lot of low-level kernels, so they need low-level building blocks that are language agnostic.  Level 0 is the bottom user-space layer where you can interact with MPI and OpenMP runtime and pass kernel objects back and forth.
+
+* The industry standard part of this is focused on DPC++ as a programming model and libraries that are part of the spec. We're not expecting everyone to program to Level 0, but it became apparent we needed to expose a low-level layer. DPC++ is a language front end based on Clang. The compiler infrastructure is based on LLVM. We are developing this in the open, including the language extensions. A lot of the language extensions built last year have been incorporated into Khronos SYCL that will be released soon. DPC++ is not proprietary, but we can go faster and work with the language TAB and Khronos standardization committee.
+
+* Are you ultimately aiming to get extensions back to SYCL?
+   * Yes, though we are aware of some constraints.  For example, bfloat16 is a non-standard data type, but it's a pseudo-standard. It's not likely that bfloat16 will be standardized in any language standard because it likely won't be IEEE standardized (it is not part of the IEEE 754-2019 standard). It's possible that bfloat16 data types won't land in Khronos SYCL, but could be supported by every clang/SYCL compiler.  We are trying to make sure the Khronos language is extensible.
+   * GCC has float128, but it's not standard.
+
+Motivation for DPC++:
+
+* Bigger ecosystem than just GPU, but keeping in mind there are multiple HW vendors for GPUs, with different SYCL ecosystems for GPUs: Intel, CodePlay, hipSYCL (interfaces into CUDA Clang, interfaces to Nvidia and AMD). So you can get all the GPUs and CPUs out of SYCL. Additionally, SYCL has extensive hardware coverage for various devices, not just CPU and GPU.
+
+* DPC++ is the name of the compiler and the language dialect associated with it. All based on C++-17 (or will be). Not all compilers are 100% feature complete. SYCL 2020 is imminent. Why SYCL? OpenCL is too verbose and lacks good C++. SYCL is the first standard programming model designed for heterogeneity with modern C++.
+
+OpenCL example:
+
+* It's kind of tedious to do loadProgram. Plus, you need two different source codes, which is difficult to maintain if you change parameters.
+
+SYCL 1.2.1 example:
+
+* SYCL 1.2.1 allows selecting devices. The buffer model and accessors - this is one of the most controversial parts of SYCL, but it's not going to be required anymore with the support of pointers.
+
+Various comments on the examples:
+
+* Lack of pointers was a big problem in OpenCL and their opaque handles to memory.
+* Explicitly declaring access intent for buffers (read-only, write-only, read-write) in SYCL is useful.
+* Kokkos can be seen as insufficiently restrictive precisely because access intent isn't built into the interface.
+* The tag class ("class nstream") required in SYCL 1.2.1 adds complexity, but it will become optional in the future since Clang knows how it name mangles (-fsycl-unnamed-lambda).
+* The "id<N>" in the kernel is funny since we have C++ and could do (i, j).
