@@ -7,79 +7,88 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 
 Attendees:
 
+* Ted Barragy
 * David Beckingsale (Lawrence Livermore National Laboratory)
 * James Brodman (Intel)
 * Robert Cohn (Intel)
 * Tom Deakin (University of Bristol)
 * Hal Finkel (Argonne National Laboratory)
+* Ronan Keryell
 * Mike Kinsner (Intel)
 * Alexey Kukanov (Intel)
 * Geoff Lowney (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
 * Antonio J. Peña (Barcelona Supercomputing Center)
 * John Pennycook (Intel)
+* Heidi Poxon
 * Pablo Reble (Intel)
 * James Reinders (James Reinders Consulting LLC)
 * Alison Richards (Intel)
+* Andrew Richards
 * Roland Schulz (Intel)
 * Gergana Slavova (Intel)
 * Timmie Smith (Intel)
+* Christian Trott (Sandia National Laboratory)
 
-Notes:
+Data Parallel C++ Library continued: Alexey Kukanov
+
+* `Slides <presentations/2020-05-oneDPL-for-TAB.pdf>`__
 
 * Namespaces
 
   * oneapi:: vs one:
-  * Don't like one: too much chance for collision
-  * people will make jokes about one
-  * one has poor searchability
-  * people can make alias if they want something shorter
+  
+    * Don't like 'one': too much chance for collision
+    * People will make jokes about 'one'
+    * 'one' has poor searchability
+    * People can make alias if they want something shorter
+    
+  * Board recommends 'oneapi'
   
 * Top level include directory
 
   * one/dpl/ vs oneapi/dpl vs onedpl vs dpl
-  * follow the namespace structure: oneapi/dpl
-  * can use symlinks/header that includes header for support old code
+  * Board recommends to follow the namespace structure: oneapi/dpl
+  * Can use symlinks/header that includes header for support old code
   
 * oneDPL execution policy
 * predefined execution policy
 
-  * verbose: default_policy cpu_policy, ...
-  * concise: cpu, gpu, default. namespace will make it unique
-  * don't like pol, preferred spell it out, default_ preferred to deflt
-  * code read more than written
-  * like to distinguish between type and variable. C++17 std way with _v
+  * Verbose: default_policy cpu_policy, ...
+  * Concise: cpu, gpu, default. Namespace will make it unique.
+  * Don't like pol, preferred spell it out, default_ preferred to deflt
+  * Generally concise is not preferred.  Code is read more than written so it's better to be verbose.
+  * Like to distinguish between type and variable. Using C++17 std way with _v will make the distinction clear.
   * What about policy_gpu?
   
-    * not a big difference
+    * Not a big difference
     
-  * short names are not that short because you would normally have namespace
+  * Short names are not that short because you would normally have namespace
   
-* sync vs async
+* Sync vs Async
 
-  * some block, some do not block
-  * options
+  * Currently some algorithms block, some do not block
+  * Board would prefer option 'c'
   
-    * describe current behavior
-    * allow implementation to decide
-    * require all algorithms to block
-    * above, but define async APIs
+    * Standard API should be blocking
+    * Add an explicit async API for those implementations that need it
     
-  * Standard API should be blocking, have an async API. For current implementation, move into namespace?
-  * No code out there now. Making sync is performance but not correctness issue. Like async, but if goal is to follow C++,
-    then require all blocking
+  * For current implementation, move into namespace?  
+  * No code out there now. Making it synchronous is a performance but not correctness issue. Like async, but if goal is to follow C++, then require all blocking
   
 * Range-based API for algorithms
 
-  * allows concise expression of pipelines
-  * Did we miss algorithms?
+  * Allows concise expression of pipelines
+  * Did we miss algorithms?  Please review list and provide feedback.
   * Add ranges now, or as extension/experimental?
-  * No experience in HPC community with using ranges, having it available would give people a chance to experiment
-  * would be useful for graph library
-  * no disagreement about delaying making it part of spec
+  * Would be useful for graph library
+  * No disagreement about delaying making it part of spec
   
-* extension APIs
+    * Ok to have it implemented even though it's not part of spec.  No experience in HPC community with using ranges so having it available would give people a chance to experiment.
+  
+* Extension APIs
 
-  * See slide
+  * No discussion, see details in slide 14
  
 
 2020-04-22
