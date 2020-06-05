@@ -1,0 +1,125 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2020-06-03
+==========
+
+Materials:
+
+* `Overview of oneMKL programming model <../presentations/2020-06-03_Slides.pdf>`__
+* `oneMKL Specification <https://spec.oneapi.com/versions/latest/elements/oneMKL/source/index.html>`__
+
+Attendees:
+
+* Peter Caday (Intel)
+* Marius Cornea (Intel)
+* Craig Garland (Intel)
+* Mark Hoemmen (Stellar Science)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* Spencer Patty (Intel)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+* Nichols Romero (ANL)
+* Shane Story (Intel)
+* Harry Waugh (University of Bristol)
+
+Agenda:
+
+* Welcoming remarks - all
+* Overview of oneMKL programming model - Maria Kraynyuk
+* Walk-through of the oneMKL Specification - Spencer Patty
+* Wrap-up and next steps
+
+Introduction:
+
+* Harry Waugh - PhD student of Simon McIntosh-Smith at the University of Bristol.  Looking at how BLAS is used at different scales in HPC codes.
+
+Walk-through of the oneMKL Spec:
+
+* We'll look at parts of the oneMKL spec, which is in turn part of a bigger oneAPI specification. At the end of the day, the functionality is the most important part.
+* The dark blue items on slide 9 are what is currently in the oneMKL spec. At some future time, we may add some of the other features, like sparse solvers or summary statistics. Feedback on prioritization for additional domain areas would be appreciated. For multidimensional FFTs, we currently support up to 3D FFTs.
+* There are other parts of Intel MKL that aren't part of the oneMKL spec.
+
+`oneMKL Spec <https://spec.oneapi.com/versions/latest/elements/oneMKL/source/index.html>`__:
+
+* We just released revision 0.8 of the spec, with a goal to reach revision 1.0 by August. Any feedback you have would be appreciated.
+* We'll spend a few minutes going through the structure of the document. We have two sections: oneMKL Architecture and oneMKL Domains.
+* The Architecture chapter details the assumptions we are making, the design features. Someone who is writing an implementation to the spec would need to be aware of these.
+* In the Domains chapter, we define multiple domains of the oneAPI Math Kernel Library. It contains descriptions of the APIs, and it will continue to be extended.
+* We've updated BLAS and LAPACK for revision 0.8 to be nearly complete, but the other domains will target revision 0.9. They are currently based on documentation from an earlier beta release of oneMKL.
+* There are both buffer-based and pointer-based (also known as USM for Unified Shared Memory) interfaces. The APIs are overloaded by data types.
+
+Discussion on lack of a matrix interface and buffers:
+
+* While this is supposed to be a C++ interface, it looks more like the traditional C interface.
+* Why was a matrix encapsulation type not chosen?
+   * We did discuss this internally as we were developing APIs. There is an ongoing C++ proposal for mdarrays, so we didn't want to create our own interim types when there is a standard coming up. If it makes sense for us to do a matrix encapsulation object in the meantime, perhaps we should go down that route.
+* Why use 1-D buffers instead of 2-D buffers?
+   * The 2-D buffers don't allow for leading dimensions or increments.  We're currently treating SYCL buffers as essentially pointers with automatic data transfer and dependency tracking.
+* Do the SYCL buffers give size? Since you're not passing pointers, you could protect the user.
+   * You can do memory safety here because you can query the size of the buffer. We haven't specified an exception to be thrown if the size of the buffer isn't sufficient, but that could be done.
+* Concern that the unsafety of C is being combined with the hassle of C++ (::, etc.). The SYCL buffers track dependencies, but don't encode the fact that they are matrices.
+   * John Pennycook may have done some experiments using mdspan; we'll follow up.
+
+Other comments:
+
+* Is there a plan for human-readable names; e.g., norm() instead of nrm2()? This is being done in SLATE.
+   * Some people are very familiar with Netlib Fortran BLAS API, so we didn't want to deviate too far from that.
+   * We wanted to be close to the BLAS++ from SLATE. There have been internal discussions on this; we may introduce such names in the future.
+   * Once the proposed C++ linear algebra APIs become standard, we could extend to support those APIs.
+* These APIs don't support row major layout.
+   * Yes, though there are some thoughts on how to do that.  Using an enum, or via a new namespace since typically users won't combine row and column major operations.
+* There is value in modernizing the BLAS APIs.
+
+
+oneAPI MKL Programming Model (from the slides):
+
+* 3 examples showing the difference between C and buffer APIs, buffer and USM APIs, plus a more complex case.
+* The C APIs and the buffer APIs are pretty close to each other.
+* For DPC++, we create devices and buffers. We allocate memory on the host and wrap it in SYCL buffers. We call a BLAS function, passing the queue and buffers.
+* The main difference between buffer and USM API is how we allocate memory. For USM API, we create pointers and specify context for how we want to allocate it.
+* In the more complex case, where we want to call several functions, the buffers handle the synchronization. In USM, you explicitly handle it yourself.
+
+* For the Aurora Exascale Computer project, we get a ton of feedback about batched APIs.
+   * It would be ideal to file `Github issues <https://github.com/oneapi-src/oneAPI-spec>`__ against the spec, or discussions, or whatever it happens to be. We're tracking these, and it helps to get the feedback going in the community.
+
+Continuing the review of the Architecture chapter of the oneMKL Spec:
+
+Execution Model:
+
+* We have non-member functions (standalone routines), as in BLAS and LAPACK, as well as member function (class-based encapsulations) in DFT and RNGs. Non-member functions take a queue as the first argument. We will throw exceptions instead of returning an info or error type.
+* For device usage, if you have multiple devices available, we depend on the DPC++ language to provide subdevices. Think of this as your NUMA type of stuff.  We're not introducing language into the oneMKL specification to handle subdevices.
+* Both synchronous and asynchronous execution is supported.  As the language evolves, we would like to have as much as possible be asynchronous, but it's not required to have asynchronous execution.
+
+* What does an exception mean for asynchronous execution?
+   * There is a method for asynchronous exceptions to be caught and then re-thrown. If you look at the Intel oneMKL examples, you can see how to catch this.  The language is moving to a point where no asynchronous execution is lost.  You have an exception handler attached to your queue.
+   * Prefer throwing exceptions over the XERBLA approach in BLAS.
+   * It's also possible to force the queue to have in-order behavior - especially useful for USM.
+
+* Buffers handle dependencies themselves, so that is why the USM APIs take a vector of event dependencies and return an event. You can build your own dependency tree. While it's a little more work to do that, it offers more flexibility.
+* We assume all functions are host thread safe. In the class-based APIs, it's not necessary that two threads concurrently using the same class will be thread safe.
+
+* If I have a big matrix and I give separate chunks of it to different threads, is that okay?  E.g., I have a 100x100 matrix, is it okay to give 50x50 to one thread and 50x50 to another?
+   * The SYCL buffers' dependencies are controlled by SYCL runtime, and they can't track how they interact.  That's an advantage with USM - as a programmer you know that working on one part of a matrix doesn't overlap with working on another part of the matrix.  A matrix encapsulation can handle that as well.  For host thread safety, we'll need to look that up for buffers.  For USM pointers, you should be fine; they're all in the same host virtual address space.
+
+Memory model:
+
+* 2 approaches to memory model: buffers and USM. Each have their own properties.  With USM, use malloc_device or malloc_share.  There is no assumption that data is host accessible.  An implementation may need to be able to handle both cases (how the memory was allocated).  Each has different properties, and it doesn't always make sense to assume it's always host accessible.
+
+API design - logistical design - namespaces:
+
+* There is a proposal going through the oneAPI TAB meetings to change the namespace to oneapi::mkl; that is, to put everything under the same oneapi namespace.  It's longer, but it makes things more simple if you can use a "using" statement. This would be done for all oneAPI libraries (TBB, etc.)
+   * Don't like deeply nested namespaces just to get into functionality. With this, you'd need to go 3 deep before you can use functionality. Shorter is better!
+   * There are issues with using "using" statements.  May do it for a particular function, but typically not for a whole namespace.
+   * We've even had discussions internally about the different domain namespaces, how to differentiate between them.  Pros and cons for each variant.
+   * We are open to suggestions here.  Concrete proposals on Github would be great!  Could have a flat structure as well.  Something to think about for later.
+   * Lots of people think of namespaces as package management, but it's not really. They aren't like Python import statements.
+   * Have namespaces and include structure be related to each other.
+
+* Thank you all for the engaging and active discussions. Please keep them going on the `oneAPI specification repository <https://github.com/oneapi-src/oneAPI-spec>`__.
+
+* Mark Hoemmen started a `discussion <https://github.com/oneapi-src/oneMKL/issues/23>`__ on dense linear algebra functions needing encapsulations for matrices and vectors shortly after the meeting.
