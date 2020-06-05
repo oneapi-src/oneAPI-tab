@@ -13,7 +13,7 @@ Attendees:
 * Robert Cohn (Intel)
 * Tom Deakin (University of Bristol)
 * Hal Finkel (Argonne National Laboratory)
-* Ronan Keryell
+* Ronan Keryell (Xilinx)
 * Mike Kinsner (Intel)
 * Alexey Kukanov (Intel)
 * Geoff Lowney (Intel)
