@@ -7,7 +7,7 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 
 Attendees:
 
-* Ted Barragy
+* Ted Barragy (NAG Lead Computational Scientist supporting BP)
 * David Beckingsale (Lawrence Livermore National Laboratory)
 * James Brodman (Intel)
 * Robert Cohn (Intel)
@@ -20,7 +20,7 @@ Attendees:
 * Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
 * Antonio J. Peña (Barcelona Supercomputing Center)
 * John Pennycook (Intel)
-* Heidi Poxon
+* Heidi Poxon (HPE)
 * Pablo Reble (Intel)
 * James Reinders (James Reinders Consulting LLC)
 * Alison Richards (Intel)
