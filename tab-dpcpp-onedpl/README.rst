@@ -24,7 +24,7 @@ Attendees:
 * Pablo Reble (Intel)
 * James Reinders (James Reinders Consulting LLC)
 * Alison Richards (Intel)
-* Andrew Richards
+* Andrew Richards (Codeplay)
 * Roland Schulz (Intel)
 * Gergana Slavova (Intel)
 * Timmie Smith (Intel)
