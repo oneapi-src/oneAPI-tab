@@ -1,0 +1,136 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2020-06-17
+==========
+
+Materials:
+
+* `Overview of the open source oneMKL interfaces GitHub project <../presentations/2020-06-17_Slides.pdf>`__
+* `oneMKL Specification <https://spec.oneapi.com/versions/latest/elements/oneMKL/source/index.html>`__
+* `oneMKL interfaces GitHub project <https://github.com/oneapi-src/oneMKL>`__
+
+Attendees:
+
+* Marius Cornea (Intel)
+* Mike Dewar (NAG)
+* Craig Garland (Intel)
+* Mark Hoemmen (Stellar Science)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* Mesut Meterelliyoz (Intel)
+* Spencer Patty (Intel)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+* Nichols Romero (ANL)
+* Shane Story (Intel)
+* Julia Sukharina (Intel)
+* Harry Waugh (University of Bristol)
+
+Agenda:
+
+* Welcoming remarks - all
+* Updates from last meeting - all
+* Finish walk-through of the oneMKL Specification - Spencer Patty
+* Overview of the open source oneMKL interfaces GitHub project - Julia Sukharina
+* Wrap-up and next steps
+
+Introduction:
+
+* Mike Dewar - CTO at NAG, which develops and sells math libraries. When shipping for Intel architectures, ship with Intel MKL and call into it for RNGs and linear algebra.
+
+Updates from last meeting:
+
+* We are following up with the DPC++ team on non-contiguous sub-buffer support that stemmed from Mark Hoemmen's `discussion <https://github.com/oneapi-src/oneMKL/issues/23>`__ on encapsulation for matrices and vectors.
+* Experiments using mdspan: John Pennycook looked at mdspan on top of USM pointers rather than SYCL buffers.
+* New release of oneAPI spec planned: version 0.8.5, targeting June 26.
+
+Walk-through of the oneMKL Spec:
+
+* Last time, we covered dense linear algebra and most of the architecture model. So let's start with API design. It's about the look and feel as well as the different APIs we use.
+* Currently for namespaces we use onemkl; another proposal is working its way through, based on feedback from TAB meetings and elsewhere. That proposal is for the whole oneAPI ecosystem to use a two-part namespace - oneapi::mkl. We may be able have just an mkl:: namespace that aliases to the two-part namespace.
+* In the future, we may have a summary statistics domain, so the domains/namespace table would expand.  But that is not planned to be part of 1.0 version of spec.
+
+* What about PBLAS and ScaLAPACK?
+   * Cluster components are out of scope for version 1.0 of the spec.
+
+* In oneMKL, certain datatypes are supported, like std integers and complex numbers. 
+* Additionally, since it is built on the DPC++ language, there are some types we use from the language itself (e.g., sycl::queue, sycl::buffer, etc.).  These show up in the interfaces.
+* Finally, we have some oneMKL defined datatypes, which were originally matched with the CBLAS type approach.
+* Theoretically we could have "F" or fill as a value for uplo; this may be expanded in future.
+* Diag - useful for various factorizations or triangular solve.  It allows to skip values that are stored and use an implicit 1 on the diagonal.
+* Coming from sparse linear algebra, an index_base for indexing.
+
+Discussion on oneMKL datatypes:
+
+* Are these enum structs, or is each a type?
+   * In our implementation, it's an enum class, but it's up to the implementation.
+* Is the index_base supposed to be a value?  0, 1?
+   * ``zero`` and ``one`` are values in the enum class.
+
+Discussion on alignment of ``std::complex<T>`` versus ``_Complex``:
+
+* On Nvidia platforms, the complex double is aligned to 16 bytes, not 8.  If ``std::complex<double>`` aligned just to 8 bytes, the alignment would be wrong.
+* The language in Array-oriented access section of https://en.cppreference.com/w/cpp/numeric/complex specifically calls out intent of the requirement to match C language complex number types.
+* Things like ``reinterpret_cast<cv T(&)[2]>(z)[0]`` have to work.  See the [complex.numbers] section for those details:  http://eel.is/c++draft/complex.numbers.
+
+* As noted at a previous meeting, row/column major still isn't represented here; still working through details.
+* We'll present on exceptions and error handling at the next meeting.  Section 1.4 will be updated for version 0.9 of the oneMKL spec.
+* For versioning of the spec, we use a MAJOR.MINOR.PATCH approach.  First version was 0.5.0; currently on 0.8.0 version.
+* Standard approach for versioning; once we reach 1.0, anytime we have a major change, the MAJOR count will change.
+* The version number for each element of the oneAPI spec (like oneMKL) will have its own version number and can be different from the overall oneAPI version numbering.
+* Finally, in the oneMKL product we have an idea of pre- and postcondition checking.  This will be built into the spec, and each API will define the pre- and postconditions; and what are verified to be true.  There will be a way to enable and disable these types of conditional checking.  How to do it is up to the implementation.
+
+* For other vendor backends, who would write the backend?  For example, putting in the hooks for rocBLAS.
+   * It could be anybody.  Our goal is that the interface is open to any hardware.  Codeplay did the initial implementation where they mapped the oneMKL BLAS DPC++ buffer-based interfaces to cuBLAS, so you could build a library with the oneMKL APIs on top of Nvidia and use cuBLAS.  Someone could theoretically build a oneMKL for ARM library.
+   * It would be good to have some vendor buy-in.
+   * Having users nudge vendors may help motivate them.
+
+
+Overview of the open source oneMKL interfaces GitHub project:
+
+* Open source project is to implement what we provide in specification. The spec can be ahead of the open source project, but the open source would follow and be aligned with spec.
+* The binary product provides an implementation for Intel CPU/GPU.  The open source provides interfaces with plugins for various implementation, including the binary product.
+* Codeplay implemented support for cuBLAS on Nvidia.
+* Conan package manager handles dependency download on Linux.
+* DPC++ works with Intel DPC++ compiler and Intel LLVM compiler, which supports CPU, GPU, and Nvidia.
+* This project currently has only BLAS interfaces, both buffer- and USM-based APIs.
+* Upcoming plans include supporting another CPU library; we decided to go with Netlib, as it is a well-known library. This demonstrates there is nothing specific to Intel oneMKL and provides an open source alternative.
+* You can run functional tests and see results.
+
+Two types of interfaces:
+
+* In the open source project, there are two ways to create application.
+* One is called "auto backend selection" (phrase may change).  When you build the project, you create libonemkl.so dynamic library.  At runtime, it will dispatch to your choice of backend library.  You will be able to control and select which library to load.  At this moment, we found some issues with how to do runtime dispatching on the same hardware.  In next few weeks, we'll resolve this.  It works well for different architectures currently.
+* The other option is called "manual backend selection". When you write your program, you can explicitly tell it to call GEMM for a particular backend (like cuBLAS on Nvidia).  We initially introduced two parameters, but recently decided that just specifying the name of the library should be sufficient, since libraries are written for certain hardware support.
+* The queue q controls which device.
+* Overall, these are the two models we support to allow users to select which hardware.
+
+Looking at the `oneMKL interfaces GitHub project repository <https://github.com/oneapi-src/oneMKL>`__:
+
+* The open source `oneAPI-SRC GitHub project <https://github.com/oneapi-src>`__ has all the source codes for oneAPI.
+* oneMKL is here, with a very descriptive README.
+* The different interfaces are described.
+* There are some limitations given, like Nvidia is supported only on Linux (not on Windows).
+* It lists which hardware is supported.  We don't test all Nvidia hardware, but we expect it should work with all the latest hardware.
+* This is one area we hope others would contribute.  We aren't able to have a full farm of architectures for all vendors.
+* We can support only what operating systems the compiler supports.  Once the compiler extends their support, we should be able to support more OSes as well.
+* Two ways to get dependencies, either manually or via Conan. There are also some limitations on what can or can't be downloaded automatically.
+* There is a guide on how to build the project.
+
+* There are also Contribution guidelines, including a checklist on how to contribute.  Hoping to see more community contributions.
+* In long term, all DPC++ interfaces in the oneMKL spec would become part of open source.  But if the user community is running ahead of us, they can create requests for comments (RFCs) where they suggest interfaces and how they would be extendible.
+* It would need to be decided if they would be accepted to the spec; if so, then afterwards they could be brought to the open source project.  First a new interface needs to be accepted by the spec.
+* As part of contributing guideline, there are some coding guidelines.  Clang is part of the open source and helps to check the guidelines.
+* As part of the project, there is some documentation that can be built.  Provided in restructured text (RST) format. It describes how to integrate different backends to the open source project.
+* There is a lot of work that can be automated, and to help assist, we provide scripts that are described in the documentation.
+* There is a lot more work to do here.
+* For testing, we currently have internal CI to verify changes.  In future, we plan to enable some external CI (likely would take a couple months to do so).  External CI would help contributors to test their changes and bring different backends.
+* We welcome you or anyone to contribute.
+
+* "Business strategy question" - MKL, in addition to being an acronym, is also an established Intel brand.  Do you view this as an obstacle for contributions from other vendors?  To consider an analogy from DOE: Trilinos and PETSc are two big DOE math libraries. You wouldn't see someone from the PETSc team supporting a Trilinos API, for example, as it doesn't seem like it would be good business/PR for them.  Do you think some of these Intel brands on this open source project will be an obstacle to other vendors?
+   * Good question, and we had lots of internal discussions on this.  MKL itself has earned a good reputation for performance optimizations, but we removed the brand from it by removing the "Intel" part of it.  So it is not "Intel MKL" but "oneMKL".
+   * The strategy is to create these "one" components and the oneAPI as an ecosystem.  Intel can do an implementation, anyone can do that, as long as they follow the specification.  We are avoiding the "Intel" in the open source.  The binary product we build and deliver separately has the Intel brand there.
