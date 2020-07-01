@@ -4,12 +4,98 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 
 Upcoming Topics
 ===============
-* June 24: Atomics
+
 * July 22: Accessor simplifications
 * Aug 26: Extension mechanism
 * Sept 23: Function pointers
 * Oct 28: End of year review
 * November: SC'20
+
+
+2020-07-01
+==========
+
+Attendees:
+
+* Robert Cohn (Intel)
+* Gergana Slavova (Intel)
+* Alexey Kukanov (Intel)
+* Antonio J. Peña (Barcelona Supercomputing Center)
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* Geoff Lowney (Intel)
+* Hal Finkel (Argonne National Laboratory)
+* Heidi Poxon (HPE)
+* James Brodman (Intel)
+* John Pennycook (Intel)
+* Roland Schulz (Intel)
+* Ronan Keryell (Xilinx)
+* Ruyman Reyes (Codeplay)
+* Sandip Mandera (Intel)
+* Timmie Smith (Intel)
+* Tom Deakin (University of Bristol)
+* Xinmin Tian (Intel)
+* Alison Richards (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
+* Andrew Richards (Codeplay)
+  
+Opens
+
+* DPC++ vs SYCL
+
+  * With SYCL 2020, differences between DPC++ and SYCL are smaller
+  * Can Intel present it same way it talks about OpenMP, don't need another name
+
+Atomics: John Pennycook
+
+* deprecate cl::sycl::atomic replace with intel::atomic_ref
+
+  * mostly aligned with c++2- std::atomic_ref
+  * Which address spaces?
+
+    * local, global, or generic
+
+  * What about constant?
+
+    * Atomic does not seem relevant
+    * Issue about LLVM optimization, synchronization edges, ..
+
+* memory orderings and scopes
+
+* single happens-before relation
+
+  * questions about hardware implications, need for fences
+  * By specifying memory order/scope, you can tune performance
+  * Situations where fences are required dominates the
+    performance. Need to do the exercise where fences are required for
+    common patterns and look at other architectures, if it will be
+    part of SYCL
+
+* changes to fences and barriers
+
+* changes memory consistency model
+
+  * makes sycl default behavior close to C++
+  * difference still exists because private memory
+
+* Questions
+
+  * should we support std::atomic_ref in device code?
+
+    * Yes as a migration solution, with expectation that eventually
+      code uses SYCL native
+    * Do not want to support name, but it give it different meaning
+
+  * Do we need std::atom-like interface as well as atomic_ref?
+
+    * Is the issue performance?
+
+      * What are the semantics of of std::atomic on host being
+        accessed on device
+      * Argonne has code that uses std::atomic. Would it make sense to
+        compile code that uses it in device code?
+      * what is code usage of std::atomic?
+
+	* arrays, data structures
 
 
 2020-05-27
