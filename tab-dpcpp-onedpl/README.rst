@@ -4,12 +4,123 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 
 Upcoming Topics
 ===============
-* June 24: Atomics
+
 * July 22: Accessor simplifications
 * Aug 26: Extension mechanism
 * Sept 23: Function pointers
 * Oct 28: End of year review
 * November: SC'20
+
+
+2020-07-01
+==========
+
+Attendees:
+
+* Robert Cohn (Intel)
+* Gergana Slavova (Intel)
+* Alexey Kukanov (Intel)
+* Antonio J. Peña (Barcelona Supercomputing Center)
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* Geoff Lowney (Intel)
+* Hal Finkel (Argonne National Laboratory)
+* Heidi Poxon (HPE)
+* James Brodman (Intel)
+* John Pennycook (Intel)
+* Roland Schulz (Intel)
+* Ronan Keryell (Xilinx)
+* Ruyman Reyes (Codeplay)
+* Sandip Mandera (Intel)
+* Timmie Smith (Intel)
+* Tom Deakin (University of Bristol)
+* Xinmin Tian (Intel)
+* Alison Richards (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
+* Andrew Richards (Codeplay)
+  
+Opens
+
+* SYCL 2020 provisional spec is now public: James Brodman
+
+  * Fairly major change vs. SYCL 1.2.1 including USM, quality-of-life
+    improvements, new way of doing images
+  * A lot of the changes included were prototyped in DPC++ first
+  * Call for action: provide input on the spec either via the SYCL
+    github (to be available soon) or through this group
+
+* DPC++ vs SYCL
+
+  * With SYCL 2020, differences between DPC++ and SYCL are smaller,
+    would be good to see a technical list of differences
+  * Would like to see a closer connection being made between DPC++ & SYCL
+  
+    * DPC++ messaging has explicitly shifted to highlight the fact that
+      DPC++ = ISO C++ + SYCL + extensions
+   
+  * What is the need for a separate name, why not call it SYCL + vendor 
+    extensions, similar to OpenMP?
+  
+    * DPC++ is a short-hand way to refer to the collection of extensions.
+      While the difference between DPC++ & SYCL 2020 is fairly small now due to
+      the recent release, expectation is to continue to prototype new extensions
+      through DPC++ before upstreaming to SYCL.
+  
+  * This feedback will be rolled up to ensure it reaches the right people
+
+Atomics: John Pennycook
+
+* `Slides <presentations/2020-07-01-TAB-Atomics.pdf>`__
+
+* deprecate cl::sycl::atomic replace with intel::atomic_ref
+
+  * mostly aligned with c++2- std::atomic_ref
+  * Which address spaces?
+
+    * local, global, or generic
+
+  * What about constant?
+
+    * Atomic does not seem relevant
+    * Issue about LLVM optimization, synchronization edges, ..
+
+* memory orderings and scopes
+
+* single happens-before relation
+
+  * questions about hardware implications, need for fences
+  * By specifying memory order/scope, you can tune performance
+  * Situations where fences are required dominates the
+    performance. Need to do the exercise where fences are required for
+    common patterns and look at other architectures, if it will be
+    part of SYCL
+
+* changes to fences and barriers
+
+* changes memory consistency model
+
+  * makes sycl default behavior close to C++
+  * difference still exists because private memory
+
+* Questions
+
+  * should we support std::atomic_ref in device code?
+
+    * Yes as a migration solution, with expectation that eventually
+      code uses SYCL native
+    * Do not want to support name, but give it different meaning
+    * Interesting to see if this supports different-sized <T>s
+
+  * Do we need std::atom-like interface as well as atomic_ref?
+
+    * Is the issue performance?
+
+      * What are the semantics of std::atomic on host being
+        accessed on device
+      * Argonne has code that uses std::atomic. Would it make sense to
+        compile code that uses it in device code?
+      * what is code usage of std::atomic?
+
+	* arrays, data structures
 
 
 2020-05-27
