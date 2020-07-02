@@ -40,7 +40,7 @@ Attendees:
   
 Opens
 
-* SYCL 2020 provisional spec is now public
+* SYCL 2020 provisional spec is now public: James Brodman
 
   * Fairly major change vs. SYCL 1.2.1 including USM, quality-of-life
     improvements, new way of doing images
