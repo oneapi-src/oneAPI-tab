@@ -69,6 +69,8 @@ Opens
 
 Atomics: John Pennycook
 
+* `Slides <presentations/2020-07-01-TAB-Atomics.pdf>`__
+
 * deprecate cl::sycl::atomic replace with intel::atomic_ref
 
   * mostly aligned with c++2- std::atomic_ref
