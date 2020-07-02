@@ -40,10 +40,32 @@ Attendees:
   
 Opens
 
+* SYCL 2020 provisional spec is now public
+
+  * Fairly major change vs. SYCL 1.2.1 including USM, quality-of-life
+    improvements, new way of doing images
+  * A lot of the changes included were prototyped in DPC++ first
+  * Call for action: provide input on the spec either via the SYCL
+    github (to be available soon) or through this group
+
 * DPC++ vs SYCL
 
-  * With SYCL 2020, differences between DPC++ and SYCL are smaller
-  * Can Intel present it same way it talks about OpenMP, don't need another name
+  * With SYCL 2020, differences between DPC++ and SYCL are smaller,
+    would be good to see a technical list of differences
+  * Would like to see a closer connection being made between DPC++ & SYCL
+  
+    * DPC++ messaging has explicitly shifted to highlight the fact that
+      DPC++ = ISO C++ + SYCL + extensions
+   
+  * What is the need for a separate name, why not call it SYCL + vendor 
+    extensions, similar to OpenMP?
+  
+    * DPC++ is a short-hand way to refer to the collection of extensions.
+      While the difference between DPC++ & SYCL 2020 is fairly small now due to
+      the recent release, expectation is to continue to prototype new extensions
+      through DPC++ before upstreaming to SYCL.
+  
+  * This feedback will be rolled up to ensure it reaches the right people
 
 Atomics: John Pennycook
 
@@ -83,13 +105,14 @@ Atomics: John Pennycook
 
     * Yes as a migration solution, with expectation that eventually
       code uses SYCL native
-    * Do not want to support name, but it give it different meaning
+    * Do not want to support name, but give it different meaning
+    * Interesting to see if this supports different-sized <T>s
 
   * Do we need std::atom-like interface as well as atomic_ref?
 
     * Is the issue performance?
 
-      * What are the semantics of of std::atomic on host being
+      * What are the semantics of std::atomic on host being
         accessed on device
       * Argonne has code that uses std::atomic. Would it make sense to
         compile code that uses it in device code?
