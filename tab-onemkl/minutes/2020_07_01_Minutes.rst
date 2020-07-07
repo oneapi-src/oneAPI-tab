@@ -1,0 +1,91 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2020-07-01
+==========
+
+Materials:
+
+* `Exceptions/Error handling <../presentations/2020-07-01_Slides.pdf>`__
+
+Attendees:
+
+* Peter Caday (Intel)
+* Mark Hoemmen (Stellar Science)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* Mesut Meterelliyoz (Intel)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+* Nichols Romero (ANL)
+* Shane Story (Intel)
+* Julia Sukharina (Intel)
+* Harry Waugh (University of Bristol)
+* Maria Zhukova (Intel)
+
+Agenda:
+
+* Welcoming remarks - all
+* Exceptions/Error handling - Maria Kraynyuk
+* Open discussion on oneMKL Specification and open source oneMKL interfaces GitHub project - all
+* Wrap-up and next steps
+
+Exceptions/Error handling:
+
+* Motivation for different level of details: wide range of applications use oneMKL.  Some need no details, some just want to identify all oneMKL exceptions, some want more details.
+
+* 3 levels of exceptions:
+
+1. Base exception, which can be inherited from std::exception, but not required to.
+2. Problem-specific exception classes, like for invalid arguments or something uninitialized, which are inherited from the oneMKL base exception class.
+3. Domain-specific exception classes, like for an uninitialized descriptor in DFT; inherited from problem-specific exceptions or the base class.
+
+* 7 problem-specific exceptions can cover all domains.  Differentiate between host or device memory allocation; device not supported; some functionality is not implemented; incorrect input. For sparse and DFT domains, there are descriptors/handles; have an exception if it wasn't initialized first. Finally, check that everything was fine during computation; since this can be very different between domains, have domain-specific exceptions as well.
+* Final list of domain-specific exceptions is not yet defined but will be added to the spec.
+
+Open Discussion:
+
+* Board strongly recommends requiring inheriting from std::exception, rather than allowing it. 
+   * Helps applications to handle exceptions consistently.
+   * In general, it's really helpful if custom exceptions inherit from ``std::exception``.
+
+* It's helpful to use existing idioms for C++ exceptions.
+   * For example, throwing ``std::bad_alloc`` for bad allocation.
+
+* Distinguish between "user messed up" and "library messed up" errors; may not need to fuss too much with user messed up errors.
+   * Things the xerbla would be invoked for - like incorrect arguments - fall into the user messed up category.
+   * Can start with a basic exception and subdivide more in the future.
+   * Haven't seen code that recovers from xerbla.
+   * There are cases for Intel MKL where users redefine xerbla because they don't want to stop but continue. It's possible the user code would take a different path in this case.
+
+* Will there be MKL_DIRECT_CALL support?
+   * We want to specify a pre-check system, which is currently partially implemented in the open source interfaces.  We want it to be part of the spec.  Allow to switch off at compile time if argument checking is not needed, though would still need to check for computational problems.
+   * We would want to use the compile-time dispatching interfaces instead of the run-time dispatching.
+   * Need to think carefully about direct call because it requires header support.
+
+* What happens for companies that don't allow exceptions?
+   * We have received a request on potentially using statuses instead of exceptions, though using DPC++ led to the choice of exceptions.
+   * If necessary, we can have a system that catches everything at the top level with a status code that users can query with an API.
+
+* There is an argument about exceptions being only exceptional conditions.  Providing bad data is not exceptional.
+   * Bad allocation is exceptional, bad arguments are bugs. But things like LAPACK not converging - is that exceptional, or simply hard?
+   * It can be handled through an ``if`` branch in user code.  For numerical issues, can have a fast path in the code; try LU, if it fails, switch to QR.  Debatable if it should be an exception.
+   * Negative numbers from the ``info`` parameter in LAPACK are truly errors, you can't do anything. But positive numbers indicate a failure during computations, such as passing a non-positive definite matrix to Cholesky (potrf).
+   * In this case, potrf would throw an exception, and the ``info`` code of the problem can be obtained by the ``get_info()`` method of the exception object.
+   * Concern that large production runs may assert that no exceptions are thrown, to devote all core-hours to compute. 
+   * Sometimes LU is called to determine if a matrix is singular.  Users can't be expected to detect a singular matrix; the algorithm finds that out for them.
+   * But having both error codes and exceptions on a single function call may be unwieldy. The ``std::filesystem`` has both, but users do not like functions that return an error code also throw an exception.
+   * In some cases it may be okay, but don't want a function that will have informational errors and malloc exceptions tied to the same number.
+
+* With exceptions, there's an expectation you'd unwind the stack. Can you throw an exception on the GPU, or do you have to go back to the CPU to throw it?
+   * You need to wait.
+
+* Our interface in general is asynchronous. Reporting about the conditioning of a matrix forces things to be synchronous.
+   * One option is device-accessible pointers, like in cuBLAS.
+   * SYCL has a notion of asynchronous errors.  To catch them, you need to register an asynchronous error handler on the queue you created.  But it doesn't come with a way for user code to raise asynchronous exceptions.  We could press for changes to the SYCL specification in the future.
+   * However, even if possible, the ability to throw an exception on the device may affect performance.
+   * In PLASMA, both asynchronous and synchronous APIs were provided. In the asynchronous API, there was no guarantee on the state of the data in the event of an error.  In the synchronous API, an object was introduced to keep track of the progress.
+   * The C++ executor proposal (P0443) has an "error channel", though that is not quite the same.
