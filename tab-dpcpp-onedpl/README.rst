@@ -81,7 +81,8 @@ Atomics: John Pennycook
   * What about constant?
 
     * Atomic does not seem relevant
-    * Issue about LLVM optimization, synchronization edges, ..
+    * Issue about LLVM optimization, synchronization edges, etc. For more information, see comment 6 in `LLVM PR37716
+    <https://bugs.llvm.org/show_bug.cgi?id=37716>`__ 
 
 * memory orderings and scopes
 
