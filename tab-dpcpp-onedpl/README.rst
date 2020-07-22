@@ -5,7 +5,6 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Upcoming Topics
 ===============
 
-* July 22: Accessor simplifications
 * Aug 26: Extension mechanism
 * Sept 23: Function pointers
 * Oct 28: End of year review
