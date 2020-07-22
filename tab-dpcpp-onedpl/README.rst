@@ -12,6 +12,94 @@ Upcoming Topics
 * November: SC'20
 
 
+2020-07-22
+==========
+
+Attendees:
+
+* Robert Cohn (Intel)
+* Gergana Slavova (Intel)
+* Ilya Burylov (Intel)
+* Alison Richards (Intel)
+* Andrew Richards (Codeplay)
+* Christian Trott (Sandia National Laboratory)
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* Geoff Lowney (Intel)
+* Hal Finkel (Argonne National Laboratory)
+* Heidi Poxon (HPE)
+* James Brodman (Intel)
+* John Pennycook (Intel)
+* Mike Kinsner (Intel)
+* James Reinders (James Reinders Consulting LLC)
+* Jeff Hammond (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
+* Roland Schulz (Intel)
+* Ronan Keryell (Xilinx)
+* Ruyman Reyes (Codeplay)
+* Timmie Smith (Intel)
+* Xinmin Tian (Intel)
+
+Opens
+
+Accessors: Ilya Burylov
+
+* `Slides <presentations/2020-07-22 accessor simplification.pdf>`__
+* Changes in accessors for SYCL 2020 provisional
+* Host accessors, blocking, placeholder, ...
+
+  * absence of handler is interpretreted different for host and non-host accessor
+  * placeholder host accessor are not supported
+  * considering making 2 new types of host accessor, blocking and non-blocking
+
+  * discussion
+
+    * concerns about excessive overloading and implicit behavior
+    * just call it non-blocking vs call it task
+
+      * names based on semantics vs use case
+
+* Creating more dedicated types/alias
+
+  * is granularity enough
+
+* issue with 0 dimension
+* removed operator[](size_t index)
+
+  * allowed passing item instead
+  * need implicit conversions from size_t and other types to id
+    * should check spec that it works that way
+
+* Feedback from Argonne
+
+  * highly desirable for uniform set of rules for naming things
+
+    * image_accessor, host_image_accessor, should image always be first?
+
+  * deduction guides are useful, but don't solve problem.
+
+    * Default arguments must be in order. Might be better to have specialized/more general.
+    * Kokkos experience: helper classes take variadic arguments to make typedef
+
+      * host accessor does not help, because it needs to be stored and must be generic
+      * christian asked to make example to share with group
+
+  * local memory issues
+
+    * local memory allocated by accessor, different from all other accessors. Normally allocated somewhere else
+    * irregularity, not sure if there is a solution
+    * difference between view & allocation, working on it, expect to have a proposal soon
+
+* Are 0 dimensional data structures used?
+
+  * Yes in Kokkos
+
+    * atomic counters, error flags, ..
+
+  * would like to see 0 dimensional buffer
+  * need subspan mechanism to get view vs 1-off solutions
+  
+    
+
 2020-07-01
 ==========
 
