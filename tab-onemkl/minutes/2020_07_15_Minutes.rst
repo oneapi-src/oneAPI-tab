@@ -1,0 +1,141 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2020-07-15
+==========
+
+Materials:
+
+* `Overview of oneMKL Random Number Generators domain <../presentations/2020-07-15_Slides.pdf>`__
+
+Attendees:
+
+* Peter Caday (Intel)
+* Marius Cornea (Intel)
+* Pavel Dyakov (Intel)
+* Alina Elizarova (Intel)
+* Mehdi Goli (Codeplay)
+* Mark Hoemmen (Stellar Science)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* Mesut Meterelliyoz (Intel)
+* Spencer Patty (Intel)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+* Nichols Romero (ANL)
+* Edward Smyth (NAG)
+* Shane Story (Intel)
+* Harry Waugh (University of Bristol)
+
+Agenda:
+
+* Welcoming remarks - all
+* Discussion and updates from last meeting
+* Overview of oneMKL Random Number Generators domain - Pavel Dyakov and Alina Elizarova
+* Wrap-up and next steps
+
+Introduction, including how you use math libraries:
+
+* Mehdi Goli - Principal software engineer at Codeplay, based in Edinburgh, developed different math libraries in SYCL. As part of contribution to community, contributed cuBLAS backend to oneMKL open source interfaces project. In the past couple of years, developing linear algebra kernels, Eigen backend used in TensorFlow.
+* Edward Smyth - Works for Numerical Algorithms Group (NAG); famous for their math libraries. Working there for many years, did some early work for Intel MKL years ago. Also does a lot of HPC consultancy.
+
+Opening up for comments on the oneMKL Spec or general discussion:
+
+* Overall, the focus from reviewing the spec has been on the linear algebra interfaces. No additional comments from what has been captured during previous oneMKL TAB meetings.
+* In OpenMP, you have control over the level of parallelism you get. Being able to control how much of the CPU/GPU is used would be useful.
+* Interoperability of SYCL and other runtimes: In the oneMKL open source interfaces project, the oneMKL APIs can work with cuBLAS underneath and the CUDA runtime, for example.
+
+Row-major support for BLAS:
+
+* What happens if you add another layout?
+   * The approach taken matches CBLAS capabilities. If you had lots of other layouts, a matrix object would better encapsulate. This is the procedural version for now.
+* Why using namespaces instead of enums?
+   * Users will typically use just column major or just row major for entire application. With the namespace approach, you do not need an enum parameter for every function. This approach also doesn't break current API.
+
+* Multi-dimensional arrays (tensors) would benefit from supporting multiple strides.  There have been requests for SLATE to cover multi-dimensional strides.
+
+Overview of RNGs
+
+* Two types of classes:
+
+1.   Engines - source of randomness, hold state of random number generators.
+2.   Distributions - hold distribution parameters, mean, standard deviation parameters.
+
+* Two types of free functions:
+
+1.   Service routines - responsible for engine's state modification.
+2.   Generation routines - used to obtain random numbers from a given engine and distribution
+
+* Engine classes work with both free function types; Distributions classes work only with generation routines.
+
+* What are the return values for the generation routines?
+   * The generated numbers are provided via output parameters. For buffer-based APIs, the return type is void. For USM, an event is returned.
+
+* 3 steps for workflow:
+
+1. Create and initialize an Engine object. Can adjust Engine state by calling service function if required.
+2. Create and initialize a distribution object.
+3. Call the generation routine to obtain n random numbers.
+
+Deeper look at Engines classes:
+
+* Engines classes: represent source of independent and identically distributed random variables.
+* Engine object holds its internal state between calls; it holds a ``sycl::queue`` object, and generation is performed on the device associated with the queue.
+* May be different constructors for different Engines, depending on the seed needed.
+* Copy constructible and copy assignable.
+   * A random number engine is just a vector of bits, which should be trivially copyable without needing to implement custom copy constructors.
+   * Different engines have different costs for copying due to differences in internal state.  But people typically pass Engines around by non-const reference, so you are not copying them all over the place.
+* What about move constructors?
+   * Wanted to provide minimal set of constructors.
+   * Engine state is modified in generate calls.
+* Are you going to offer threefry4x64?
+   * No plans currently for threefry algorithm.  For counter-based engines we have philox4x32x10 and ARS-5.
+
+Deeper look at Distributions classes:
+
+* Distributions represent statistical properties of produced random numbers.
+* Gaussian takes mean and standard deviation in constructor.  Different parameters are needed for different Distributions.
+* Copy constructible and assignable;  trivial action in this case.
+* The structs are just tags; why do they not have the transforms in them?
+   * Everything happens in the generate function.
+   * Dispatch to the right method based on the tag.
+   * Did not want to specify in the specification since different devices may have different implementations and work with the Engine and Distribution differently.
+
+Deeper look at generation routines:
+
+* These provide random numbers from a given engine with a given distribution.
+* Uses sycl::buffer<> or USM pointer provided by user as storage for the generated numbers.
+* How does this compare to the RNGs in C++?
+   * It is a little different than the std:: one, since std:: does not work for different devices and has shared state between different threads.
+   * oneDPL implements std:: like subset of random number engines and distributions which works for different devices.
+   * The goal is to provide something that looks C++-like but in a more performant way by generating multiple numbers.
+   * Wanted to make the user experience easier with a general entry point - a free function routine instead of an operator that provides just one number from a given Engine.  But the general workflow is similar.
+   * Needs justification in the specification why it looks different from std so it does not seem arbitrary.
+
+Deeper look at service routines:
+
+* Service routines are used to modify the state of the engine.
+* Two ways:
+
+1. Skip-ahead method: Engine behaves like it has already generated num_to_skip elements.  If you want to generate from one random sequence but on different devices, may use skip-ahead.
+2. Leapfrog method: Produced by same engine, but with fixed increment.
+
+* Not all engines support these routines.
+* Typo in the text underneath the skip-ahead image - refer to the colors in the image instead.
+* Can I overload leapfrog and write a custom engine?
+   * If you provide a generate function for this, then yes.
+* Is there any guarantee on the complexity of leapfrog() or skip_ahead()?
+   * No, it differs from engine to engine. For philox4x32x10, skip_ahead() is constant time, but other engines may be more complex.
+
+General RNG usage:
+
+* What customer base uses RNG?
+   * Not too many people at DOE use it.  Most just use Boost or the built-in Fortran functions.
+   * Lots of customers in the finance field use Monte Carlo (or quasi-Monte Carlo) simulations for risk management and options calculation.  Lots of customers in physics use Monte Carlo simulations.
+
+* May want a specialized Engine, for instance, to support a thousand streams with a thousand threads.
+   * This could be specified in the constructor.
+
