@@ -44,58 +44,60 @@ Accessors: Ilya Burylov
 
 * `Slides <presentations/2020-07-22 accessor simplification.pdf>`__
 * Changes in accessors for SYCL 2020 provisional
-* Host accessors, blocking, placeholder, ...
+* Device and host accessors have different behavior, not obvious from the call name
 
-  * absence of handler is interpretreted different for host and non-host accessor
-  * placeholder host accessor are not supported
-  * considering making 2 new types of host accessor, blocking and non-blocking
+  * Absence of handler is interpreted different for host (blocking) and non-host (non-blocking) accessor
+  * Placeholder host accessor are not supported
+  * Considering making 2 new types of host accessor, blocking and non-blocking
 
-  * discussion
+  * Discussion
 
-    * concerns about excessive overloading and implicit behavior
-    * just call it non-blocking vs call it task
+    * Concerns about excessive overloading and implicit behavior
+    * Just call it non-blocking vs calling it a task
 
-      * names based on semantics vs use case
+      * Names-based on semantics vs use-case
+      * Recommend to make the code be self-descriptive
 
 * Creating more dedicated types/alias
 
-  * is granularity enough
+  * Is this level of granularity enough?
 
-* issue with 0 dimension
-* removed operator[](size_t index)
+* Removed operator[](size_t index)
 
-  * allowed passing item instead
-  * need implicit conversions from size_t and other types to id
-    * should check spec that it works that way
+  * Allowed passing item instead
+  * Need implicit conversions from size_t and other types to id
+  
+    * Should check spec that it works that way
 
 * Feedback from Argonne
 
-  * highly desirable for uniform set of rules for naming things
+  * Highly desirable to have uniform set of rules for naming things
 
-    * image_accessor, host_image_accessor, should image always be first?
+    * Define a consistent prefix
+    * E.g. image_accessor vs host_image_accessor, should "image" always be first?
 
-  * deduction guides are useful, but don't solve problem.
+  * Deduction guides are useful, but don't solve the problem of strict argument order
 
     * Default arguments must be in order. Might be better to have specialized/more general.
     * Kokkos experience: helper classes take variadic arguments to make typedef
 
-      * host accessor does not help, because it needs to be stored and must be generic
-      * christian asked to make example to share with group
+      * Host accessor does not help, because it needs to be stored and must be generic
+      * Christian can provide an example to share with the group
 
-  * local memory issues
+  * Confusion around how local memory, irregularity around usage
 
-    * local memory allocated by accessor, different from all other accessors. Normally allocated somewhere else
-    * irregularity, not sure if there is a solution
-    * difference between view & allocation, working on it, expect to have a proposal soon
+    * Local memory allocated by accessor, different from all other accessors. Normally allocated somewhere else.
+    * Difference between view & allocation
+    * Working on a proposal, expect to bring it to this body for review soon
 
 * Are 0 dimensional data structures used?
 
-  * Yes in Kokkos
+  * Yes, common in Kokkos
 
-    * atomic counters, error flags, ..
+    * Atomic counters, error flags, ..
 
-  * would like to see 0 dimensional buffer
-  * need subspan mechanism to get view vs 1-off solutions
+  * Would also like to see 0 dimensional buffer (no range, 1 element)
+  * Need subspan mechanism to get view vs 1-off solutions
   
     
 
