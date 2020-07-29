@@ -5,12 +5,101 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Upcoming Topics
 ===============
 
-* July 22: Accessor simplifications
 * Aug 26: Extension mechanism
 * Sept 23: Function pointers
 * Oct 28: End of year review
 * November: SC'20
 
+
+2020-07-22
+==========
+
+Attendees:
+
+* Robert Cohn (Intel)
+* Gergana Slavova (Intel)
+* Ilya Burylov (Intel)
+* Alison Richards (Intel)
+* Andrew Richards (Codeplay)
+* Christian Trott (Sandia National Laboratory)
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* Geoff Lowney (Intel)
+* Hal Finkel (Argonne National Laboratory)
+* Heidi Poxon (HPE)
+* James Brodman (Intel)
+* John Pennycook (Intel)
+* Mike Kinsner (Intel)
+* James Reinders (James Reinders Consulting LLC)
+* Jeff Hammond (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
+* Roland Schulz (Intel)
+* Ronan Keryell (Xilinx)
+* Ruyman Reyes (Codeplay)
+* Timmie Smith (Intel)
+* Xinmin Tian (Intel)
+
+Opens
+
+Accessors: Ilya Burylov
+
+* `Slides <presentations/2020-07-22 accessor simplification.pdf>`__
+* Changes in accessors for SYCL 2020 provisional
+* Device and host accessors have different behavior, not obvious from the call name
+
+  * Absence of handler is interpreted different for host (blocking) and non-host (non-blocking) accessor
+  * Placeholder host accessor are not supported
+  * Considering making 2 new types of host accessor, blocking and non-blocking
+
+  * Discussion
+
+    * Concerns about excessive overloading and implicit behavior
+    * Just call it non-blocking vs calling it a task
+
+      * Names-based on semantics vs use-case
+      * Recommend to make the code be self-descriptive
+
+* Creating more dedicated types/alias
+
+  * Is this level of granularity enough?
+
+* Removed operator[](size_t index)
+
+  * Allowed passing item instead
+  * Need implicit conversions from size_t and other types to id
+  
+    * Should check spec that it works that way
+
+* Feedback from Argonne
+
+  * Highly desirable to have uniform set of rules for naming things
+
+    * Define a consistent prefix
+    * E.g. image_accessor vs host_image_accessor, should "image" always be first?
+
+  * Deduction guides are useful, but don't solve the problem of strict argument order
+
+    * Default arguments must be in order. Might be better to have specialized/more general.
+    * Kokkos experience: helper classes take variadic arguments to make typedef
+
+      * Host accessor does not help, because it needs to be stored and must be generic
+      * Christian can provide an example to share with the group
+
+  * Confusion around how local memory, irregularity around usage
+
+    * Local memory allocated by accessor, different from all other accessors. Normally allocated somewhere else.
+    * Difference between view & allocation
+    * Working on a proposal, expect to bring it to this body for review soon
+
+* Are 0 dimensional data structures used?
+
+  * Yes, common in Kokkos
+
+    * Atomic counters, error flags, ..
+
+  * Would also like to see 0 dimensional buffer (no range, 1 element)
+  * Need subspan mechanism to get view vs 1-off solutions
+  
+    
 
 2020-07-01
 ==========
