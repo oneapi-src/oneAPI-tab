@@ -10,4 +10,5 @@ Meeting notes:
 | `June 17, 2020 <minutes/2020_06_17_Minutes.rst>`__
 | `July 1, 2020 <minutes/2020_07_01_Minutes.rst>`__
 | `July 15, 2020 <minutes/2020_07_15_Minutes.rst>`__
+| `August 12, 2020 <minutes/2020_08_12_Minutes.rst>`__
 
