@@ -1,0 +1,139 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2020-08-12
+==========
+
+Materials:
+
+* `Overview of oneMKL Summary Statistics domain <../presentations/2020-08-12_Slides.pdf>`__
+
+Attendees:
+
+* Pavel Dyakov (Intel)
+* Alina Elizarova (Intel)
+* Mark Hoemmen (Stellar Science)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* Spencer Patty (Intel)
+* Pat Quillen (MathWorks)
+* Nichols Romero (ANL)
+* Edward Smyth (NAG)
+* Shane Story (Intel)
+
+Agenda:
+
+* Welcoming remarks - all
+* Updates from last meeting
+* oneMKL Random Number Generators pass downs and open questions - Pavel Dyakov and Alina Elizarova
+* Overview of oneMKL Summary Statistics domain - Pavel Dyakov and Alina Elizarova
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* oneMKL Specification v. 0.9 was published on July 30.
+* oneMKL Specification v. 1.0 is scheduled for August 30. Cutoff date for accepting feedback is August 17, with code freeze August 28.
+* Feedback that will be considered for a future version (after v. 1.0) is captured in an appendix - many thanks to the oneMKL TAB members!
+* Going forward, oneMKL TAB will switch to a 4-week cadence, as there are still topics to cover, for consideration in a future spec version.
+* Please continue to file `Github issues <https://github.com/oneapi-src/oneAPI-spec>`__ against the specification, even after version 1.0.
+* Can also file issues against the `oneMKL open source interfaces <https://github.com/oneapi-src/onemkl>`__ if there are issues about the open source implementation of the specification.
+
+oneMKL Random Number Generators discussion:
+
+* Based on feedback from the previous oneMKL TAB meeting, we have removed trivial constructors to make it cleaner. Adding move constructors to v. 1.0.
+
+5 groups of engines:
+
+1. Modern engines with good statistical properties.
+2. Engines with small period but good performance - two instantiations of linear congruential engines.
+3. Hardware dependent engines.  For example, ars5 can be done via hardware (HW) instruction or software, but there is a significant performance difference.  Nondeterministic is implemented via HW instruction, and cannot be supported on HW lacking this instruction (like current GPUs).  sfmt19937 utilizes vectorized capabilities of CPUs, but may not make sense on GPU hardware.
+4. Engines that used to be popular in the past, but not so much anymore.
+5. Quasi-random engines that can be used for certain use cases.
+
+Questions for feedback:
+
+* Do we need to introduce a default engine in the oneMKL spec?
+   * Our proposal is to add to the spec, but as implementation defined.  It is needed to support users who do not care about what engine they use, but need to generate random numbers.
+   * oneMKL TAB agrees with default engine proposal.
+
+* What would the default engine be?
+   * Each implementation can specify its own choice.  For Intel, this is still under discussion, but currently leaning towards philox engine, as it has good performance for both CPUs and GPUs and has perfect statistics properties.
+
+* Should HW-dependent engines be included in the oneMKL spec?
+   * Proposal is to include them.
+   * In the C++ specification, hardware-dependent engines correspond to `std::random_device`.
+   * The nondeterministic engine, due to the lack of a seed, would produce different bits on different HW. But other engines can produce same bits on different HW - including the SIMD Mersenne-Twister when run on systems with different SIMD lengths.
+   * The oneMKL TAB recommends documenting the reproducibility and agrees with including HW-dependent engines.
+
+* What happens if some hardware cannot support an engine?
+   * An implementation can support only a partial version of the spec, so not every engine needs to be supported.
+   * With the exceptions introduced in v. 1.0, we can specify throwing a certain exception if not supported by an implementation.
+   * `std::random_device` falls back to the CPU.  Do you want that to happen here, or if the hardware is not available, then do not use it.
+   * In Intel oneMKL, we have no fallback for nondeterministic engine.  It probably makes sense not to have fallbacks to avoid confusing users, as otherwise users would see same results from run-to-run.
+
+* Except for hardware-dependent engines, do all of the other engines (in principle) work on Intel CPU, GPU, and potentially other vendor hardware as well?
+   * Yes, though some, like r250, will have lower performance on the GPU.  The first two groups are supported on both Intel CPUs and GPUs, and sobol is supported on both as well.  Some of these engines are already implemented by Nvidia GPUs.
+
+* How should a user understand the tradeoffs of different engines?  Is it a matter of performance vs randomness?
+   * Different engines have different periods.  For example, the period of MCG is too small for some applications.  Additionally, if you want parallel uses of random numbers, some are easier to parallelize.  For instance, the skipahead for philox is light-weight, while it is heavier for mt19937, leading to an additional overhead to parallelize this engine.
+
+* Should outdated engines be included in the oneMKL spec?
+   * Proposal is to keep them in the spec to provide a wide set of engines.  This set can be used in older applications.
+   * The oneMKL TAB agrees with keeping the outdated engines in the spec.
+
+Overview of oneMKL Summary Statistics domain:
+
+* Introduced Summary Statistics component in v. 0.9 of the oneMKL spec.
+* There is a dataset structure, service routines to make a dataset, and free functions - computational routines that compute basic statistical estimates for single/double precision.
+* We want to extend the set in the future.
+* Typical usage model: create and initialize an object for dataset; call mean function to calculate mean values.
+* For consistency with the rest of oneMKL spec, 1D SYCL buffers and USM pointers are used to represent multi-dimensional dataset.
+
+Dataset Structure:
+
+* The dataset structure holds all user data, with two specializations to support USM and buffer APIs.
+* It stores the number of dimensions and observations; the matrix of observations; and two optional parameters: weights (scale of observation in dataset) and indices (which dimensions are processed).
+
+* Discussion on struct storage for the dataset:
+   * It is a struct instead of a class because it just stores data and nothing else. There is a template parameter for row or column major.
+   * If it is just a struct then you do not need a constructor - you can just use curly brackets. You can give default values in the struct, and when you use curly bracket initialization, anything you leave out will be initialized to the default values.
+   * The general rule is if the data can vary independently with no constraints, then it can be a struct.
+   * If everything is public, then users can change the data.
+   * A user may want to calculate the mean for some indices and different statistics for other indices. The user could change just the indices and re-use the struct for both.
+   * However, the number of dimensions and observations do seem tied to the matrix of observations.
+   * One additional concern with data structs in general is that you can never change the order of things inside the struct - they need to be initialized in order.
+
+* Only the 1D ``sycl::buffer<Type, 1>`` has a specialization; it will not work for 2D buffers (same issues as with dense linear algebra).
+
+Service Routines:
+
+* Supports users using pre-C++17 version to create a dataset object.
+* SYCL 2020 provisional supports C++17 as minimum.
+* If C++17 will be the minimum required, then we can remove these two functions and rely on deduction guides.
+* It is just an enumeration; it is not using constraints (C++20).
+* The order of the template parameters is reversed compared to the structure; this should be fixed.
+
+Computational functions:
+
+* Each takes queue, the dataset, and a place to store results.
+* Different template parameters to support different methods.
+
+* What does ``fast`` mean?
+   * Fast is the fastest if there are multiple methods. Some functions only have the fast method.
+
+* Can ``fast`` be less accurate?
+   * Yes, or it can provide slightly different results when using different number of threads.
+
+* oneMKL TAB recommends to specify why users may not want to use ``fast`` - what are the tradeoffs.  May also want to choose a different name - why would someone choose a slow method?
+
+General discussion:
+
+* Has summary statistics been part of Intel MKL for a while? Who uses it?
+   * Yes, it was part of the "vector statistics" domain in Intel MKL, which contains both RNGs and summary statistics. Summary statistics and RNGs are not really related, so that is why they are in separate domains in oneMKL.
+   * Summary statistics routines are mostly used for some primitives in classic machine learning.
+   * Financial service applications and Monte Carlo simulations may also use these.
+
+* There is a DOE project called `Spack <https://spack.readthedocs.io/>`__ that is a package manager.  It would be good to have oneMKL support for Spack in the future.  Spack has special rules to automatically install Intel MKL via a special way of packaging Intel software: ``spack install intel-mkl``.
