@@ -11,6 +11,99 @@ Upcoming Topics
 * November: SC'20
 
 
+2020-08-26
+==========
+
+Attendees:
+
+* Robert Cohn (Intel)
+* Gergana Slavova (Intel)
+* Alison Richards (Intel)
+* Andrew Richards (Codeplay)
+* Ruyman Reyes (Codeplay)
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* Geoff Lowney (Intel)
+* Hal Finkel (Argonne National Laboratory)
+* James Brodman (Intel)
+* John Pennycook (Intel)
+* Jeff Hammond (Intel)
+* Roland Schulz (Intel)
+* Ronan Keryell (Xilinx)
+* Ted Barragy (NAG Lead Computational Scientist supporting BP)
+* Timmie Smith (Intel)
+* Tom Deakin (University of Bristol)
+* Xinmin Tian (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
+* Christian Trott (Sandia National Laboratory)
+* Xinmin Tian (Intel)
+  
+Opens
+
+Spec: Robert Cohn
+
+* Looking for feedback on usefulness of the `PDF version
+  <https://spec.oneapi.com/versions/0.9/oneAPI-spec.pdf>`__ of oneAPI
+  spec
+
+Extensions: Greg Lueck
+
+* `Slides <presentations/2020-08-26-TAB-Extension-Mechanism.pdf>`__
+* Extension mechanism
+
+  * Discussion
+
+    * Extension of existing classes breaks binary compatibility?
+
+      * When moving between vendors, you have to recompile, even
+        without extensions
+
+    * Needs more verbose guidance on how to make changes that are
+      source compatible: conversions, constructors, overload sets
+
+    * compile-time warnings would be useful
+      
+* Optional features of devices
+
+  * Similar to extension, because it may not be there
+    
+  * has() is passed aspect enum. Use if/template to handle absence of
+    feature
+
+  * error handling
+
+    * throw runtime exception when using feature that is not supported
+      by device
+
+  * devconstexpr: constant when compiling for device
+
+    * discussion
+      
+      * requires keyword, no longer C++
+
+	* could hide it in macro
+
+      * issues about lambda capture, device compiler, types not being
+        present when feature is not supported.
+
+
+Local memory allocation: John Pennycook
+
+* `Slides <2020-08-26-TAB-LocalMemory.pdf>`__
+
+* Ability to declare local memory for static size, instead of just accessor
+* group_local_memory allocates, returning multi_ptr
+* Discussion
+
+  * dynamically sized arrays
+
+    * only static, use accessor for dynamic
+
+  * Support for arrays (std::array) and type requirements
+    (e.g. trivially destructible)
+
+    * arrays supported, only requirement is trivially destructible
+
+
 2020-07-22
 ==========
 
