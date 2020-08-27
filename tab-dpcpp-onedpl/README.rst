@@ -5,7 +5,6 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Upcoming Topics
 ===============
 
-* Aug 26: Extension mechanism
 * Sept 23: Function pointers
 * Oct 28: End of year review
 * November: SC'20
@@ -35,7 +34,7 @@ Attendees:
 * Xinmin Tian (Intel)
 * Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
 * Christian Trott (Sandia National Laboratory)
-* Xinmin Tian (Intel)
+* Greg Lueck (Intel)
   
 Opens
 
@@ -45,7 +44,7 @@ Spec: Robert Cohn
   <https://spec.oneapi.com/versions/0.9/oneAPI-spec.pdf>`__ of oneAPI
   spec
 
-Extensions: Greg Lueck
+Extensions Mechanism: Greg Lueck
 
 * `Slides <presentations/2020-08-26-TAB-Extension-Mechanism.pdf>`__
 * Extension mechanism
@@ -56,11 +55,14 @@ Extensions: Greg Lueck
 
       * When moving between vendors, you have to recompile, even
         without extensions
+      * It's the job of the implementor to ensure vendor-specific code
+      	runs on targeted hardware
 
     * Needs more verbose guidance on how to make changes that are
-      source compatible: conversions, constructors, overload sets
+      source compatible: conversions, constructors, overload sets.
+      Further discussion to happen offline.
 
-    * compile-time warnings would be useful
+    * Compile-time warnings would be useful
       
 * Optional features of devices
 
@@ -69,20 +71,20 @@ Extensions: Greg Lueck
   * has() is passed aspect enum. Use if/template to handle absence of
     feature
 
-  * error handling
+  * Error handling
 
-    * throw runtime exception when using feature that is not supported
+    * Throw runtime exception when using a feature that is not supported
       by device
 
   * devconstexpr: constant when compiling for device
 
-    * discussion
+    * Discussion
       
-      * requires keyword, no longer C++
+      * If this uses a keyword, it's no longer C++
 
-	* could hide it in macro
+	* Could hide it in macro but that has other downsides
 
-      * issues about lambda capture, device compiler, types not being
+      * Issues about lambda capture, device compiler, types not being
         present when feature is not supported.
 
 
@@ -94,14 +96,16 @@ Local memory allocation: John Pennycook
 * group_local_memory allocates, returning multi_ptr
 * Discussion
 
-  * dynamically sized arrays
+  * Dynamically sized arrays
 
-    * only static, use accessor for dynamic
+    * Only static, use accessor for dynamic
 
   * Support for arrays (std::array) and type requirements
     (e.g. trivially destructible)
 
-    * arrays supported, only requirement is trivially destructible
+    * Arrays supported, only requirement is trivially destructible
+
+* Not enough time for full discussion, looking forward to further feedback here
 
 
 2020-07-22
