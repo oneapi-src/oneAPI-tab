@@ -1,0 +1,85 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2020-09-09
+==========
+
+Materials:
+
+* `Overview of oneAPI specification and process going forward <../presentations/2020-09-09_Slides.pdf>`__
+
+Attendees:
+
+* Robert Cohn (Intel)
+* Mehdi Goli (Codeplay)
+* Jeff Hammond (Intel)
+* Mark Hoemmen (Stellar Science)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Piotr Luszczek (UTK)
+* Spencer Patty (Intel)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+* Nichols Romero (ANL)
+* Edward Smyth (NAG)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Overall oneAPI specification and process going forward - Robert Cohn
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* Verified meeting series appears correctly on calendars (meeting every 4 weeks now).
+* Enabling RNG domain in open source oneMKL interfaces is in progress
+
+oneAPI Specification:
+
+* Robert Cohn is the editor for the oneAPI specification, which includes oneMKL.
+* Purpose of oneAPI specification: document design for stakeholders, implementers and users. Also useful for things like validation, documentation; the whole pipeline.
+* oneAPI spec contains 9 elements:
+
+1. DPC++ - programming model/language for oneAPI, based on SYCL with Intel extensions. Most of the oneAPI libraries have bindings in DPC++.
+2. oneDPL - standard library for DPC++. Very similar (or same, at times) as standard C++ library. Includes parallel STL as a way to express parallelism and executors that are extended to work with DPC++. Also has some parallel implementations of algorithms.
+3. oneDNN - primitives for deep learning, like convolution. High performance implementations that work on CPU or GPU.
+4. oneCCL - communication library for oneDNN; similar to MPI. Collective operations that are most valuable for deep learning.
+5. Level Zero - low level driver; sits above kernel mode driver. DPC++ runtime sits on top of Level Zero, and most of the other libraries sit on top of DPC++ runtime.
+6. oneDAL - library for data science; includes k-means, correlation, clustering, and other algorithms.
+7. oneTBB - Threading Building Blocks - CPU only library, but it does have support for coordinating computations that may be accelerated on devices. Underlying threading for many oneAPI libraries.
+8. oneVPL - video processing; includes encoding, decoding and others.
+9. oneMKL - math routines.
+
+Discussion on oneCCL:
+
+* What is the history of oneCCL?  It looks very similar to MPI, but slightly different.
+   * oneCCL used to be MLSL (Machine Learning Scalability Library).
+   * MLSL was created by some expert asynchronous MPI folks. It basically used MPI collective techniques, but was optimized more heavily for their needs and did not have to support all of the MPI standard.
+   * See `https://arxiv.org/abs/1801.08030 <https://arxiv.org/abs/1801.08030>`__ for paper on scaling for machine learning.
+
+Relationship of spec to product:
+
+* First product release of oneAPI implements oneAPI spec 1.0.
+* The products are a superset of the spec.  Things like OpenMP offload are not described by the spec but may be part of the product.
+
+Roadmap of spec:
+
+* Available in GitHub repository.
+* 1.0 to be published in October (at the latest).
+* Once 1.0 is done, it will not be changed (beyond editing updates).
+* Various elements have new features planned for oneAPI, after 1.0 version.
+* Just like with oneAPI v. 1.0, incremental versions will be published before the final version. Provisional 1.1 specs will be published quarterly. In about a year, oneAPI 1.1 will be published.
+
+Governance:
+
+* Governance for spec is very similar to how open source projects are managed.
+* There is a core team for each element. For oneMKL, it is Maria Kraynyuk and Spencer Patty.
+* Contribution to spec is open to anyone.
+* Core team membership today is currently all Intel, but is open to anyone based on history of contribution.
+
+Getting involved:
+
+* Continue participating in TAB.
+* Let Sarah Knepper know if you would like a blog post/article you write to be posted on `oneapi.com <https://www.oneapi.com>`__.
