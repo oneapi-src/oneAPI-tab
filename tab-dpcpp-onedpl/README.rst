@@ -10,6 +10,131 @@ Upcoming Topics
 * November: SC'20
 
 
+2020-09-23
+==========
+
+Attendees:
+
+* Robert Cohn (Intel)
+* Gergana Slavova (Intel)
+* Christian Trott (Sandia National Laboratory)
+* Ruyman Reyes (Codeplay)
+* Geoff Lowney (Intel)
+* Heidi Poxon (HPE)
+* James Brodman (Intel)
+* James Reinders (James Reinders Consulting LLC)
+* Mike Kinsner (Intel)
+* Pablo Reble (Intel)
+* Sergey Kozhukhov (Intel)
+* Jinpil Lee ()
+* Timmie Smith (Intel)
+* Ted Barragy (NAG Lead Computational Scientist supporting BP)
+* Ronan Keryell (Xilinx)
+* Roland Schulz (Intel)
+* John Pennycook (Intel)
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* Andrew Richards (Codeplay)
+* Greg Lueck (Intel)
+* Tom Deakin (University of Bristol)
+  
+Opens
+
+Extension naming: Greg Lueck
+
+* `Slides <presentations/2020-09-23-TAB-Function-pointers.pdf>`__
+* Prevent extension name conflicts for vendors/SYCL spec
+
+  * SYCL new features will initially appear as extensions
+
+* 3 options
+
+  * with methods for macros, free functions, members
+  * Considered
+
+    * verbosity
+    * similarity with past practice
+    * all caps looks like macro name
+
+* Option 1: All capitals
+* Options 2: Initial capital
+* Options 3: EXT prefix
+* Discussion
+
+  * Option 3 preferred by multiple people
+
+    * most consistent
+    * more clear to people, even if extension string is not obviously
+      an extension
+    * only 4 characters more, especially since it is an extension
+
+      * some things will remain extensions forever because they are
+        not suitable for standardization
+
+  * Still would like offline feedback on bad experiences with any of
+    the options.
+      
+Function pointers: Sergey Kozhukhov
+
+* `Slides <presentations/2020-09-23-TAB-Extension-Naming.pdf>`__
+* functions pointers important, need to be enabled in intel
+  implementation and SYCL spec
+* Today: not allowed in device code, want to relax this restriction
+* Usage in source code
+
+  * Implicit: usual C/C++ function pointers
+  * Explicit: wrapper around pointer
+
+* Options
+
+  * attributes vs wrappers
+  * part of function type
+
+* Intel past experience
+
+  * attributes, not part of type system
+  * difficulties in passing function pointers with different vector
+    variants
+
+* Option 1: use C/C++ function pointers
+
+  * every pointer created with default set of variants: e.g. linear,
+    uniform,
+
+* Discussion
+
+  * Concerned about generating multiple variants. A lot of code
+    generation. Is this really necessary, safe, clear how to implement
+    with compilers?
+
+    * Need it for virtual functions. Might need multiple variants for
+      device
+    * CUDA has bare-boned function pointer. Only usable in the context
+      where it is created (device, host).
+
+      * we would still need translation functions for passing function
+        pointers between host and device
+
+    * This is for SIMD. Need to know: vectorization factor (subgroup
+      size), mask/unmask. Writing SPMD, and want to use SIMD, need
+      called function to be in vector factor/mask
+
+  * Compiler must create variants and choose, how portable is this
+    between different compilers, different hardware?
+
+    * need to consider the use case, how performance are you willing to
+     sacrifice
+
+  * Is it debuggable, will it crash if you make a mistake
+
+  * want to see clearer use case descriptions
+
+  * are attributes part of overload resolution? No.
+
+  * needs more discussion
+
+    * use case, examples
+   
+
 2020-08-26
 ==========
 
@@ -122,7 +247,6 @@ Attendees:
 * David Beckingsale (Lawrence Livermore National Laboratory)
 * Geoff Lowney (Intel)
 * Hal Finkel (Argonne National Laboratory)
-* Heidi Poxon (HPE)
 * James Brodman (Intel)
 * John Pennycook (Intel)
 * Mike Kinsner (Intel)
