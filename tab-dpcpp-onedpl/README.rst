@@ -5,10 +5,146 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Upcoming Topics
 ===============
 
-* Sept 23: Function pointers
-* Oct 28: End of year review
+* Oct 28: Function pointers (continued)
 * November: SC'20
 
+
+2020-09-23
+==========
+
+Attendees:
+
+* Robert Cohn (Intel)
+* Gergana Slavova (Intel)
+* Christian Trott (Sandia National Laboratory)
+* Ruyman Reyes (Codeplay)
+* Geoff Lowney (Intel)
+* Heidi Poxon (HPE)
+* James Brodman (Intel)
+* James Reinders (James Reinders Consulting LLC)
+* Mike Kinsner (Intel)
+* Pablo Reble (Intel)
+* Sergey Kozhukhov (Intel)
+* Jinpil Lee (RIKEN)
+* Timmie Smith (Intel)
+* Ted Barragy (NAG Lead Computational Scientist supporting BP)
+* Ronan Keryell (Xilinx)
+* Roland Schulz (Intel)
+* John Pennycook (Intel)
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* Andrew Richards (Codeplay)
+* Greg Lueck (Intel)
+* Tom Deakin (University of Bristol)
+  
+Opens
+
+* Welcome to Jinpil Lee who joins us from RIKEN! Jinpil is participating
+  on the recommendation of Mitsuhisa Sato, RIKEN's deputy director.
+* oneAPI spec v1.0 will be live next week. Thank you all in helping us
+  achieve this tremendous milestone!
+
+Extension naming: Greg Lueck
+
+* `Slides <presentations/2020-09-23-TAB-Function-pointers.pdf>`__
+* Purpose of this proposal is to prevent name conflicts between vendors
+  extending the SYCL spec, and make the extension apparent in user code
+
+  * Expect that SYCL new features will initially appear as extensions
+
+* 3 options presented
+
+  * Covers methods for macros, free functions, and members
+  * Options took into account:
+
+    * Verbosity
+    * Similarity with past practice
+    * Similarity to macro name when all caps is used
+
+* Option 1: All capitals
+* Options 2: Initial capital
+* Options 3: EXT prefix
+* Discussion
+
+  * Option 3 preferred by multiple people. Reasons why:
+
+    * Most consistent
+    * Makes is clear this is an extension even if it's not obvious 
+      based on the extension string
+    * Any worry about additional verbosity?
+    
+      * Only 4 additional characters. Generally developers should be ok
+        exchanging the extra characters for clarity.
+      * More verbosity might be good here as it forces people to be deliberate
+        when using extensions
+      * For the vast majority, expect vendor-specific extensions to be temporary
+        as they will be rolled into the standard. It is understood some may remain
+	extensions forever because they are not suitable for standardization
+	but those will be mostly exceptions.
+
+  * Would like offline feedback on bad experiences with any of
+    the options.
+      
+Function pointers: Sergey Kozhukhov
+
+* `Slides <presentations/2020-09-23-TAB-Extension-Naming.pdf>`__
+* Function pointers are important, we want to enable them in Intel
+  implementation and SYCL spec
+* The options shown are high-level summary of many detailed discussions - 
+  mostly looking for feedback on the overall direction
+* Today, function pointers are not allowed in device code, want to relax this restriction
+* How are function pointers represented in source code? 2 options:
+
+  * (Option 1) Implicit: typical C/C++ function pointers
+  * (Option 2) Explicit: wrapper around pointer
+
+* Many options exist for language and implementation:
+
+  * Attributes vs wrappers
+  * Part of function type
+
+* Based on past experience with Intel compiler implementation:
+
+  * OpenMP: attributes were enabled but not part of type system
+  * Encountered difficulties in passing function pointers with different vector
+    variants
+
+* Option 1: use C/C++ function pointers
+
+  * Every pointer is created with default set of variants: e.g. linear,
+    uniform
+
+* Discussion
+
+  * Concerned about generating multiple variants. A lot of code
+    generation. Is this really necessary, safe, clear how to implement
+    with compilers?
+
+    * Need it for virtual functions. Might need multiple variants for
+      device.
+    * CUDA has bare-boned function pointer. Only usable in the context
+      where it is created (device, host).
+
+      * We would still need translation functions for passing function
+        pointers between host and device
+
+    * This is for SIMD. Need to know: vectorization factor (subgroup
+      size), mask/unmask. Writing SPMD, and want to use SIMD, need
+      called function to be in vector factor/mask.
+
+  * Compiler must create these variants and make choices as it compiles/builds
+    binary, how portable is this between different compilers, different hardware?
+
+    * Not an easy answer, also need to take ease of debugging into account - does it
+      crash when it fails?
+    * Each use case should be considered, including trade-offs for performance
+
+  * Are attributes part of overload resolution? No.
+  * Option 2 is really for non-virtual functions but overall direction might be to
+    do a hybrid approach
+  * Need more discussion on this topic. Bring back to October meeting.
+  
+    * Include more examples, clearer use case descriptions
+    
 
 2020-08-26
 ==========
@@ -122,7 +258,6 @@ Attendees:
 * David Beckingsale (Lawrence Livermore National Laboratory)
 * Geoff Lowney (Intel)
 * Hal Finkel (Argonne National Laboratory)
-* Heidi Poxon (HPE)
 * James Brodman (Intel)
 * John Pennycook (Intel)
 * Mike Kinsner (Intel)
