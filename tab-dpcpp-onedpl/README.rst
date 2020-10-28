@@ -9,6 +9,111 @@ Upcoming Topics
 * November: SC'20
 
 
+2020-10-28
+==========
+
+Attendees:
+
+* James Brodman (Intel)
+* Robert Cohn (Intel)
+* Tom Deakin (University of Bristol)
+* Jeff Hammond (Intel)
+* Ronan Keryell (Xilinx)
+* Alexey Kukanov (Intel)
+* Mike Kinsner (Intel)
+* Jinpil Lee (RIKEN)
+* Nevin Liber (???)
+* Geoff Lowney (Intel)
+* Greg Lueck (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
+* Heidi Poxon (HPE)
+* Pablo Reble (Intel)
+* James Reinders (James Reinders Consulting LLC)
+* Alison Richards (Intel)
+* Andrew Richards (Codeplay)
+* Ruyman Reyes (Codeplay)
+* Roland Schulz (Intel)
+* Gergana Slavova (Intel)
+* Timmie Smith (Intel)
+* Christian Trott (Sandia National Laboratory)
+
+Opens
+
+SYCL/oneAPI 1.0 Spec Feedback: Michael Kinsner
+
+* `Slides <presentations/2020-10-28-TAB-specFeedback.pdf>`__
+* oneAPI spec 1.0 released on 2020-09-28
+* SYCL 2020 provisional released
+* Feedback topics. Looking for things that are missing
+* Extensions table does not look up to date.
+    
+  * need to follow-up: SYCL provisional has parallel reduce, missing
+  * the more we can say, "this is just SYCL" the better
+
+* Want to know occupancy of kernels
+
+  * SYCL has mechanism for query, but what it queries is back-end
+    specific
+
+* better solution for trivially copyable issues
+
+  * everything you capture needs to be trivially copyable
+  * usm shared memory is one way to deal with it
+  * implies destructor does not do anything specific
+  * need memcopyable
+  * example: tuple unlikely to be trivially copyable
+  * move construct to device, move construct back
+  * want to have know that says on device, don't do anything in
+    destructor. not an issue for cuda/opencl
+  * Need follow-up meeting: This time next week.
+
+* static way to specify graphs of computations
+
+  * after data movement is optimized, only thing left is latencies
+  * can be 40% of latency
+  * streams/events not as effective as cuda graphs
+  * construct up front vs record/replay?
+
+    * Kokkos needs to be explicitly constructed
+    * explicit interface feels safer
+    * vulkan/cl have been looking at command lists
+    * level 0 has support for command lists
+    * some benefit for paramertizability
+    * timing of previous executions to guide allocation/placement
+
+* auto-tuning for tiling/nd-range/work group size
+
+  * using oneapi across GPU's/CPU's, do I have to write heuristics for every platform
+  * Kokkos has moved from heuristics to auto-tuning
+  * kokkos has auto feature that user lets kokkos choose parameters
+  * kernels can be called millions of time, auto-tuning in same run is
+    not a big deal
+  * not just work group, controlling occupancy: run at lower occupancy
+    to use less cache. 2.5x speedup by reducing occupancy
+  * need hint for parallel for and query to know what happened
+  * hint from user about whether auto-tuning might be worthwhile
+
+    * building a graph is one hint
+    * hint about tuning parameter, does not change semantics, versus
+      statements about barrier
+    * using property list
+    * lots of places where you hint
+
+* cooperative groups/barriers
+
+  * device barriers vs mpi-style every possibility
+  * kokkos not using because not sure it can be supported everywhere,
+    and might not be faster than forcing kernel stop/start. latencies
+    are problem and device runs at lower frequency.
+  * see going back to host is very expensive. wavefront algorithm.
+  * tried it for solvers, did not work
+  * prefer coarse-grain barriers because everything else will kill us
+
+* How to get more feedback on oneDPL, oneTBB?
+
+  * in this meeting or separate forum?
+    
+
 2020-09-23
 ==========
 
