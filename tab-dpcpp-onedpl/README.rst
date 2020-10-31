@@ -113,7 +113,7 @@ SYCL/oneAPI 1.0 Spec Feedback: Michael Kinsner
     are also a problem and the device runs at lower frequency.
   * Going back to host is very expensive. Could we use wavefront algorithm?
   * Tried it for solvers, did not work
-  * Prefer coarse-grain barriers because everything else will not work for us
+  * Prefer coarse-grain barriers because it is easier to support and barriers are just one among many sources of overhead
 
 * How can we get more feedback on oneDPL, oneTBB?
 
