@@ -5,9 +5,120 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Upcoming Topics
 ===============
 
-* Oct 28: Function pointers (continued)
 * November: SC'20
 
+
+2020-10-28
+==========
+
+Attendees:
+
+* James Brodman (Intel)
+* Robert Cohn (Intel)
+* Tom Deakin (University of Bristol)
+* Jeff Hammond (Intel)
+* Ronan Keryell (Xilinx)
+* Alexey Kukanov (Intel)
+* Mike Kinsner (Intel)
+* Jinpil Lee (RIKEN)
+* Nevin Liber (Argonne National Laboratory)
+* Geoff Lowney (Intel)
+* Greg Lueck (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
+* Heidi Poxon (HPE)
+* Pablo Reble (Intel)
+* James Reinders (James Reinders Consulting LLC)
+* Alison Richards (Intel)
+* Andrew Richards (Codeplay)
+* Ruyman Reyes (Codeplay)
+* Roland Schulz (Intel)
+* Gergana Slavova (Intel)
+* Timmie Smith (Intel)
+* Christian Trott (Sandia National Laboratory)
+
+SYCL/oneAPI 1.0 Spec Feedback: Michael Kinsner
+
+* `Slides <presentations/2020-10-28-TAB-specFeedback.pdf>`__
+* oneAPI spec 1.0 released on 2020-09-28; SYCL 2020 provisional released
+
+  * Thanks to TAB for their ongoing engagement
+  * Feedback provided has influenced both the DPC++ spec as well being fed into SYCL
+  
+* Specifically looking for directional feedback: items that are missing, that need more focus, or 
+  are going in the wrong direction
+* Extensions table in DPC++ spec section does not look up to date
+    
+  * oneAPI team to follow-up: e.g. SYCL provisional has parallel reduce but missing here
+  * The more we can say: "this is just SYCL", the better
+
+* Want to know occupancy of kernels
+
+  * Need to add the ability to set the global and local range in parallel_for range
+    not nd_range, and perhaps also to assert no barriers in nd_range parallel_for. 
+    Would this be harder for CPU?
+  * SYCL has mechanism for query, but what it queries is back-end
+    specific - need to add something at the user level
+
+* Better solution for trivially copyable issues
+
+  * Everything you capture needs to be trivially copyable but implies
+    destructor does not do anything specific
+  * Unified shared memory (USM) is one way to deal with it but 
+    it comes with penalties - need memcopyable solution
+  * Example: a tuple is unlikely to be trivially copyable
+  * Want the ability to have non-trivial destructors with byte-copyable objects
+  * Need follow-up meeting: this time next week
+
+* Static way to specify graphs of computations
+
+  * After data movement is optimized, only thing left is latencies
+  
+    * Up to 40% latencies, in some cases
+    
+  * What about streams/events? They're not as effective as CUDA graphs.
+  * Construct up front vs record/replay?
+
+    * In Kokkos, it needs to be explicitly constructed
+    * Having an explicit interface feels safer
+    * Vulkan/cl have been looking at command lists
+    
+      * Level 0 has support for command lists
+      
+    * Some benefit for paramertizability
+    * Would like to have timing of previous executions guide allocation/placement
+
+* Auto-tuning for tiling/nd-range/work group size
+
+  * Do I have to write heuristics for every platform when using oneAPI across GPU's/CPU's?
+  * Kokkos has moved from heuristics to auto-tuning, including an auto feature where users let
+    Kokkos choose parameters
+  * Kernels can be called millions of time, auto-tuning in same run is
+    not a big deal
+  * Not just work group, also want to control occupancy: run at lower occupancy
+    to use less cache. Could achieve 2.5x speedup by reducing occupancy.
+  * Need a hint for parallel_for and query to know what happened
+  * Want hints from the user about whether auto-tuning might be worthwhile
+
+    * Building a graph is one hint
+    * Hint about tuning parameter, does not change semantics, versus
+      statements about barrier
+    * Using property list
+    * Lots of places where you hint
+
+* Cooperative groups/barriers
+
+  * Considering device barriers vs mpi-style
+  * Kokkos is not using this because can't be sure it can be supported everywhere,
+    and might not be faster than forcing a kernel stop/start. Latencies
+    are also a problem and the device runs at lower frequency.
+  * Going back to host is very expensive. Could we use wavefront algorithm?
+  * Tried it for solvers, did not work
+  * Prefer coarse-grain barriers because it is easier to support and barriers are just one among many sources of overhead
+
+* How can we get more feedback on oneDPL, oneTBB?
+
+  * Should we continue to discuss in this meeting or a separate forum?
+    
 
 2020-09-23
 ==========
