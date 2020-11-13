@@ -36,7 +36,7 @@ Attendees:
 * Timmie Smith (Intel)
 * Christian Trott (Sandia National Laboratory)
 
-SYCL/oneAPI 1.0 Spec Feedback: Michael Kinsner
+SYCL/oneAPI 1.0 Spec Feedback: Roland Schulz, Michael Kinsner
 
 * `Slides <presentations/2020-10-28-TAB-specFeedback.pdf>`__
 * oneAPI spec 1.0 released on 2020-09-28; SYCL 2020 provisional released
