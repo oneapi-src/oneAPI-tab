@@ -1,0 +1,77 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2020-11-11
+==========
+
+Materials:
+
+* `Overview of oneMKL Vector Math domain <../presentations/2020-11-11_Slides.pdf>`__
+
+Attendees: 
+
+* Rachel Ertl (Intel)
+* Mehdi Goli (Codeplay)
+* Sarah Knepper (Intel)
+* Andrey Kolesov (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* Pat Quillen (MathWorks)
+* Nichols Romero (ANL)
+* Edward Smyth (NAG)
+* Andrey Stepin (Intel)
+* Shane Story (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Overview of oneMKL Vector Math domain - Andrey Stepin
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* oneAPI Developer Summit 2020: Nevin Liber will be participating on a panel discussion.
+* oneMKL specification v. 1.0 released.
+* RNG and BLAS domains available in oneMKL open source interfaces project.
+
+Overview of Vector Math (VM) Domain:
+
+* Vector math allows to accelerate the calculation of values of transcendental functions for vectors of different types, like float, double, and complex types.
+* There are different accuracies available which allow users to select between calculation speed and accuracy (up to close to correctly rounded results).
+* DPC++ interface based on C++, allows to perform the same capabilities of calculation on the same data types and same types of optimizations as the pre-existing C/Fortran APIs.
+* VM has a very nice capability of reporting numerical errors and fixing them on the fly if user desires.
+* For example, in calculating the inverse cumulative distribution function, a user may find that some values are outside of the domain of the specified inverse function. Such out-of-domain values can be fixed by the status code handler.
+
+VM APIs:
+
+* Classic C/Fortran APIs are very simple; accept vector length, input and output vectors. Same interface for OpenMP offload.
+* DPC++ interfaces have explicit SYCL queues, and either buffers or simple pointers (for USM).
+
+DPC++ Usage Models:
+
+* If user wants to calculate something more than just one function, the buffers handle the dependencies (building the directed acyclic graph).
+* For USM, the user needs to care about dependencies themselves.
+* USM API has a nice property that it can accept host pointers. If user has device pointers or shared pointers, they are also accepted.  But users need to care about setting explicit dependencies.
+* The utility of USM pointers seem to outweigh the convenience of the SYCL buffers.
+
+VM Error Handler:
+
+* Simple use case: calculate some functions and check there were no computational errors.
+* User can specify a special option via a flag.  If this flag is specified, the library will register all computational errors that are associated with a queue.
+* User also can ask for explicit computational status for every element, like in example 3. Then custom processing can be done to handle computational errors.
+* User can replace results that had some error status with a value that is appropriate; for example, replacing INF with FLT_MAX.
+
+Considering future extensions for VM:
+
+* Strided API, which calculates a transcendental function with some stride. For this, USM makes sense, but buffer may not.
+* Thinking of extending VM to accept std::vector.
+* Also looking forward to improving the computational performance of vector math by allowing so-called kernel fusion. User will program some sequence of operations, and those operations will be fused in that the GPU will not produce additional loads/stores between functions.
+
+* For the strided interface - will that involve a user-provided iterator, or an array of strides?
+   * It is pretty limited in that it just has an increment. Basically, it increments the index by a fixed value, and you can place the outputs based on a different increment. The number of calculations is regulated by the length of the vector.
+   * Coming from the batched linear algebra world, where you have a batch of matrices, the matrices may not be coming from one big buffer unless the matrices themselves are strided in the same manner.
+
+* Is there functionality to compute sum of absolute value for complex numbers?
+   * It does not have such operation, but it could be extended to have this.
