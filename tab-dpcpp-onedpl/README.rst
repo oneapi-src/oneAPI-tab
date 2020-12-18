@@ -5,8 +5,78 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Upcoming Topics
 ===============
 
-* November: SC'20
+* Done for 2020. Will post future topics in early 2021.
 
+2020-12-16
+==========
+Attendees:
+
+oneAPI - how we got here, where are we going: Geoff Lowney
+
+* `Slides <presentations/...>`__
+
+Small group discussions on 3 major themes identified in Geoff's presentation
+
+* Irregular Parallelism: led by Mike Kinsner & James Brodman
+
+  * Can we look to OpenMP? Mark up the work and later decide who does it.
+  * Dynamic dispatch but need to consider:
+  
+    * Chicken and egg
+    * Is this the right abstraction or is there a better option?
+    * Is a kernel too much?
+    * Do we need a smaller "task"?
+
+  * Consider cross lane operations to help dynamically remap/move work. Do we need better
+    ways to detect this?
+  * Can cooperative groups help here? Is converged control flow restriction too limiting?
+  * Tasking has been one approach
+  
+    * Granularity/complexity important - if it's too hard, an application might not use it
+
+
+* NUMA: led by Xinmin Tian
+
+  * `Slides <presentations/...>`__
+  * Places (an abstraction) is a reasonable abstraction for NUMA affinity control
+  * The C++ standard committee executor WG is investigating NUMA support as well 
+  * Ease-of-use considerations:
+  
+    * How to present NUMA control / usage model to users is very important for ease of use
+    * A big customer prefers a simpler method for applications w.r.t NUMA domains usage.
+      User expects implicit NUMA-aware support for applications cross-tile.
+    * We may need high abstractions such as “spread” and “close” for programmers
+    * Also need to support fine-level control for ninja programmers with a good mirror to architectural hierarchy
+    * GPU (HW and driver) may support a “fixed mode” for programmers on NUMA thread-affinity control
+
+  * Performance:
+  
+    * TensorFlow uses and supports a high-level control of NUMA domains for TF performance
+    * Kokkos primarily uses OpenMP environment variables to get ~10x performance for some Kokkos users
+    * Good thread-affinity control is tied to implementation specifics
+
+  * Scheduling:
+  
+    * How to support NUMA control has impact on portability and scheduling. Explicit NUMA control is served better in applications.
+      Use the subdevice (tile) as a GPU (a NUMA domain), then, the scheduling happens in the tile, which minimizes NUMA impact
+      but is a bit more work for users.   
+    * DPC++ (Gold) started with a high level control DPCPP_CPU_CU_AFFINITY={master | close | spread} for CPU.
+      There are scheduling implications as well for thread-data affinity.
+    * Need to give people an easy mode that works. Tying data to tasks is key: if we can design something where
+      programmers say "Here are my data dependencies, please schedule this in a way that gets good performance"
+      we'll have more luck than if we ask nonexperts to reason about things like whether pages should be interleaved
+      and the granularity of thread scheduling.
+
+* Distributed computing: led by Jeff Hammond
+
+  * Preference for send-recv, particularly in stencil codes
+  * TensorFlow doesn’t use MPI but we've reimplemented all of the MPI collective algorithms in MeshTensorFlow
+  * What is the memory consistency model?  Assume memory consistency only at kernel boundaries.  We did
+    distributed GPU in Kokkos already and it works great on DGX but may not apply in other cases.
+  * Higher level abstractions are important but hard.  It’s nice to not have to implement the entire STL and start small.
+  * Still upset at MPI standard dropping C++ bindings.
+  * Getting things into ISO C++ is a huge pain.
+  * MPI-3 RMA is amazing. Should we consider as similar model in DPC++?
 
 2020-10-28
 ==========
