@@ -11,9 +11,38 @@ Upcoming Topics
 ==========
 Attendees:
 
+* Alexey Kukanov (Intel)
+* Gergana Slavova (Intel)
+* Xinmin Tian (Intel)
+* Sanjiv Shah (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
+* James Reinders (Intel)
+* Mark Hoemmen (Stellar Science)
+* Piotr Luszczek (University of Tennessee, Knoxville)
+* Christian Trott (Sandia National Laboratory)
+* Nevin Liber (Argonne National Laboratory)
+* Marius Cornea (Intel)
+* Michael Kinsner (Intel)
+* Edward Smyth (Numerical Algorithms Group (NAG))
+* Sarah Knepper (Intel)
+* James Brodman (Intel)
+* Geoff Lowney (Intel)
+* Pablo Reble (Intel)
+* Mehdi Goli (Codeplay)
+* John Pennycook (Intel)
+* Roland Schulz (Intel)
+* Timmie Smith (Intel)
+* Shane Story (Intel)
+* Maria Kraynyuk (Intel)
+* Jeff Hammond (Intel)
+* Nichols Romero (Argonne National Laboratory)
+* Penporn Koanantakool (Google)
+* Alison Richards (Intel)
+* Robert Cohn (Intel)
+
 oneAPI - how we got here, where are we going: Geoff Lowney
 
-* `Slides <presentations/...>`__
+* `Slides <presentations/2020-12-16-TAB-oneAPI-year-one.pdf>`__
 
 Small group discussions on 3 major themes identified in Geoff's presentation
 
@@ -37,7 +66,7 @@ Small group discussions on 3 major themes identified in Geoff's presentation
 
 * NUMA: led by Xinmin Tian
 
-  * `Slides <presentations/...>`__
+  * `Slides <presentations/2020-12-16-TAB-DPCPP-NUMA-Discussion.pdf>`__
   * Places (an abstraction) is a reasonable abstraction for NUMA affinity control
   * The C++ standard committee executor WG is investigating NUMA support as well 
   * Ease-of-use considerations:
