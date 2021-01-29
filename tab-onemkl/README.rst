@@ -13,4 +13,6 @@ Meeting notes:
 | `August 12, 2020 <minutes/2020_08_12_Minutes.rst>`__
 | `September 09, 2020 <minutes/2020_09_09_Minutes.rst>`__
 | `November 11, 2020 <minutes/2020_11_11_Minutes.rst>`__
+| `December 16, 2020 <../tab-dpcpp-onedpl/README.rst>`__
+| `January 27, 2021 <minutes/2021_01_27_Minutes.rst>`__
 

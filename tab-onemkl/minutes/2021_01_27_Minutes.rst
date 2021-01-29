@@ -1,0 +1,128 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2021-01-27
+==========
+
+Materials:
+
+* `Overview of oneMKL Batched Linear Algebra <../presentations/2021-01-27_Slides.pdf>`__
+
+Attendees:
+
+* Marius Cornea (Intel)
+* Pavel Dyakov (Intel)
+* Rachel Ertl (Intel)
+* Mehdi Goli (Codeplay)
+* Mark Hoemmen (Stellar Science)
+* Louise Huot (Intel)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* Spencer Patty (Intel)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+* Nichols Romero (ANL)
+* Edward Smyth (NAG)
+* Shane Story (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Overview of oneMKL Batched Linear Algebra - Louise Huot and Rachel Ertl
+* Wrap-up and next steps
+
+Overview of Batched Linear Algebra:
+
+* We will go over support for batched linear algebra in the oneMKL specification as well as some extensions being considered.
+* Batching: computes multiple independent operations.
+* Currently support batch functionality for some BLAS and LAPACK functions, as well as all DFTs (out of scope).
+* 2 different batch APIs: group and strided.
+
+  * Group takes independent pointers for each input matrix/vector.
+  * Strided API is less flexible because it allows for only one size of computation, and all matrices have to be stored in the same buffer.
+
+Group API in detail:
+
+* A group gathers all computations with identical parameters, but all matrices/vectors are different.
+* Two extreme scenarios: 1 group and N groups.
+* Only supports USM API (not buffer API).
+* Follows same naming pattern as other functions in the oneMKL specification.
+* Because we are doing group APIs, all of the standard GEMM parameters become arrays, of size the number of groups for non-matrix parameter.
+* One entry in a (non-matrix) parameter array corresponds to one group.
+* Array of pointers for matrices, of size the sum of all the group sizes (total batch size). The `a` array contains pointers that point to the different `a_i` matrices.
+* Another visualization of the batch group computation is shown on slide 8, describing the layout of the `a` array.
+* After the first `group_size[0]` elements of `a`, it starts to point to matrices in the next group.
+* This is what had already been supported in Intel MKL on the CPU side for a number of years.
+
+Strided API in details:
+
+* The matrix/vector parameters are a key difference with strided APIs, compared to group APIs.
+* Strided API supports a single group, with fixed stride between successive matrices/vectors in the batch.
+* Zero stride can be used for input matrices/vectors, but not for output matrices/vectors.
+* Strided APIs supports both DPC++ buffer and USM pointers.
+* The API is very similar to non-batch counterparts, but with the addition of stride and batch size parameters.
+* Walk-through an example of USM version with strided API.
+* Batch of 100 matrices; the matrices happen to be square, though the general case is also supported.
+* Allocate memory for the matrices and pivot indices, as well as for the scratch space.
+* Do the computation in a try-catch, to be able to catch some exceptions.
+
+LAPACK Batch Exceptions:
+
+* The tables on slide 11 are taken from the oneMKL specification.  The left side shows common exceptions across all domains, the right side shows LAPACK-specific exceptions.
+* Highlighted in yellow are the batch errors.
+* We are trying to retain information captured in the `info` parameter that users of standard LAPACK would be familiar with (via `info()` method). We want to give information on where in the batch the error occurred (via `ids()` method), and details on the exceptions (via `exceptions()` method).
+* The multiple inheritance hierarchy of LAPACK exceptions, shown in slide 12, gives the user a choice of which exception to catch. The left side shows the hierarchy that starts with `std::exception` and is common across oneMKL domains. The right side shows the LAPACK-specific hierarchy that starts with `oneapi::mkl::lapack::exception`, and provides the `info()` method.
+* If user does not care about the particulars of the exception, can just catch `std::exception`.
+* If user wants to catch all oneMKL-related exceptions, can just catch `oneapi::mkl::exception`.
+* If user wants to focus on LAPACK exceptions, then catch exceptions from the LAPACK-specific hierarchy.
+
+Speculation about future interfaces:
+
+* Coming in C++23 is mdspan, so we may want to consider adding that on top of existing interfaces.
+* On the right side of slide 13, another option is having a matrix object that captures matrix data and state data, where the state data could include errors. But this could be problematic, since errors do not correspond with the matrix, but with the operation.
+* Agreement from the TAB that matrices do not have errors, operations do.
+
+Batch API extension requests:
+
+* Have scalars passed by reference instead of value.
+* Have different scalars (e.g., alpha for axpy) for each computation.
+* Problem with current API is that we cannot extend to support those two requests because there would be conflicting APIs with different semantics.
+* For example, for strided API where the scalar becomes a pointer, it would be of type fp_type* alpha, but expected to store only one scalar. But for the second requested extension, it would have the same type but would point to batch_size scalars.
+* Concern from TAB that having APIs with double* and double** may allow users to pass one when they meant the other; consider using `std::span` instead.
+
+* Potential approaches under consideration to support these requests:
+
+1. Naïve idea to add more inputs to provide size of arrays - not leaning toward this change since there are already lots of parameters and want to avoid introducing more parameters.
+2. Could have additional parameter for stride of each array - same drawback as previous.
+3. New entry point, but this adds new functions.
+4. Something similar to what was proposed by SLATE: pass a vector for each parameter, of size either 1/group_count/total_batch_size (as appropriate). Sizes and increments could be vectors, but would need to handle incompatibility between different sizes. Need additional overloads to handle scalars passed by reference.
+5. Have a matrix/tensor object encapsulation.
+
+* Why use overloading, with functions having the same name?  It makes debugging difficult.
+
+  * Overloading in oneMKL is used to handle different data types, when performing the same type of operation (e.g., gemm instead of dgemm). A similar rationale was applied for batch function naming.
+  * Concern from TAB that it can be hard to tell what is wrong when passing a lot of parameters and would suggest to use different names for the different types of batches. 
+
+* Why use `std::vector`?  `std::span` from C++20 is simply a pointer and a length.
+
+  * The problem with `std::vector` is that it would be a separate deep copy into device memory.
+  * Since the request for passing scalars by reference is for device data, this is a valid concern.
+  * `std::vector` prevents using device data and is overkill for what is needed.
+  * It would be easy to implement a `onemkl::span` if C++20 is not yet supported for DPC++, and it is preferable to using `std::vector`.
+
+Dense Linear Algebra Batch support in libraries:
+
+* Small summary of different batch dense linear algebra support in various libraries, and how the oneMKL specification currently covers the usage.
+* Would like to cover usage of different libraries on different hardware.
+* cuBLAS has two types of APIs, but they only allow for one group - more similar to the strided APIs. The non-strided APIs match the group API, but for only 1 group. cuBLAS also has some batched computations for lower or mixed-precision GEMM and other LAPACK routines.
+* MAGMA has even more batch coverage. Variable and fixed version - fixed can be covered by group API with group_count of 1. The variable batch can be covered by the group API as well, but with each group having size of 1.
+* MAGMA also has some functionality not covered in the oneMKL specification, mainly additional level-3 BLAS and some LAPACK.
+* rocBLAS has more extended support (additional BLAS).
+
+Future considerations for batch support in oneMKL specification:
+
+* More functions, supporting variable batch (different scalars for each computation, etc.), and possibly matrix/tensor object encapsulation.
