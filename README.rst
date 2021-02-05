@@ -25,3 +25,4 @@ Meeting notes:
 
 | `oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) <tab-dpcpp-onedpl>`__
 | `oneAPI Technical Advisory Board Meeting (oneMKL) <tab-onemkl>`__
+| `oneAPI Technical Advisory Board Meeting (AI) <tab-ai>`__
