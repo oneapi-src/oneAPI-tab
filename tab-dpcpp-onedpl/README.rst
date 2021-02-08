@@ -5,7 +5,9 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Upcoming Topics
 ===============
 
-* Done for 2020. Will post future topics in early 2021.
+* SYCL 2020 revisited & implementation priorities
+* Error handling
+* Function pointers revisited
 
 2020-12-16
 ==========
