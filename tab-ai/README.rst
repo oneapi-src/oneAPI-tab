@@ -2,9 +2,6 @@
 oneAPI Technical Advisory Board Meeting (TAB-AI) Meeting Notes
 ==============================================================
 
-Upcoming Topics
-===============
-
 2021-02-11
 ==========
 Attendees:
