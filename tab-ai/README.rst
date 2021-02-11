@@ -9,39 +9,25 @@ Upcoming Topics
 ==========
 Attendees:
 
-* Ben Ashbaugh, Intel
-* Krishna Bhuyan, Intel
-* Jayaram Bobba, Habana
-* Andrew Chen, Vastai Tech
-* Robert Cohn, Intel
-* Neel Dhamdhere, Intel
-* Mehdi Goli, Codeplay
-* Tim Harris, Microsoft
-* Atsushi Ike, Fujitsu
-* Kentaro Kawakami, Fujitsu
-* Rahul Khanna, Intel
-* Kazui Kimihiko, Fujitsu
-* Penporn Koanantakool, Google
-* Guoling Li, Vastai Tech
-* Hui Li, Intel
-* Jian Hui Li, Intel
-* Wei Li, Intel
-* Jeff McVeigh, Intel
-* Rajeev  Nalawadi, Intel
-* Nikolay Petrov,  Intel
-* Jun Qian, Vastai Tech
-* Shlomo Raikin, Habana
-* AG Ramesh, Intel
-* Sreenivasulu Rayanki, Intel
-* Leif Reinert, AWS
-* Ruyman Reyes, Codeplay
-* Alison Richards, Intel
-* Andrew Richards, Codeplay
-* Tatiana Shpeisman, Google
-* Shivani Sud, Intel
-* Guy Tamir, Intel
-* Zack Waters, Intel
-* Louis Zhang, Vastai Tech
+===============================  ===============================
+Ben Ashbaugh, Intel              Jeff McVeigh, Intel
+Krishna Bhuyan, Intel            Rajeev  Nalawadi, Intel
+Jayaram Bobba, Habana            Nikolay Petrov,  Intel
+Andrew Chen, Vastai Tech         Jun Qian, Vastai Tech
+Robert Cohn, Intel               Shlomo Raikin, Habana
+Neel Dhamdhere, Intel            AG Ramesh, Intel
+Mehdi Goli, Codeplay             Sreenivasulu Rayanki, Intel
+Tim Harris, Microsoft            Leif Reinert, AWS
+Atsushi Ike, Fujitsu             Ruyman Reyes, Codeplay
+Kentaro Kawakami, Fujitsu        Alison Richards, Intel
+Rahul Khanna, Intel              Andrew Richards, Codeplay
+Kazui Kimihiko, Fujitsu          Tatiana Shpeisman, Google
+Penporn Koanantakool, Google     Shivani Sud, Intel
+Guoling Li, Vastai Tech          Guy Tamir, Intel
+Hui Li, Intel                    Zack Waters, Intel
+Jian Hui Li, Intel               Louis Zhang, Vastai Tech
+Wei Li, Intel
+===============================  ===============================
 
 | oneAPI Welcome & Introduction – Jeff McVeigh
 | AI Machine Learning Accelerators – Wei Li
