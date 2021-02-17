@@ -29,7 +29,7 @@ Wei Li, Intel
 | oneAPI Welcome & Introduction – Jeff McVeigh
 | AI Machine Learning Accelerators – Wei Li :  `Slides <presentations/AI-TAB-Feb-2021.pdf>`__
 
-oneDNN on ARM – Kentaro Kawakami
+oneDNN on ARM – Kentaro Kawakami : `Slides <presentations/oneAPI_development_of_oneDNN_for_Armv8-A_SVE_20210210_v4.pdf>`__
 
 * How can we use Mesh TF widely to larger user base?
 
