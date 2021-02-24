@@ -5,16 +5,18 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Upcoming Topics
 ===============
 
-* SYCL 2020 revisited & implementation priorities
+* [March 24] SYCL 2020 revisited & implementation priorities continued
+* [April 28] oneDPL range-based & async APIs
 * Error handling
 * Function pointers revisited
+* [2nd half 2021] oneDPL C++ standard library support
 
 2021-2-24
 =========
 
 Attendees:
 
-* Aksel Simon Alpay
+* Aksel Simon Alpay (Heidelberg University)
 * David Beckingsale (Lawrence Livermore National Laboratory)
 * Robert Cohn (Intel)
 * James Brodman (Intel)
@@ -34,98 +36,109 @@ Attendees:
 * Tom Deakin (University of Bristol)
 * Ronan Keryell (Xilinx)
 * Alison Richards (Intel)
-* John Melonakos (ArrayFire)
 * Christian Trott (Sandia National Laboratory)
-* Stefan (ArrayFire)
-* Umar Arshad
+* John Melonakos (ArrayFire)
+* Stefan Yurkevitch (ArrayFire)
+* Umar Arshad (ArrayFire)
 * Ruyman Reyes (Codeplay)
 * Simon P Garcia de Gonzalo
-* Pradeep Garigipati
+* Pradeep Garigipati (ArrayFire)
+* Andrew Richards (Codeplay)
   
-SYCL 2020
----------
+SYCL 2020 implementation priorities
+-----------------------------------
 
+* `Slides <presentations/2021-02-24-TAB-dpcpp-implementation-prioritization.pdf>`__
 * Need your feedback on prioritizing implementation of SYCL 2020
   features for upstream LLVM
 * Atomics
 
-  * Robert missed the questions from Christian.
+  * Could AddressSpace argument be generated at runtime? Other implementations
+    have not used it.
     
-  * limitations on arbitray size atomics? Need to go beyond 64?
+    * Perhaps can consider a basic version of atomic_ref without it
+    
+  * Limitations on arbitray size atomics? Do we need to go beyond 64?
 
-    * Yes, complex double.
+    * Yes, need it to support complex double.
 
 * Subgroups
 
   * How do we handle namespace changes and existing code?
 
-    * We will have both for a period of time, eventually DPC++
-      extension will go away.
+    * We will have both for a period of time. Eventually DPC++
+      extension will be deprecated.
 
 * Group Algorithms
 
-  * What are the restrictions on where you call the API's, especially
+  * What are the restrictions on where you call the APIs, especially
     nested loops?
 
     * Designed to be called from ndrange parallel. Cannot be called in
       hierarchical parallelsim (parallel for work group, parallel for
-      work item)
+      work item).
 
-    * Could it work at work-group scope? We have it in hipsycl.
+    * Could it work at work-group scope? We have it in hipSYCL.
 
     * Pennycook to follow-up offline
 
-* Sub-group Algorithms
+* Sub-group Algorithms: no discussion, check slides for details
 * Reductions
 
-  * Feedback on which components of reductions relative to others? e.g. mulitple reductions
+  * Do you support multiple reductions? Limited support only. For example,
+    no more than one reducer per kernel is allowed.
 
-  * Even if ndspan gets into 23, and we are still on 17?
+  * What happens if ndspan gets into C++23 but we are still on C++17?
 
     * Like span (C++20), we pre-adopt, eventually it becomes std::span
 
   * Why is parallel_for without explicit work-group size challenging?
 
     * Implementations have heuristics for work-group size. Can't use
-      same heuristics because of other constraints like constraints on
+      same heuristics because of other limitations: constraints on
       shared memory, etc.
 
-  * Reduction code is 2/3 of the CUDA backend in Kokkos
+  * Reduction code is 2/3 of the CUDA backend in Kokkos. It's important
+    to have reductions in the standard - same code has failed by simply
+    moving to a different version of the same hardware platform in the past.
 
-  * Any performance testing with span reductions? Experience of f
-    going beyond 8 performance falls apart and you are better off
+  * Any performance testing with span reductions? Past experience has shown
+    that performance falls apartn when going beyond 8, you are better off
     doing scalar.
 
-  * Reductions aren't guarantee to be deterministic? Right.
+  * Reductions aren't guaranteed to be deterministic? Right.
 
-* Group Mask
-* Accessor Changes
+* Group Mask: no discussion, check slides for details
+* Accessor Changes: no discussion, check slides for details
 * Work-group local memory
 
   * What is the rationale for using a function instead of wrapper
-    type? Similar feature in hipscyl.
+    type? Similar feature in hipSYCL but implemented with wrapper.
 
-    * We want to align for next spec version. thread local was
-      closest. Did not want keyword. Thought wrapper type was
-      confusing for scope & visibility. Restrictions on where you can
+    * Thread local was closest. Did not want keyword. Thought wrapper type was
+      confusing for scope & visibility and has restrictions on where you can
       put it. Can't use as temporary. Looks like it is per work-item,
       but isn't.
+    * We want to align on function vs. wrapper for next spec version
+      (Roland will follow-up with Aksel)
 
-* Multi_ptr
-* heterogenous device
+* Multi_ptr: no discussion, check slides for details
+* Heterogenous device
 
   * Is this a const expr function?
 
     * No. Only known at runtime.
 
   * Still looking at dispatching on the device, this is host dispatch.
-* Kernel bundles (did not present, will do next time)
-* Describing things that are not fully implemented, may be
-  partial. Looking for prioritization.
-* How do you want the feedback?
+  
+* Did not finish the remainder - will bring this discussion back in March
 
-  * Opening issues on `llvm github`_ is best or email to tab members
-    OK.
+  * Focused on describing items that are not fully implemented yet.
+    Looking for prioritization from this group on what to do first.
+    
+* How should feedback be submitted?
+
+  * Opening issues on `llvm github`_ is best. Ok to also use email to TAB members.
     
 .. _`llvm github`: https://github.com/intel/llvm
 
