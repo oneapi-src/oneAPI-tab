@@ -9,6 +9,126 @@ Upcoming Topics
 * Error handling
 * Function pointers revisited
 
+2021-2-24
+=========
+
+Attendees:
+
+* Aksel Simon Alpay
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* Robert Cohn (Intel)
+* James Brodman (Intel)
+* Michael Kinsner (Intel)
+* Alexey Kukanov (Intel)
+* Nevin Liber (Argonne National Laboratory)
+* Geoff Lowney (Intel)
+* Greg Lueck (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
+* John Pennycook (Intel)
+* Pablo Reble (Intel)
+* James Reinders (Intel)
+* Roland Schulz (Intel)
+* Gergana Slavova (Intel)
+* Timmie Smith (Intel)
+* Xinmin Tian (Intel)
+* Tom Deakin (University of Bristol)
+* Ronan Keryell (Xilinx)
+* Alison Richards (Intel)
+* John Melonakos (ArrayFire)
+* Christian Trott (Sandia National Laboratory)
+* Stefan (ArrayFire)
+* Umar Arshad
+* Ruyman Reyes (Codeplay)
+* Simon P Garcia de Gonzalo
+* Pradeep Garigipati
+  
+SYCL 2020
+---------
+
+* Need your feedback on prioritizing implementation of SYCL 2020
+  features for upstream LLVM
+* Atomics
+
+  * Robert missed the questions from Christian.
+    
+  * limitations on arbitray size atomics? Need to go beyond 64?
+
+    * Yes, complex double.
+
+* Subgroups
+
+  * How do we handle namespace changes and existing code?
+
+    * We will have both for a period of time, eventually DPC++
+      extension will go away.
+
+* Group Algorithms
+
+  * What are the restrictions on where you call the API's, especially
+    nested loops?
+
+    * Designed to be called from ndrange parallel. Cannot be called in
+      hierarchical parallelsim (parallel for work group, parallel for
+      work item)
+
+    * Could it work at work-group scope? We have it in hipsycl.
+
+    * Pennycook to follow-up offline
+
+* Sub-group Algorithms
+* Reductions
+
+  * Feedback on which components of reductions relative to others? e.g. mulitple reductions
+
+  * Even if ndspan gets into 23, and we are still on 17?
+
+    * Like span (C++20), we pre-adopt, eventually it becomes std::span
+
+  * Why is parallel_for without explicit work-group size challenging?
+
+    * Implementations have heuristics for work-group size. Can't use
+      same heuristics because of other constraints like constraints on
+      shared memory, etc.
+
+  * Reduction code is 2/3 of the CUDA backend in Kokkos
+
+  * Any performance testing with span reductions? Experience of f
+    going beyond 8 performance falls apart and you are better off
+    doing scalar.
+
+  * Reductions aren't guarantee to be deterministic? Right.
+
+* Group Mask
+* Accessor Changes
+* Work-group local memory
+
+  * What is the rationale for using a function instead of wrapper
+    type? Similar feature in hipscyl.
+
+    * We want to align for next spec version. thread local was
+      closest. Did not want keyword. Thought wrapper type was
+      confusing for scope & visibility. Restrictions on where you can
+      put it. Can't use as temporary. Looks like it is per work-item,
+      but isn't.
+
+* Multi_ptr
+* heterogenous device
+
+  * Is this a const expr function?
+
+    * No. Only known at runtime.
+
+  * Still looking at dispatching on the device, this is host dispatch.
+* Kernel bundles (did not present, will do next time)
+* Describing things that are not fully implemented, may be
+  partial. Looking for prioritization.
+* How do you want the feedback?
+
+  * Opening issues on `llvm github`_ is best or email to tab members
+    OK.
+    
+.. _`llvm github`: https://github.com/intel/llvm
+
 2020-12-16
 ==========
 Attendees:
