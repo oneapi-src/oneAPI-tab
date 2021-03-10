@@ -1,0 +1,163 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2021-02-24
+==========
+
+Materials:
+
+* `Overview of oneMKL Sparse BLAS <../presentations/2021-02-24_Slides.pdf>`__
+
+Attendees:
+
+* Mehdi Goli (Codeplay)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* Spencer Patty (Intel)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+* Nichols Romero (ANL)
+* Edward Smyth (NAG)
+* Julia Sukharina (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Overview of oneMKL Sparse BLAS - Spencer Patty
+* Wrap-up and next steps
+
+Overview of Sparse BLAS:
+
+* We will start by looking at the current support seen in many different sparse BLAS libraries, mainly focused on GPUs.
+* There are a number of different sparse matrix format styles. The most common one to start with is Compressed Sparse Row (CSR) or Compressed Sparse Column (CSC).
+* There are other formats: coordinate (COO); block compressed sparse row (BSR) - each block is a dense matrix; ELLPACK - think of it as a data machine and put it into format suitable for that. It is also sometimes useful to have a dense format, since not everything is always sparse.
+* For oneMKL DPC++ SpBLAS APIs, we are building out functionality for Compressed Sparse formats, and we are also looking at BSR.  We are open to supporting the ELLPACK format or others, if that is what the community wants or as needs arise.
+
+High level overview of CSR:
+
+* If you have a sparse matrix, which is defined as a matrix with lots of zeros, in some cases it makes sense to change how you store it. In CSR, you have row pointers (points to where the row starts as an offset into the other arrays), column indices, and the actual values.  Two are vectors of integer types, one of floating point.  In CSC, you switch the role of row pointer and column indices - compressing now by columns.
+
+Analysis-Execution Strategy:
+
+* In Sparse BLAS development, we implement an Analysis-Execution (or Inspection-Execution) strategy. This is because they are often used in iterative environments, when you apply the same operation many times in a row.
+* The idea is to spend a little bit of time up front, to do analysis and preprocessing - changing the internal format of the matrix, analyzing the sparsity structure, etc., to set yourself up to a more performant compute kernel. The cost to do this is amortized over the many calls to the computation.
+* The analysis step can be skipped.  The user needs to decide whether or not it makes sense to do analysis and execution.
+* In trsv (triangular solve), it is only via the analysis stage that it is possible to have parallelism enabled. Because of sparsity patterns, the inherent parallelism is not easily peeled at run time.
+* This is the paradigm we are working under with the design of oneMKL. Most of the other sparse BLAS libraries do the same.
+
+Naming Strategy:
+
+* Using oneapi::mkl::sparse namespace.
+* Strategy so far has been to mirror the dense BLAS names where it makes sense; for example, having a oneapi::mkl::sparse::gemv.
+* GEMM here means sparse*dense.  We are still undecided what to call sparse * sparse: currently leaning towards SpGEMM.
+* We do prefer overloading of APIs to templating, for the different integer and floating point types, as well as USM/buffer overloads. Main difference between buffer and USM: buffer returns void, while USM returns a SYCL event (and takes a vector of them as dependencies).  Uses lower camel case, consistent with other domains in oneMKL.
+
+* What about parameters to these functions, like transpose?
+
+  * They are all enums.
+
+APIs for the initialization and release steps:
+
+* We use an opaque handle to store the matrices. This allows each implementation to store its own optimized format - closed to users.  You create a handle and give it the data.  For example, in set_csr_data, you pass in the matrix handle, number of rows and columns, whether it uses 0- or 1-based indexing, and then the three needed arrays.
+* There is a set_matrix_property not yet defined, but it could be useful for the user to tell oneMKL that the column indices are sorted.
+* Key point: the current types we support are 32-bit and 64-bit integers, and 32-bit and 64-bit real and complex floating point types. We are open to supporting other types as needed.  For example, in deep learning applications there may be interest in having 16-bit floating point types.  
+* Things like transpose and whether it is unit or non-unit diagonal are enums.
+
+* Does symmetric mean values or structure?
+
+  * It means values.  We could add another flag for structure symmetry, but currently have no plans to do so. If you think there is value, we can discuss it.
+
+* What about supporting conjugate or Hermitian?
+
+  * Good question; this can add a lot of different combinations.
+  * You could split the concept: Are you conjugate? Are you transpose?
+  * No problem to set multiple properties.
+
+* For supporting symmetric, does it depend on which triangle (upper or lower)?
+
+  * The symmetric property would be assuming you were given the entire matrix data and it is symmetric, and you're just setting an informational flag. Think of it as hints to optimizers. The data is in here and you can skip the step of making it symmetric.
+  * On the other hand, the api SY{MV} with a fill mode lower or upper implies that we should use the data from the lower or upper part and use it as if the matrix were symmetric (even though in general, we are only using the data and pattern from that half).  The other part of data does not have to be present, but if it is you could also set the matrix_property::is_symmetric as a hint to optimizers. 
+
+* Does your CSR format support duplicates within the row?  Or do you need to avoid this?
+
+  * From the specification point of view, the API should support this. That is, it should allow duplicates, but it is up to each library implementation.  Currently the Intel oneMKL product probably does not support duplicates.
+  * This could be another useful property to be able to set: indices are unique vs there may be duplicates. But duplicates should be handled whether or not the property is set.
+
+* As a philosophical question, what is symmetry?  If I have a NaN above the diagonal, is it symmetric or not? You cannot say they are equal - would need to compare bit patterns to say they are both NaNs. In dense BLAS/LAPACK - for symmetry, it does not matter because you store the whole matrix but just access half.  How do you compare symmetry in presence of NaNs?
+
+  * Realistically you will end up here. Someone will put a 0 as a value, then scale by a singular matrix. And you get a NaN.  So then what happens?
+  * We cannot throw exceptions - we need to handle them and propagate the NaNs and infinities, handle underflows and overflows. There is a special way to find norms and handle pivots. These are the expectations of what we are asked to do.
+  * We need to think about how to codify this in a specification.
+
+* Also we are asked by users to be lenient about the definition of symmetric/Hermitian.  Consider symmetric matrix multiply (symm): the matrix is real, but I am asking for Hermitian transpose (rather than just transpose).
+
+Currently supported APIs:
+
+* op(A) is one of A, A-transpose, or A-Hermitian.  The matrix type in the API is just a general matrix.
+* In trmv and symv you specify if it is the lower or upper triangle that you want to be used (there is a flag that specifies which part of the data to use).
+* With symv and an op that can be nothing, transpose, or Hermitian, need to determine if this would cover the complex case.
+
+* In CSR, you would need to optimize at the beginning to handle transpose efficiently, correct?
+
+  * Yes, that is why we need the analysis steps.
+
+* Why is there no optimize_symv?
+
+  * It is not defined yet because we have not needed it yet. From a spec level, though, it makes sense to have all of the analysis-related APIs.  It may be that they do nothing in an implementation, but we should have the APIs. 
+
+* Do the triangular functions (trmv, trsv) allow you to specify unit diagonal?
+
+  * Yes, unit and non-unit.
+
+* What is the difference between gemv and gemvdot?
+
+  * gemv does: y = alpha * op(A) * x + beta * y.  gemvdot does this and additionally returns the dot product of y and x. This can show up in preconditioners, so gemvdot provides a fused kernel to do both steps.  The dot should be interpreted as the inner product under the norm you are using (d=x' * y, if alpha=1 and beta=0). We do not have a way to say use the non-conjugate dot for complex data.
+  * As you are computing the matrix-vector multiply, you can also compute the dot product.
+
+* Do you use optimized GEMV for GEMM?
+
+  * That is an internal decision for the library implementation.  If x is 1 or 2 rows, probably then yes.
+
+* Should there be an optimize_gemm as well?
+
+  * Yes, for all of the execution stage there should be an analysis stage.
+
+* If the optimize_gemv is not doing anything now, why introduce it now?
+
+  * Originally we thought we needed it, but currently we do not need it.  But there may be some optimizations to put here.
+  * If you are targeting Intel CPUs/GPUs/FPGAs - you likely will need it for at least one of these hardware.  Need to train the user early to call analysis stage.
+
+* If the optimize routines do things like re-organizing the matrix, is it doing it specifically for that operation? Will different optimizations undo some optimizations for other functions?
+
+  * We never overwrite user data. If we need to make a change, we make a copy, unless there is an explicit description in the API that the user data will be changed.
+
+GEMV Example:
+
+* There is a handle, scalars, transpose flag that is an enum (non-transpose, transpose, or conjugate-transpose - could be extended to others as needed).
+* Because we are using a matrix handle (hidden type), all of the matrix-related data is encompassed. There are not a ton of parameters.
+
+* Does this API permit mixing double and float? There is no float-ness of the matrix in the API.
+
+  * From a spec level - we do not specify this.
+  * This is an area where a template may help compared to an overload. The matrix_handle_t, alpha, x, etc., could all be templated on a float type.
+  * This could potentially come up with multi-precision (though currently that is more dominated by dense linear algebra).
+  * The way the MAGMA team envisions going forward: you store your matrix in one form and compute on it in another, and the conversion is on the fly while the data is available in registers (costs nothing). The storage for matrices is in one precision and the compute is in another.
+  * The compute precision could be based on the output type. This could be encoded in the sparse matrix handle.
+
+Forward looking - sparse * sparse:
+
+* Two variants: one with sparse output; one with dense output. 
+* It may be useful to also perform a transpose-type operation on C, though that was not previously done in Intel oneMKL C/Fortran sparse BLAS.  That would allow dropping a transpose in case of B^T*A^T vs (A*B)^T.
+* It is important to have dense operations on devices. Accelerators do not like triangular matrices because of the additional checks for diagonal. If you fill in 0s, you can do computations much faster even though you are operating on 0s. The outside interfaces are triangular matrices, while internal may have an extra output buffer.
+
+Forward looking - additional functionality:
+
+* SDDMM (sampled dense-dense matrix product) comes from TensorFlow-type operations: perform matrix-matrix multiplication and sample it according to the density pattern of B, and store the result as a sparse matrix.
+* The board highly recommends TRSM. GEMVShift may be useful for eigensystems.
+* No reason yet to support sparse vectors; they show up in sparse solvers, and make sense for graph processing. Coordinate format may be best.
+* Could even do hyper-sparse format, with an extra layer of indirection for the row pointers.
+* Currently adding functionality based on known needs.  Could alternatively determine the core fundamental set of sparse BLAS needs and include all of that in the specification.
