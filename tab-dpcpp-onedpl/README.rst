@@ -11,6 +11,94 @@ Upcoming Topics
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
 
+2021-3-24
+=========
+
+Attendees:
+
+* Aksel Simon Alpay (Heidelberg University)
+* James Brodman (Intel)
+* John Melonakos (ArrayFire)
+* Michael Kinsner (Intel)
+* Alexey Kukanov (Intel)
+* Nevin Liber (Argonne National Laboratory)
+* Geoff Lowney (Intel)
+* Greg Lueck (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
+* John Pennycook (Intel)
+* Pradeep Garigipati (ArrayFire)
+* Pablo Reble (Intel)
+* James Reinders (Intel)
+* Alison Richards (Intel)
+* Ronan Keryell (Xilinx)
+* Roland Schulz (Intel)
+* Gergana Slavova (Intel)
+* Kevin Smith (Intel)
+* Timmie Smith (Intel)
+* Stefan Yurkevitch (ArrayFire)
+* Xinmin Tian (Intel)
+* Tom Deakin (University of Bristol)
+* Umar Arshad (ArrayFire)
+
+
+SYCL 2020 implementation priorities (continued)
+-----------------------------------------------
+
+* Continued from `SYCL 2020 implementation priorities`_
+* `Slides <presentations/2021-02-24-TAB-dpcpp-implementation-prioritization.pdf>`__
+
+  * Robert came late and does not have notes for these topics
+
+    * kernel bundles
+    * specialization constants
+    * device copyable
+    * sampled_image, unsampled_image
+    * accessor to const T is read-only
+    * sycl::exception error codes, not class hierarchy
+
+* implemented features
+
+  * kernels must be immutable
+    
+  * marray
+
+    * vec used for SPMD code, but designed for SIMD
+    * SIMD support visa ESIMD,sycl::vec,std::simd
+    * marray recommended for vectors in SPMD code
+
+      * size does not contain padding
+      * no swizzle and write to element allowed
+
+  * sycl::exception derives from std::exception
+  * async errors no longer silently ignored
+  * sycl::bit_cast is c++20 bit_cast
+  * queue
+
+    * missing constructor: explicit context & device
+
+  * namespace from cl:sycl to sycl
+
+    * still accepts cl::sycl
+
+  * call for input on prioritization for LLVM open source project
+
+* request for features
+
+  * virtual function support
+
+    * may not be possible on all devices, e.g. FPGA
+    * Ronan has some workarounds when virtual functions are needed
+
+      * std:variant
+
+  * issues related to multiple inheritance
+
+    * vtable size when conflicts
+    * considering limiting to single inheritance
+
+* request for topics
+    
+
 2021-2-24
 =========
 
@@ -747,8 +835,9 @@ Atomics: John Pennycook
   * What about constant?
 
     * Atomic does not seem relevant
-    * Issue about LLVM optimization, synchronization edges, etc. For more information, see comment 6 in `LLVM PR37716
-    <https://bugs.llvm.org/show_bug.cgi?id=37716>`__ 
+    * Issue about LLVM optimization, synchronization edges, etc. For
+      more information, see comment 6 in `LLVM PR37716
+      <https://bugs.llvm.org/show_bug.cgi?id=37716>`__
 
 * memory orderings and scopes
 
@@ -844,7 +933,7 @@ Data Parallel C++ Library continued: Alexey Kukanov
 
   * Verbose: default_policy cpu_policy, ...
   * Concise: cpu, gpu, default. Namespace will make it unique.
-  * Don't like pol, preferred spell it out, default_ preferred to deflt
+  * Don't like pol, preferred spell it out, default preferred to deflt
   * Generally concise is not preferred.  Code is read more than written so it's better to be verbose.
   * Like to distinguish between type and variable. Using C++17 std way with _v will make the distinction clear.
   * What about policy_gpu?
@@ -957,7 +1046,7 @@ Notes:
 	* On the other hand, we don't want to create 2 dialects
   * Top-level namespace
   
-    * DPC++ has multiple namespaces: sycl::, sycl::intel, std::
+    * DPC++ has multiple namespaces: sycl::, sycl::intel
     * oneDPL adds a namespace
     * Discussion
     
