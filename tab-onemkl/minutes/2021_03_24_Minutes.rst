@@ -1,0 +1,135 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2021-03-24
+==========
+
+Materials:
+
+* `Overview of oneMKL FFT <../presentations/2021-03-24_Slides.pdf>`__
+
+Attendees:
+
+* Marius Cornea (Intel)
+* Pavel Dyakov (Intel)
+* Alina Elizarova (Intel)
+* Mehdi Goli (Codeplay)
+* Mark Hoemmen (Stellar Science)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* Spencer Patty (Intel)
+* Helen Parks (Intel)
+* Nichols Romero (ANL)
+* Edward Smyth (NAG)
+* Julia Sukharina (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Overview of oneMKL FFT - Helen Parks
+* Wrap-up and next steps
+
+Overview of FFT:
+
+* oneMKL DPC++ FFT API is currently heavily based on Intel's Discrete Fourier Transform Interface ("DFTI interface") from oneMKL C/Fortran APIs; it is not the FFTW interface. It supports 1D/2D/3D data, which is well aligned with general FFT library support, and supports both SYCL buffers and USM data like the other oneMKL domains.
+
+Four-step workflow (similar to many FFT libraries):
+
+1. Create descriptor - intended to be a lightweight operation
+2. Configure descriptor - via multiple calls to set_value function; sets one parameter per call - very lightweight as well
+3. Commit descriptor - this is where the heavy work is done; setting twiddle factors, determining the factorization to use. Idea is that you would commit once and compute many times. The descriptor can use the provided queue to make device-specific kernels.
+4. Compute - expect to have multiple calls to compute to reuse the work done at the commit stage. The queue that is committed will be used at the compute stage.
+
+* What about making a plan separate from the queue?
+
+  * The descriptor is intended to encapsulate all the information about the FFT. It is hard to get away from device-specific work, with one descriptor per device and a commit for each. It is probably possible to handle running multiple queues on the same hardware with a single descriptor and single commit call.
+  * The create and configure calls are lightweight; commit is the heavy call.
+
+3 main components:
+
+1. Descriptor class (already discussed): two different constructors based on 1D or multi-dimensional FFT. There can be additional private members in an implementation that are not part of the oneMKL specification.
+2. Enum classes for configuring values: config_param covers all parameters that can be configured. config_value corresponds to a subset of values that can be used while configuring. Some config_param parameters will just take numerical values; others will take config_value enums.
+3. Free functions for compute: there are multiple compute functions covering different variants (forward/backward, in-place/out-of-place, etc.).
+
+* Are the … in set_value overloads, parameter packs, etc.?
+
+  * Those are C …; in the Intel oneMKL product implementation, we are using a vararg list to process the call.
+  * The TAB strongly recommends not mixing C … with C++; there are lots of ways trouble can come up.
+  * Type safety would be the number one concern, which would allow some issues to be found at compile-time and not only at run-time.
+  * C++ developers may expect parameter pack instead of C …; also the C … may get deprecated in future in C++.  In general, there are a lot of mixing of C idioms with C++ here.
+  * We expect this to evolve in future versions of the specification. We would like this to be more type safe and to have compile-time errors when setting parameters. But it may be impossible to entirely get away from run-time errors. Individually type-safe settings may not make sense all together. Commit does prework and a final check that all parameters work together - that run-time error is hard to avoid.
+  * Yes, but a useful error message could be provided there, instead of segfaulting or unexpectedly chopping floating point numbers in half.
+
+* Descriptors take the number of dimensions as a run-time parameter. Have you considered making the number of dimensions a compile-time parameter, since the total number of combinations is small (3)?
+
+  * The descriptor could take a std::array of correct size based on the compile-time dimensions.
+
+1D example:
+
+* Initialize data, wrap in a buffer. In this example, descriptor object is templated on double precision and complex domain. Configures backward_scale parameter. It expects same precision as the data in the set_value.
+
+* Suppose that precision were float. So the set_value function would expect the scalar to have type float. But the value that users would usually type in is 1.0/integer, which always have type double. So do users have to cast to float, or is there an overload?
+
+  * This is handled through the C … args. In the examples we provide, this line does an explicit cast on the variable (it was removed from slides to save space), to show best practices. However, as we previously discussed, better type safety would be nice.
+  * For the common use case of float and typing 1.0/N without doing static_cast<float>(1.0/N), it could give users a completely wrong result or crash.
+
+* Highlighting the difference between buffer and USM input data: the compute functions return a SYCL event in the USM case, so the user has something they can wait on. In the buffer case, they can use the queue itself or an accessor to the data to accomplish that wait.
+
+2D example:
+
+* Also demonstrates the batched usage, which is very common FFT usage - and for performance reasons, it is highly recommended when running on GPUs.
+* Need to set the distance in elements from the start of one FFT to the start of the next. The most common case is shown here, where they are contiguously stored. N1 and N2 are both referring to complex elements, since it's the complex domain.
+* For out-of-place, the compute_forward needs to take both input and output buffers.
+
+3D example:
+
+* Fairly similar to the 2D example; here we have the real domain. Strides describe the data layout within a single FFT with multiple dimensions; it is always a vector of dimension D+1. Offset into the buffer as well as strides for each dimension. For the convention we have where a real forward transform has a complex backward transform, the input and output strides will almost always be different.  Because the input and output domains are different, you need to reset the strides and recommit before the backward transform, according to the spec currently.
+
+* Does it make sense to have a compute_forward_and_backward function?
+
+  * No, people usually want to do something in-between.
+
+* You have to do a commit for the forward and a commit for the backward; could you re-use if you want to set up once and do multiple calls?
+
+  * If the input and output strides are different from forward to backward, then to use one descriptor you would have to commit every single time. Alternatively, you could set up two different descriptors and commit them each once. It may be most efficient to change the specification to avoid having to keep committing.
+  * If you are doing this during every time step in a simulation, it would be costly. This is good feedback that it is a common use case to alternate between forward and backward many times.
+
+Future directions:
+
+* Managing scratch workspace on devices.
+* Current specification is heavily based on DFTI interface, but the goal is to make it very general and usable for a wide user base (e.g., current FFTW, cuFFT, DFTI, etc. users). Most FFT libraries use "plan-compute" terminology.
+* Making sure it is general enough for broad adoption is where we are headed.
+
+Specification questions:
+
+* Device-side APIs that can be embedded/inlined into user kernels - thoughts?
+
+  * See device-side APIs as a good thing, in general, and definitely for linear algebra.
+
+* When factorizing an FFT - is this based on pre-existing heuristics, or can users time this on their machine?
+
+  * Right now, in the Intel oneMKL product, it is based on our pre-analysis. That is a major difference between our implementation and the FFTW implementation.
+  * Probably most people use defaults from FFTW anyway. But there may be some people who try to squeeze the last bit of performance out of their systems.
+
+* Is there anything that does not allow me to say: run an FFT on a queue on the GPU, and also run an FFT on a queue on the CPU?
+
+  * As of now, the specification would require you to have two descriptor objects and commit them separately to each queue (one for GPU, one for CPU). From the user perspective, it may look clunky to have two descriptors that need to be set up separately. From a performance perspective, when you have two queues on two devices, you have to do the device-side setup - need to do it for both the CPU and the GPU. So not as much of a performance hit if you want to run on two different types of hardware. But if you are running on the same hardware, but with multiple queues - then you are taking an unnecessary performance hit by committing twice.
+  * In the case that the FFTs would be very different in size and number, you would need multiple descriptors anyway.
+
+* Running multiple queues on the same hardware - any intuitions on how common this might be?
+
+  * Here the keyword is running the same FFT on the same hardware. Does not seem like it is a big deal, but maybe others would have different perspectives.
+  * That was the intuition that went in to the specification, that this use case would not be as common. But we did get a question about this, so we wanted to bring attention to this to see if intuition was wrong.
+
+General comments about oneMKL specification:
+
+* In general, oneMKL is a mix of C and C++ idioms. If I had to pick one thing to change, it would be this.
+* Difficulty debugging things on GPUs, so anything that can help (type safety!) would be appreciated.
+
+Requested sparse BLAS functionality:
+
+* C = A * (B_local + B_remote); B_local are locally owned rows and B_remote are rows brought in from other MPI processes. This functionality may be somewhat specific to multi-grid; it would be useful for Trilinos developers.
