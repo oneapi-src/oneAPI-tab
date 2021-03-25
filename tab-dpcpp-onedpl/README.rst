@@ -5,8 +5,7 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Upcoming Topics
 ===============
 
-* [March 24] SYCL 2020 revisited & implementation priorities continued
-* [April 28] oneDPL range-based & async APIs
+* [April 21] oneDPL range-based & async APIs
 * Error handling
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
@@ -39,64 +38,92 @@ Attendees:
 * Xinmin Tian (Intel)
 * Tom Deakin (University of Bristol)
 * Umar Arshad (ArrayFire)
+* Robert Cohn (Intel)
 
+Opens
+-----
+
+* IWOCL and SYCLcon 2021 `registration is open <https://www.iwocl.org/>`__
+* Our next TAB meeting (on April 28) will coincide with an IWOCL live event.
+  Will shift our TAB meeting to 1 week earlier (to April 21).
+* What other topics should we discuss here? Give us your suggestions.
 
 SYCL 2020 implementation priorities (continued)
 -----------------------------------------------
 
 * Continued from `SYCL 2020 implementation priorities`_
 * `Slides <presentations/2021-02-24-TAB-dpcpp-implementation-prioritization.pdf>`__
+* No discussion on the following topics, please see slides for details.
+  Special request to group: provide feedback on images as it hasn't gotten much attention
+  in the community.
 
-  * Robert came late and does not have notes for these topics
-
-    * kernel bundles
-    * specialization constants
-    * device copyable
-    * sampled_image, unsampled_image
-    * accessor to const T is read-only
+    * Kernel bundles
+    * Specialization constants
+    * Device copyable
+    * Sampled_image, unsampled_image
+    * Accessor to const T is read-only
     * sycl::exception error codes, not class hierarchy
 
-* implemented features
+* Implemented features
 
-  * kernels must be immutable
+  * Kernels must be immutable
+  
+    * Change is due to high probability of bugs & allowing more freedom of implementation
+    * A few folks have seen problems during implementation (when kernels could be mutable).
+      Lots of discussion on how to define the right behavior so ultimately decided to restrict 
+      mutability. If this group has use cases where restrictions need to be loosened, let the team know.
+    * Do we need to add a note/block article to describe the issue? Yes, documentation is a good idea.
     
   * marray
 
-    * vec used for SPMD code, but designed for SIMD
-    * SIMD support visa ESIMD,sycl::vec,std::simd
+    * vec used for SPMD code, but designed for SIMD (want to move in that direction in the future)
+    * SIMD support via ESIMD, sycl::vec, std::simd
     * marray recommended for vectors in SPMD code
 
-      * size does not contain padding
-      * no swizzle and write to element allowed
+      * Size does not contain padding
+      * No swizzle and write to element allowed
 
   * sycl::exception derives from std::exception
-  * async errors no longer silently ignored
+  
+    * No discussion
+    
+  * Async errors no longer silently ignored
+  
+    * No discussion
+    
   * sycl::bit_cast is c++20 bit_cast
-  * queue
+  
+    * No discussion
+    
+  * Queue
 
-    * missing constructor: explicit context & device
+    * Without this, folks were missing a certain degree of control
+    * Basically, a missing constructor: explicit context & device
 
-  * namespace from cl:sycl to sycl
+  * Namespace from cl::sycl to sycl
 
-    * still accepts cl::sycl
+    * Still accepts cl::sycl
 
-  * call for input on prioritization for LLVM open source project
+* Looking forward to further input from this group on prioritization for LLVM open source project. Want to know:
+  
+  * What should be implemented next? What are you dependent on?
+  * What's missing DPC++ that's critical for your workloads
 
-* request for features
+* Request for additional features
 
-  * virtual function support
+  * Virtual function support
 
-    * may not be possible on all devices, e.g. FPGA
-    * Ronan has some workarounds when virtual functions are needed
+    * May not be possible on all devices, e.g. FPGA
+    * FPGA has some workarounds when virtual functions are needed through std::variant
 
-      * std:variant
+      * Is variant something we can use in the general case as well? No. 
+        Requires developer to know all possible types & code is not easy to re-write 
+	until you get pattern-matching.
 
-  * issues related to multiple inheritance
+  * Inheritance rules: single vs. multiple, restrictions
 
-    * vtable size when conflicts
-    * considering limiting to single inheritance
-
-* request for topics
+    * Could we use vtable size when conflicts arise?
+    * OpenMP committee is considering limiting to single inheritance to make implementation easier
     
 
 2021-2-24
