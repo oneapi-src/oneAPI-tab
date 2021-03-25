@@ -16,4 +16,5 @@ Meeting notes:
 | `December 16, 2020 <../tab-dpcpp-onedpl/README.rst>`__
 | `January 27, 2021 <minutes/2021_01_27_Minutes.rst>`__
 | `February 24, 2021 <minutes/2021_02_24_Minutes.rst>`__
+| `March 24, 2021 <minutes/2021_03_24_Minutes.rst>`__
 
