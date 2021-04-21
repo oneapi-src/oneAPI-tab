@@ -178,44 +178,6 @@ oneDPL range-based & async APIs: Alexey Kukanov
 
       * we have different set of execution policies
 
-    
-
-         
-         
-
- 
-  
-
-
-
-
-
-Last time
-
-* Aksel Simon Alpay (Heidelberg University)
-* James Brodman (Intel)
-* John Melonakos (ArrayFire)
-* Michael Kinsner (Intel)
-* Alexey Kukanov (Intel)
-* Nevin Liber (Argonne National Laboratory)
-* Geoff Lowney (Intel)
-* Greg Lueck (Intel)
-* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
-* John Pennycook (Intel)
-* Pradeep Garigipati (ArrayFire)
-* Pablo Reble (Intel)
-* James Reinders (Intel)
-* Alison Richards (Intel)
-* Ronan Keryell (Xilinx)
-* Roland Schulz (Intel)
-* Gergana Slavova (Intel)
-* Kevin Smith (Intel)
-* Timmie Smith (Intel)
-* Stefan Yurkevitch (ArrayFire)
-* Xinmin Tian (Intel)
-* Tom Deakin (University of Bristol)
-* Umar Arshad (ArrayFire)
-* Robert Cohn (Intel)
 
 2021-3-24
 =========
