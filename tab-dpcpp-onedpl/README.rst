@@ -5,10 +5,176 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Upcoming Topics
 ===============
 
-* [April 21] oneDPL range-based & async APIs
 * Error handling
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
+
+2021-4-21
+=========
+
+* Robert Cohn (Intel)
+* Romain Dolbeau
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* Christian Trott (Sandia National Laboratory)
+* En Shao
+* Christian Trott (Sandia National Laboratory)
+* Erik Lindahl
+* Guangming Tan
+* Simon P Garcia de Gonzalo (Barcelona Supercomputing Center)
+* Michael Kinsner (Intel)
+* Alexey Kukanov (Intel)
+* Nevin Liber (Argonne National Laboratory)
+* Geoff Lowney (Intel)
+* Greg Lueck (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
+* Pablo Reble (Intel)
+* James Reinders (Intel)
+* Alison Richards (Intel)
+* Ronan Keryell (Xilinx)
+* Timmie Smith (Intel)
+* Stefan Yurkevitch (ArrayFire)
+* Xinmin Tian (Intel)
+* Tom Deakin (University of Bristol)
+* Umar Arshad (ArrayFire)
+* Ruyman Reyes (Codeplay)
+* Pradeep Garigipati (ArrayFire)
+* Andrew Richards (Codeplay)
+* James Brodman (Intel)
+
+
+oneDPL range-based & async APIs: Alexey Kukanov
+-----------------------------------------------
+
+* `Slides <presentations/2021-04-21-oneDPL-for-TAB.pdf>`__
+* oneDPL recap
+* Notable changes
+
+  * Namespace oneapi::dpl, ::dpl, dropped oneapi::std because of
+    usability
+  * Algorithms are blocking by default
+  * Execution policy
+
+    * device_policy, fpga_policy
+    * Implicit conversion to sycl::queue
+
+* Notable implementation-specific additions,
+  not yet part of the spec:
+
+  * <random>
+  * range-based API
+  * asynch API
+
+* <random>
+
+  * Subset of C++ random
+  * Generate several RNs at once into sycl::vec
+  * Seed + offset lets you generate the same as one at a time API
+
+  * Feedback
+
+    * for_each should not be part of std:
+
+      * Have it for convenience, types prevent confusion with standard
+
+* Range-based API
+
+  * Ranges are new for C++20
+  * Used in algorithms, not yet for execution policy
+  * Not fully standard-compliant, not based on concepts, no projections
+  * Examples:
+
+    * Fancy iterators allow combine into single kernel, but clumsy
+    * Ranges allows 1 kernel, more concise
+
+      * Expressed as pipeline of transformations
+
+  * Using with execution policies
+
+    * Range over:
+
+      * Sequence of indexes
+      * USM data
+      * Buffer
+
+        * With variants for all_read, all_write
+
+    * Looking for feedback on how to make it device copyable
+
+
+  * oneDPL v2021.3 has 34 algorithms with range-based API
+
+  *  Feedback: happy to see modern C++
+
+* Async api
+
+  * Blocking is default
+  * Deferred waiting mode enabled by macro
+
+    * Only for no return value functions
+    * Non-standard, will not be part of spec
+
+  * Experimental async
+
+    * Never wait, return future-like object
+    * Supports multi-device
+
+  * API
+
+    * Add _async suffix, alternatives: namespace, policy class
+    * Taken an arbitrary number of dependencies as arguments
+    * Returns an unspecified future-like type
+
+      * Not specific because it is an extension and did not want to limit
+      * Inter-operable with sycl::event
+      * Holds internal buffers, so keep track of lifetime. Attached to return value.
+      
+  *  Feedback
+
+     * Do you have control over launching policy?
+
+       * We use queue submit, so no control
+
+     * Looks fine
+
+       * Not sure adding dependencies is right, does not like argument number creep
+       * _async is ok since return value is different
+
+     * Could look like CUDA graph. Add .then.
+     * Is this allowed to be eager?
+
+       * Could start submitting at get
+       * Probably best to allow it be eager without requiring it.
+
+     * Can you re-submit the same graph?
+
+       * You can create separate function, which addresses convenience
+         but not performance
+       * We are interested in looking at static graph
+       * .then allows more explicit graph building
+       * Looking at C++ executors, schedules, but proposals are not settled
+
+         * It might address the issue of building/executing graphs
+
+* Minimum C++
+
+  * oneDPL supports C++11
+  * SYCL 2020 requires C++17
+  * Strong desire to move to c++17
+
+  * Feedback
+
+    * Kokkos moved to 14 in Jan and will move to 17 by end of year,
+      stakeholders are ok
+        
+    * Surprises not good for users, should have very clear policy
+
+      * e.g. support for latest-5 years
+      * Established cadence
+        
+    * Is oneDPL useable without 17? Relying on sycl features which need it.
+
+      * We have different set of execution policies
+
 
 2021-3-24
 =========
