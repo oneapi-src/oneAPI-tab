@@ -72,7 +72,7 @@ oneDPL range-based & async APIs: Alexey Kukanov
 
   * Feedback
 
-    * for_each should not be part of std::
+    * for_each should not be part of std:
 
       * Have it for convenience, types prevent confusion with standard
 
@@ -103,7 +103,7 @@ oneDPL range-based & async APIs: Alexey Kukanov
 
   * oneDPL v2021.3 has 34 algorithms with range-based API
 
-  *  Reedback: happy to see modern C++
+  *  Feedback: happy to see modern C++
 
 * Async api
 
