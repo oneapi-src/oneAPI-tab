@@ -20,7 +20,7 @@ Upcoming Topics
 * Christian Trott (Sandia National Laboratory)
 * Erik Lindahl
 * Guangming Tan
-* Simon P Garcia de Gonzalo
+* Simon P Garcia de Gonzalo (Barcelona Supercomputing Center)
 * Michael Kinsner (Intel)
 * Alexey Kukanov (Intel)
 * Nevin Liber (Argonne National Laboratory)
@@ -46,137 +46,134 @@ oneDPL range-based & async APIs: Alexey Kukanov
 -----------------------------------------------
 
 * `Slides <presentations/2021-04-21-oneDPL-for-TAB.pdf>`__
-* DPL recap
+* oneDPL recap
 * Notable changes
 
-  * namespace oneapi::dpl, ::dpl, dropped oneapi::std because of
+  * Namespace oneapi::dpl, ::dpl, dropped oneapi::std because of
     usability
-  * algorithms blocking by default
-  * execution policy
+  * Algorithms are blocking by default
+  * Execution policy
 
     * device_policy, fpga_policy
-    * implicit conversion to sycl::queue
+    * Implicit conversion to sycl::queue
 
-* notable impl specific additions
+* Notable implementation-specific additions,
+  not yet part of the spec:
 
   * <random>
   * range-based API
   * asynch API
-  * not yet part of spec
 
-* random
+* <random>
 
-  * subset of C++ random
-  * generate several RNs at once into sycl::vec
-  * seed + offset lets you generate the same as one at a time API
+  * Subset of C++ random
+  * Generate several RNs at once into sycl::vec
+  * Seed + offset lets you generate the same as one at a time API
 
-  * feedback
+  * Feedback
 
     * for_each should not be part of std::
 
-      * have done it for convenience, types prevent confusion with standard
+      * Have it for convenience, types prevent confusion with standard
 
-* range-based API
+* Range-based API
 
-  * ranges new for c++20
-  * used in algorithms, not yet for execution policy
-  * not fully standard-compliant, not based on concepts, no projections
-  * examples
+  * Ranges are new for C++20
+  * Used in algorithms, not yet for execution policy
+  * Not fully standard-compliant, not based on concepts, no projections
+  * Examples:
 
-    * fancy iterators allow combine into single kernel, but clumsy
-    * ranges allows 1 kernel, more concise
+    * Fancy iterators allow combine into single kernel, but clumsy
+    * Ranges allows 1 kernel, more concise
 
-      * expressed as pipeline of transformations
+      * Expressed as pipeline of transformations
 
-  * using with execution policies
+  * Using with execution policies
 
-    * range over
+    * Range over:
 
-      * sequence of indexes
+      * Sequence of indexes
       * USM data
-      * buffer
+      * Buffer
 
-        * with variants for all_read, all_write
+        * With variants for all_read, all_write
 
-    * looking for feedback on how to make it device copyable
+    * Looking for feedback on how to make it device copyable
 
 
-  * DPL 2021.3 has 34 algorithms with range-based API
+  * oneDPL v2021.3 has 34 algorithms with range-based API
 
-  *  feedback
+  *  Reedback: happy to see modern C++
 
-     * happy to see modern C++
+* Async api
 
-* async api
+  * Blocking is default
+  * Deferred waiting mode enabled by macro
 
-  * blocking is default
-  * deferred waiting mode enabled by macro
+    * Only for no return value functions
+    * Non-standard, will not be part of spec
 
-    * only for no return value functions
-    * non-standard, will not be part of spec
+  * Experimental async
 
-  * experimental async
-
-    * never wait, return future-like object
-    * supports multi-device
+    * Never wait, return future-like object
+    * Supports multi-device
 
   * API
 
-    * add _async suffix, alternatives: namespace, policy class
-    * taken an arbitrary number of dependencies as arguments
-    * returns an unspecified future-like type
+    * Add _async suffix, alternatives: namespace, policy class
+    * Taken an arbitrary number of dependencies as arguments
+    * Returns an unspecified future-like type
 
-      * not specific because it is an extension and did not want to limit
-      * inter-operable with sycl::event
-      * holds internal buffers, so keep track of lifetime. Attached to return value
+      * Not specific because it is an extension and did not want to limit
+      * Inter-operable with sycl::event
+      * Holds internal buffers, so keep track of lifetime. Attached to return value.
       
-  *  feedback
+  *  Feedback
 
-     * do you have control over launching policy?
+     * Do you have control over launching policy?
 
-       * we use queue submit, so no control
+       * We use queue submit, so no control
 
-     * looks fine
+     * Looks fine
 
-       * not sure adding dependencies is right, does not like argument number creep
+       * Not sure adding dependencies is right, does not like argument number creep
        * _async is ok since return value is different
 
-     * could look like CUDA graph. Add .then
-     * allowed to be eager?
+     * Could look like CUDA graph. Add .then.
+     * Is this allowed to be eager?
 
-       * could start submitting at get
-       * probably best to allow it be eager without requiring it.
+       * Could start submitting at get
+       * Probably best to allow it be eager without requiring it.
 
-     * can you resubmit the same graph
+     * Can you re-submit the same graph?
 
-       * you can create separate function, which addresses convenience
+       * You can create separate function, which addresses convenience
          but not performance
-       * we are interested in looking at static graph
+       * We are interested in looking at static graph
        * .then allows more explicit graph building
-       * looking at C++ executors, schedules, but proposals are not settled
+       * Looking at C++ executors, schedules, but proposals are not settled
 
-         * it might address the issue of building/executing graphs
+         * It might address the issue of building/executing graphs
 
-* minimum C++
+* Minimum C++
 
-  * DPL supports C++11
+  * oneDPL supports C++11
   * SYCL 2020 requires C++17
-  * strong desire to move to c++17
+  * Strong desire to move to c++17
 
-  * feedback
+  * Feedback
 
-    * kokkos moved to 14 in Jan and will move to 17 by end of year
-
-      * stakeholders ok
+    * Kokkos moved to 14 in Jan and will move to 17 by end of year,
+      stakeholders are ok
         
     * Surprises not good for users, should have very clear policy
 
-      * e.g.support latest-5 years
-      * established cadence
+      * e.g. support for latest-5 years
+      * Established cadence
         
-    * Is DPL useable without 17? Relying on sycl features which need it
+    * Is oneDPL useable without 17? Relying on sycl features which need it.
 
-      * we have different set of execution policies
+      * We have different set of execution policies
 
 
 2021-3-24
