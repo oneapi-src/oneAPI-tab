@@ -13,13 +13,13 @@ Upcoming Topics
 =========
 
 * Robert Cohn (Intel)
-* Romain Dolbeau
+* Romain Dolbeau (SiPearl)
 * David Beckingsale (Lawrence Livermore National Laboratory)
 * Christian Trott (Sandia National Laboratory)
-* En Shao
+* En Shao (Institute of Compute Technology, China Academy of Sciences)
 * Christian Trott (Sandia National Laboratory)
-* Erik Lindahl
-* Guangming Tan
+* Erik Lindahl (Stockholm University)
+* Guangming Tan (Institute of Compute Technology, China Academy of Sciences)
 * Simon P Garcia de Gonzalo (Barcelona Supercomputing Center)
 * Michael Kinsner (Intel)
 * Alexey Kukanov (Intel)
