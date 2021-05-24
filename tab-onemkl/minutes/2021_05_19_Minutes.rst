@@ -1,0 +1,134 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2021-05-19
+==========
+
+Materials:
+
+* `Overview of device APIs for Random Number Generator domain <../presentations/2021-05-19_Slides.pdf>`__
+
+Attendees:
+
+* Hartwig Anzt (KIT, UTK)
+* Romain Dolbeau (SiPearl)
+* Aleksandr Duev (Intel)
+* Pavel Dyakov (Intel)
+* Alina Elizarova (Intel)
+* Rachel Ertl (Intel)
+* Mehdi Goli (Codeplay)
+* Mark Hoemmen (Stellar Science)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Valentin Kubarev (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* Mesut Meterelliyoz (Intel)
+* Vincent Pascuzzi (LBNL)
+* Svetlana Podogova (Intel)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+* Nadezhda Sidneva (Intel)
+* Edward Smyth (NAG)
+* Shane Story (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Overview of device APIs for Random Number Generator domain - Alina Elizarova
+* Wrap-up and next steps
+
+New member introductions:
+
+* Hartwig Anzt - Leads a team at Karlsruhe Institute of Technology and affiliated with University of Tennessee Knoxville (Innovative Computing Laboratory). Worked at ICL for years and developed MAGMA-Sparse. Now developing Ginkgo, a C++ based sparse linear algebra library, targeting accelerators from different vendors.
+
+* Romain Dolbeau - Works at a small, fairly new company in Europe called SiPearl, which is part of the European Processor Initiative, with a goal to develop HPC oriented process in EU. Mostly based on ARM technology, investigating proof of concept for European-developed accelerators. Very important to have libraries, like oneMKL, to make HPC users' lives easier.
+
+* Vince Pascuzzi: Postdoctoral researcher at Lawrence Berkeley National Laboratory, porting existing high-energy physics software to GPUs. Works in Center for Computational Excellence in DOE High Energy Physics (HEP) umbrella. Looking at different portability solutions to utilize as many upcoming HPC clusters as possible. Added support of cuRAND backend to the oneMKL interfaces project.
+
+
+Updates from last meeting:
+
+* Mark - Fourth revision (counting from 0) of the C++ standard library linear algebra proposal will have LEWG review in June; see wg21.link/p1673r3.
+
+Overview of device APIs for random number generator domain:
+
+Terminology:
+
+* Host-side APIs: All previous APIs that were discussed in oneMKL TAB meetings can be called manual offload, or host-side APIs, as all took a sycl::queue object and work only with global memory objects.
+* Device-side APIs: Sometimes there is a need to call functions inside a user's own kernels, so created new APIs that are called device-side. Their main purpose is to be used inside other kernels.
+
+Motivation:
+
+* For most applications, random number generators are not the end goal. For example, in Monte-Carlo simulations, need to have some post-processing to get down to a single number. With host APIs, using a memory-bound RNG may result in large performance overhead.
+* Workflow and names are pretty much the same in device APIs as in host APIs, but with a few differences.
+* Device APIs take no global memory buffer, just generate random numbers in private memory. User can then do post processing in the same kernel and return. Host and device APIs are in different namespaces; can’t share state between host and device APIs directly, as for device APIs each thread would have own copy of engine.
+
+oneMKL RNG Device APIs Example:
+
+* Simplest example of usage: create engine and distribution. The generate function itself does not take any memory objects, just like std:: random number generators. The main thing is to generate a lot of random numbers for each work item and do some post-processing with them.
+
+More complex example, using Monte Carlo to estimate pi:
+
+* In device APIs, a single kernel is used for both generation and postprocessing. In host APIs, user should create buffer for random numbers, create engine from the queue, then generate with passing SYCL buffer.
+* Negative impact of efficiency of host API - has 70% overhead from reading/storing the numbers.
+
+* Are the queries on the state done in parallel and from distinct from work items?
+
+  * Each work item would have an independent engine and be parallelized independently.
+
+Engine classes:
+
+* All device APIs are in the oneapi::mkl::rng::device namespace. There are different sets of engines and distributions in host- and device-side APIs.  Currently two available engines for device-side APIs: philox4x32x10 and mrg32k3a engines. These have small states, with about 6 and 11 integer values, respectively.
+
+* It is nice that seeds and offsets can be controlled separately, maybe coarse- versus fine-grained. What happens if offsets are the same?
+
+  * It will work (it won't crash), but the statistics would not be ideal. It performs exponential skipping; if pass initializer_list as {0, 1}, next would be 2^64 - main technique used for mrg. In philox, every skip ahead is done in constant time.
+
+Distributions:
+
+* These are pretty similar to what is available on the host.
+
+Generate functions:
+
+* Two generate functions: one returns a scalar, one returns a vector. generate_single should be used to calculate a tail, for example. Can keep same engine after generating vectors of, say, size 16, when you just need one or two more scalar values.
+
+* Distribution object may be modified - keep it low cost by passing in a non-const reference.
+
+  * As long as you can copy a distribution lightly, it should not matter if you pass in const in one case, and non-const in another.
+  * Pretend I'm writing a library, which is templated on the distribution. The library could just take the distribution by value, and internally decide which one it wants (const or non-const reference).
+  * Good observation that users may need to differentiate between the host and the device.
+  * Most distributions are characterized by 2 or 4 parameters - very cheap to copy. Decide from which namespace to use functionality.
+  * Fine to pass by value because it is lightweight (that is the preferred idiom nowadays).
+
+More complex example - want to keep engine states between different kernels:
+
+* This is useful when you need to initialize engines outside of the main computational block, or if you start generating in one kernel and want to continue generating in another kernel.
+* The example initializes the engine in one kernel, then loads the state in the next kernel to generate random numbers.
+
+Helper functions:
+
+* Auxiliary APIs to assist in the previous situation where user needs to create buffers on host, by providing the ability to submit kernel and initialize engine inside the constructor. The helper interface provides accessor APIs. Can load and store engines in the kernel, similar to sycl vectors.
+* As a more complex case, functor is available: user can write lambda to initialize engine whenever they want.
+
+Future steps:
+
+* Plan to add RNG device APIs to oneMKL spec 1.1, and to extend the set of Engines and Distributions that are supported.
+* In future, may think of supporting ESIMD extension (currently experimental).
+
+* Something we are adding to Netlib LAPACK is lots of randomized matrix methods. For those, we need non-Gaussian matrices. Saw vectors as input arguments in interfaces. Most generators were uniform. It would be interesting exercise of how you would use them to generate a Gaussian matrix for a randomized method.
+
+  * For host APIs, there is the distribution called Gaussian-multivariate, which produces such a matrix. But this distribution is currently only for host APIs; device APIs are just for scalar and vector output.
+
+
+Question about multi-GPU applications/libraries experience:
+
+* What is meant by multi-GPU? Inside same node, using multiple GPUs without using MPI, or do you mean an MPI-based approach?
+
+  * Both. We are considering all options, and trying to understand if someone has experience. Some approaches use multiple GPUs without MPI and do all submissions internally. If you have experience with both, that would be great to share.
+
+* Mark: Not a fun experience; mostly pleading with MPI drivers/library to do the right thing. The programming experience is improving; want to avoid the user having to wait for the GPU to finish the MPI communication. Need to know the device is done computing something to communicate it.  Used MPI to communicate both within and across a node. Used Kokkos to run GPU kernels. Could have used Nickel, but that is not a full MPI stack (kind of complicated when crossing nodes). For portability, wanted to stick to MPI for the communication layer. Christian had some success using pgas, using Kokkos::view, just for individual kernels, not all communications. But have not followed closely for a year.
+
+* Hartwig: Also have experience with both, using distinct MPI ranks, each with one GPU. Terry (from group) has a background; if of significant interest, could ask to prepare some slides. Has an executor concept (think of a queue). Each queue/executor can have a different GPU, and can share data between executors. Mostly experimented on Nvidia architectures, though maybe some with AMD. In the end, it was a lot of effort. If you want to go across multiple nodes, you need to use MPI (at least for now). 
