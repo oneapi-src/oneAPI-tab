@@ -2,6 +2,86 @@
 oneAPI Technical Advisory Board Meeting (TAB-AI) Meeting Notes
 ==============================================================
 
+2021-05-20
+==========
+Attendees:
+
+===============================  ===============================
+Alison Richards, Intel           Mourad Gouicem, Intel
+Sanjiv Shah, Intel               Daniel M Lavery, Intel
+Dmitry Durnov, Intel             Shlomo Raikin, Intel Habana
+JF Massol, SiPearl               Rodolfo G Esteves, Intel
+Atsushi Ike, Fujitsu             Mehdi Goli, Codeplay
+Rajeev K Nalawadi, Intel         Rahul Khanna, Intel
+Wei Cui, Microsoft               Andrew Richards, Codeplay
+Jian Hui Li, Intel               Sreenivasulu Rayanki, Intel
+Kentaro Kawakami, Fujitsu        Krishna Bhuyan, Intel
+Tim Harris, Microsoft            Romain Dolbeau, SiPearl
+Ruyman Reyes, Codeplay           Guoliang, VastAI Tech
+Guy Tamir, Intel                 Jayaram Bobba, Intel Habana
+Igor Lopatin, Intel              Andrew Chen, VastAI Tech
+Penporn Koanantakool, Google     AG Ramesh, Intel
+Emad Barsoum, Cerebras           Andrey Nikolaev, Intel
+Zack S Waters, Intel
+===============================  ===============================
+
+Welcome, Vision, oneAPI spec update - Sanjiv Shah, Intel
+
+* `Slides <presentations/2021-05-20-oneapi-spec.pdf>`__
+* Question: How does oneAPI differ from ROCM?
+
+  oneAPI is across multiple HW platforms and CPU, GPU, FPGA and
+  Accelerators, where ROCM is for AMD HW.  One could port Level Zero
+  to run on ROCm
+
+Antares for SYCL - Wei Cui, Microsoft
+
+* `Slides <presentations/Antares4SyCL.pdf>`__
+  
+TensorFlow and oneDNN in Partnership - Penporn Koanantakool, Google
+
+* `Slides <presentations/2021-05-20-TF-and-onednn.pdf>`__
+* Question: Will XLA and Jit be supported?
+
+  Jit is already used inside oneDNN.  Currently XLA is not using oneDNN. 
+
+Intel Extension for TensorFlow Demo - Jian Hui Li, Intel
+
+* Intel extension for TensorFlow (TEX) uses modular TensorFlow
+  interface to bring intel XPU to TensorFlow for AI workload
+  acceleration.  oneAPI complements modular TensorFlow to provide
+  modular software architecture and unifies the programming interface
+  for AI hardware.
+
+* Questions:
+
+  * Is the code private or can people access it?
+
+    It is private for now but will be public.  Right now it is
+    pre-release trial and early exploration.
+
+  * If the new HW support oneDNN, will the integration to Framework just work?
+
+    ITEX uses oneAPI components includes oneDNN, oneCCL, and DPC++.
+    If the HW only supports oneDNN only, then only the most
+    performance critical subgraph is offloaded to hardware.
+    Supporting DPC++ and oneCCL can offload the whole deep learning
+    graph to the physical device.
+
+  * What is the preferred way of adding new devices to TF?
+
+    Pluggable devices is the preferred way to plug in new devices to
+    TF.
+
+Enable Deep Learning Frameworks at Scale - Dmitry Durnov, Intel
+
+* `Slides <presentations/ai_tab_oneccl.pdf>`__
+
+* Feedback: this is a theoretical concept; can we take the concepts
+  and model the exercises in a real world example with x number of
+  training exercises.
+
+
 2021-02-11
 ==========
 Attendees:
