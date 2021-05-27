@@ -38,7 +38,7 @@ Upcoming Topics
 
 invoke SIMD - John Pennycook, Intel
 
-* `Slides <presentations/2021-04-06-26-TAB-invoke_simd.pdf>`__
+* `Slides <presentations/2021-05-26-TAB-invoke_simd.pdf>`__
 * Motivation
 * Design Goals
 * uniform<T>
