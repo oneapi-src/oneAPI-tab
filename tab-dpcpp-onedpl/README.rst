@@ -9,6 +9,83 @@ Upcoming Topics
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
 
+2021-5-26
+=========
+
+* Robert Cohn (Intel)
+* Aksel Simon Alpay (Heidelberg University)
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* James Brodman (Intel)
+* Christian Trott (Sandia National Laboratory)
+* Erik Lindahl (Stockholm University)
+* Michael Kinsner (Intel)
+* Alexey Kukanov (Intel)
+* Geoff Lowney (Intel)
+* Greg Lueck (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
+* Nevin Liber (Argonne National Laboratory)
+* John Pennycook (Intel)
+* Pablo Reble (Intel)
+* James Reinders (Intel)
+* Alison Richards (Intel)
+* Romain Dolbeau (SiPearl)
+* Ronan Keryell (Xilinx)
+* Ruyman Reyes (Codeplay)
+* Roland Schulz (Intel)
+* Gergana Slavova (Intel)
+* Timmie Smith (Intel)
+* Umar Arshad (ArrayFire)
+
+invoke SIMD - John Pennycook, Intel
+
+* `Slides <presentations/2021-04-06-26-TAB-invoke_simd.pdf>`__
+* Motivation
+* Design Goals
+* uniform<T>
+
+  * compiler analysis
+    
+    * varying: different value for each work item
+    * uniform: proven the same for each work item
+      
+  * uniform<T> overrides compiler analysis, undefined if values are not the same
+  * storage is implementation-defined. scalar or vector
+
+  * Discussion
+    
+    * Statement that it is an optimization hint and can be ignored is
+      not accurate, user facing and can lead to bugs
+    * knowing it is constant changes viewpoint because it eliminates a
+      class of bugs
+    * Name is common with openmp uniform, comparison
+
+* invoke_simd
+
+  * explicit SIMD
+
+    * can invoke on function that takes/returns SIMD/uniform arguments, SIMD mask
+
+      * bool -> SIMD mask
+      * arithmetic -> SIMD
+      * uniform -> scalar
+      
+  * Discussion
+
+    * Does it follow normal rules with templates/overloads?
+
+      Yes
+
+    * What about argument by reference?
+
+      Not allowed.
+
+    * How does it work on CPU? Can you set subgroup size to 8?
+
+      It is allowed. Same as GPU, changes SIMD width.
+
+    * discussion of SIMD agnostic code
+
+
 2021-4-21
 =========
 
