@@ -36,34 +36,52 @@ Upcoming Topics
 * Timmie Smith (Intel)
 * Umar Arshad (ArrayFire)
 
-invoke SIMD - John Pennycook, Intel
+Open items
+----------
+
+* June TAB meeting is cancelled - overlaps with ISC'21
+* Welcome to Romain Dolbeau, who joins us from SiPearl!
+
+invoke SIMD: John Pennycook
+----------------------------
 
 * `Slides <presentations/2021-05-26-TAB-invoke_simd.pdf>`__
+
+  * Published slides have been updated based on discussion
+
 * Motivation
 * Design Goals
 * uniform<T>
 
-  * compiler analysis
+  * Compiler can mark variables as:
     
-    * varying: different value for each work item
-    * uniform: proven the same for each work item
+    * Varying: different value for each work item
+    * Uniform: proven the same for each work item
       
-  * uniform<T> overrides compiler analysis, undefined if values are not the same
-  * storage is implementation-defined. scalar or vector
+  * uniform<T> overrides above compiler analysis, undefined if values are not the same
+  * Storage is implementation-defined. Can be scalar or vector.
 
   * Discussion
     
     * Statement that it is an optimization hint and can be ignored is
-      not accurate, user facing and can lead to bugs
-    * knowing it is constant changes viewpoint because it eliminates a
+      not accurate, user facing and can lead to bugs [Slides have been
+      updated accordingly]
+    * Need debug options, when 1) assigned, and 2) modified
+    
+      * Cannot modify since it's a constant
+      
+    * Knowing it is constant changes viewpoint because it eliminates a
       class of bugs
-    * Name is common with openmp uniform, comparison
+
+      * Do we need to augment the name to make it clear it's a constant?
+    
+    * Name is common with OpenMP uniform, with some exceptions
 
 * invoke_simd
 
-  * explicit SIMD
+  * Explicit SIMD
 
-    * can invoke on function that takes/returns SIMD/uniform arguments, SIMD mask
+    * Can invoke on a function that takes/returns SIMD/uniform arguments, SIMD mask
 
       * bool -> SIMD mask
       * arithmetic -> SIMD
@@ -71,20 +89,40 @@ invoke SIMD - John Pennycook, Intel
       
   * Discussion
 
+    * Does reqd_sub_group_size have to be known at compile time to use invoke?
+    
+      * Yes. In current proposal, only possible to know this via an attribute
+        that will be defined at compile-time.
+
     * Does it follow normal rules with templates/overloads?
 
-      Yes
-
-    * What about argument by reference?
-
-      Not allowed.
+      * Yes
+   
+    * Sub-group size
+    
+      * Taking an argument by reference is not allowed. Becomes hard to understand if
+        it's reference to vector, or vector of references. OMP solves this by having linear
+	reference but not available here.
 
     * How does it work on CPU? Can you set subgroup size to 8?
 
-      It is allowed. Same as GPU, changes SIMD width.
+      * It is allowed. Same as GPU, changes SIMD width.
+      * This is only available in DPC++, SYCL does not guarantee this.
 
-    * discussion of SIMD agnostic code
+    * Discussion of SIMD-agnostic code: determining sub-group size
 
+      * How do you reconcile this if you don't know the vector lengths?
+        Those can vary by architecture, how can we be more arch-agnostic?
+	Variability includes changing the sub-group size even during runtime.
+	
+	* That's really a C++ semantics concern, outside the scope of SYCL/DPC++
+	* Implementation could potentially still support through a kernel
+	  dispatched at launch time by first understanding the machine arch.
+	  Would still need to know the set of possible sizes.
+        * Realistically, hardware vector lengths are limited. But, theoretically,
+	  a developer can optimize for any vector length.
+	* Seems like an appropriate topic for a change proposal in an upcoming C++
+	  standard meeting.
 
 2021-4-21
 =========
@@ -177,9 +215,7 @@ oneDPL range-based & async APIs: Alexey Kukanov
 
     * Looking for feedback on how to make it device copyable
 
-
   * oneDPL v2021.3 has 34 algorithms with range-based API
-
   *  Feedback: happy to see modern C++
 
 * Async api
@@ -283,8 +319,8 @@ Attendees:
 * Umar Arshad (ArrayFire)
 * Robert Cohn (Intel)
 
-Opens
------
+Open items
+----------
 
 * IWOCL and SYCLcon 2021 `registration is open <https://www.iwocl.org/>`__
 * Our next TAB meeting (on April 28) will coincide with an IWOCL live event.
@@ -534,6 +570,7 @@ Attendees:
 * Robert Cohn (Intel)
 
 oneAPI - how we got here, where are we going: Geoff Lowney
+----------------------------------------------------------
 
 * `Slides <presentations/2020-12-16-TAB-oneAPI-year-one.pdf>`__
 
@@ -629,6 +666,7 @@ Attendees:
 * Christian Trott (Sandia National Laboratory)
 
 SYCL/oneAPI 1.0 Spec Feedback: Roland Schulz, Michael Kinsner
+-------------------------------------------------------------
 
 * `Slides <presentations/2020-10-28-TAB-specFeedback.pdf>`__
 * oneAPI spec 1.0 released on 2020-09-28; SYCL 2020 provisional released
@@ -739,7 +777,8 @@ Attendees:
 * Greg Lueck (Intel)
 * Tom Deakin (University of Bristol)
   
-Opens
+Open items
+----------
 
 * Welcome to Jinpil Lee who joins us from RIKEN! Jinpil is participating
   on the recommendation of Mitsuhisa Sato, RIKEN's deputy director.
@@ -747,6 +786,7 @@ Opens
   achieve this tremendous milestone!
 
 Extension naming: Greg Lueck
+----------------------------
 
 * `Slides <presentations/2020-09-23-TAB-Function-pointers.pdf>`__
 * Purpose of this proposal is to prevent name conflicts between vendors
@@ -788,6 +828,7 @@ Extension naming: Greg Lueck
     the options.
       
 Function pointers: Sergey Kozhukhov
+-----------------------------------
 
 * `Slides <presentations/2020-09-23-TAB-Extension-Naming.pdf>`__
 * Function pointers are important, we want to enable them in Intel
@@ -875,15 +916,17 @@ Attendees:
 * Christian Trott (Sandia National Laboratory)
 * Greg Lueck (Intel)
   
-Opens
+Open items
+----------
 
-Spec: Robert Cohn
+* Spec: Robert Cohn
 
-* Looking for feedback on usefulness of the `PDF version
-  <https://spec.oneapi.com/versions/0.9/oneAPI-spec.pdf>`__ of oneAPI
-  spec
+  * Looking for feedback on usefulness of the `PDF version
+    <https://spec.oneapi.com/versions/0.9/oneAPI-spec.pdf>`__ of oneAPI
+    spec
 
 Extensions Mechanism: Greg Lueck
+--------------------------------
 
 * `Slides <presentations/2020-08-26-TAB-Extension-Mechanism.pdf>`__
 * Extension mechanism
@@ -928,6 +971,7 @@ Extensions Mechanism: Greg Lueck
 
 
 Local memory allocation: John Pennycook
+---------------------------------------
 
 * `Slides <2020-08-26-TAB-LocalMemory.pdf>`__
 
@@ -973,9 +1017,8 @@ Attendees:
 * Timmie Smith (Intel)
 * Xinmin Tian (Intel)
 
-Opens
-
 Accessors: Ilya Burylov
+-----------------------
 
 * `Slides <presentations/2020-07-22 accessor simplification.pdf>`__
 * Changes in accessors for SYCL 2020 provisional
@@ -1062,7 +1105,8 @@ Attendees:
 * Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)
 * Andrew Richards (Codeplay)
   
-Opens
+Open items
+----------
 
 * SYCL 2020 provisional spec is now public: James Brodman
 
@@ -1092,6 +1136,7 @@ Opens
   * This feedback will be rolled up to ensure it reaches the right people
 
 Atomics: John Pennycook
+-----------------------
 
 * `Slides <presentations/2020-07-01-TAB-Atomics.pdf>`__
 
@@ -1178,9 +1223,9 @@ Attendees:
 * Christian Trott (Sandia National Laboratory)
 
 Data Parallel C++ Library continued: Alexey Kukanov
+----------------------------------------------------
 
 * `Slides <presentations/2020-05-oneDPL-for-TAB.pdf>`__
-
 * Namespaces
 
   * oneapi:: vs one:
@@ -1221,7 +1266,9 @@ Data Parallel C++ Library continued: Alexey Kukanov
     * Add an explicit async API for those implementations that need it
     
   * For current implementation, move into namespace?  
-  * No code out there now. Making it synchronous is a performance but not correctness issue. Like async, but if goal is to follow C++, then require all blocking
+  * No code out there now. Making it synchronous is a performance 
+    but not correctness issue. Like async, but if goal is to follow C++, 
+    then require all blocking
   
 * Range-based API for algorithms
 
@@ -1231,7 +1278,9 @@ Data Parallel C++ Library continued: Alexey Kukanov
   * Would be useful for graph library
   * No disagreement about delaying making it part of spec
   
-    * Ok to have it implemented even though it's not part of spec.  No experience in HPC community with using ranges so having it available would give people a chance to experiment.
+    * Ok to have it implemented even though it's not part of spec.
+      No experience in HPC community with using ranges so having it 
+      available would give people a chance to experiment.
   
 * Extension APIs
 
@@ -1265,107 +1314,102 @@ Attendees:
 * Xinmin Tian (Intel)
 * Phuong Vu (BP)
 
-Notes:
+Administrative
+--------------
 
-* Administrative
+* `Rules of the road <presentations/oneAPI-TAB-Rules-of-the-Road.pdf>`__
+* Notes published immediately after the meeting on
+  `Github <https://github.com/oneapi-src/oneAPI-tab/tree/master/tab-dpcpp-onedpl>`__
+* Email Robert.S.Cohn@intel.com or submit a github PR to add/remove name, add
+  affiliation to attendees list
 
-  * `Rules of the road <presentations/oneAPI-TAB-Rules-of-the-Road.pdf>`__
-  * Notes published immediately after the meeting on `Github
-    <https://github.com/oneapi-src/oneAPI-tab/tree/master/tab-dpcpp-onedpl>`__
-  * Email Robert.S.Cohn@intel.com or submit a github PR to add/remove name, add
-    affiliation to attendees list
+Data Parallel C++ Library: Alexey Kukanov
+-----------------------------------------
 
-* Data Parallel C++ Library: Alexey Kukanov
-
-  * `Slides <presentations/2020-04-22-oneDPL-for-TAB.pdf>`__
+* `Slides <presentations/2020-04-22-oneDPL-for-TAB.pdf>`__
+* Recap
   
-  * Recap
-  
-    * STL API
-    * Parallel STL
-    * non-standard API extensions
+  * STL API
+  * Parallel STL
+  * non-standard API extensions
     
-  * Required C++ version
+* Required C++ version
   
-    * Minimum DPC++ version will be C++17
-    * Is it ok for oneDPL?
-    * Will limit host-side environment. Default is C++14 for latest
-      host compilers
-    * Discussion:
+  * Minimum DPC++ version will be C++17
+  * Is it ok for oneDPL?
+  * Will limit host-side environment. Default is C++14 for latest
+    host compilers
+  * Discussion:
     
-      * Where are livermore compilers?
+    * Where are livermore compilers?
       
-        * C++11 is fine, RAJA is C++11-based, some customers not ready
-	  for C++14
-	* What is the issue?
+      * C++11 is fine, RAJA is C++11-based, some customers not ready for C++14
+      * What is the issue?
 	
-	  * People running on systems where supported gcc version is
-            old
-	  * But not about the code
-      * Why is host compiler different?
+	* People running on systems where supported gcc version is old
+	* But not about the code
+	
+    * Why is host compiler different?
+    * If we require only 14, can we still make deduction work
+      smoothly? Yes.
+    * At Argonne, there is a range of conservatism, we should not
+      impose artificial barriers
+	
+      * Provide C++17 features and ease of use when available, but
+        there is value in being more conservative
+      * On the other hand, we don't want to create 2 dialects
       
-      * If we require only 14, can we still make deduction work
-        smoothly?
-	
-        * Yes
-      * At Argonne, there is a range of conservatism, we should not
-        impose artificial barriers
-	
-        * Provide C++17 features and ease of use when available, but
-          there is value in being more conservative
-	* On the other hand, we don't want to create 2 dialects
-  * Top-level namespace
+* Top-level namespace
   
-    * DPC++ has multiple namespaces: sycl::, sycl::intel
-    * oneDPL adds a namespace
+  * DPC++ has multiple namespaces: sycl::, sycl::intel
+  * oneDPL adds a namespace
+  * Discussion
+    
+    * Strictly standard could be nested, new things own namespace
+      
+      * Requires change to sycl spec
+	
+    * Standard allows to use the sycl::intel extension
+    * Recommend top-level oneapi namespace
+      
+      * Can use C++ using to bring it into sycl::intel if desired
+      * Example: oneapi::mkl
+	
+* Standard library classes
+  
+  * Issues
+    
+    * Some classes cannot be fully supported
+    * 3 different implementations
+      
+  * Options
+    
+    * White-listed
+    * Freestanding implementation
+    * Duplicate, bring standard library into SYCL
+      
+      * Spec says whether require implementation or to host to host
+	
+  * Analysis of pro/cons, see slide
+  * Propose to go the combined route:
+    
+    * Whitelist the things that 'just work'
+    * API's that need substantial adjustments are defined in SYCL spec
+    * Freestanding for the rest
+    * Analysis, see slide
+      
+  * Discussion
+    
+    * Seems like a practical solution
+    * For freestanding, would there be conversions for standard types? Yes.
+ 
+  * Slide shows mapping, whitelisted, custom, SYCL
+    
     * Discussion
-    
-      * Strictly standard could be nested, new things own namespace
       
-        * Requires change to sycl spec
+      * Functional can't be whitelisted
 	
-      * Standard allows to use the sycl::intel extension
-      * Recommend top-level oneapi namespace
-      
-        * Can use C++ using to bring it into sycl::intel if desired
-        * Example: oneapi::mkl
-	
-  * Standard library classes
-  
-    * Issues
-    
-      * Some classes cannot be fully supported
-      * 3 different implementations
-      
-    * Options
-    
-      * White-listed
-      * Freestanding implementation
-      * Duplicate, bring standard library into SYCL
-      
-        * Spec says whether require implementation or to host to host
-	
-    * Analysis of pro/cons, see slide
-    * Propose to go the combined route:
-    
-      * Whitelist the things that 'just work'
-      * API's that need substantial adjustments are defined in SYCL spec
-      * Freestanding for the rest
-      * Analysis, see slide
-      
-    * Discussion
-    
-      * Seems like a practical solution
-      * For freestanding, would there be conversions for standard types?
-      
-        * Yes
-    * Slide shows mapping, whitelisted, custom, SYCL
-    
-      * Discussion
-      
-        * Functional can't be whitelisted
-	
-  * Not enough time for remaining topics, moved to next meeting
+* Not enough time for remaining topics, moved to next meeting
 	  
 2020-03-25
 ==========
@@ -1375,68 +1419,70 @@ Hal Finkel, Mike Kinsner, Alexey Kukanov, Erik Lindahl, Geoff Lowney,
 Antonio J. Peña, John Pennycook, Pablo Reble, James Reinders, Ruyman
 Reyes, Alison Richards, Roland Schulz, Timmie Smith, Xinmin Tian
 
-* Github: Robert Cohn
+Github: Robert Cohn
+-------------------
 
-  * We will be publishing TAB presentations materials & notes with
-    names on `github
-    <https://github.com/oneapi-src/oneapi-tab>`__. Please contact
-    `Robert.S.Cohn@intel <mailto:Robert.S.Cohn@intel.com>`__ if you
-    have concerns. If you are a watcher on the repo, you will get
-    email notification for meeting notes. Follow-up discussions can be
-    in the form of github issues.
-  * Specification is available on `oneapi.com
-    <https://spec.oneapi.com/>`__. DPC++ spec contains the list of
-    SYCL extensions with links to github docs describing them.
-  * oneAPI open source projects are moving to `oneapi-src
-    <https://github.com/oneapi-src/>`__ organization on github.
-  * Repo for oneAPI Specification `sources
-    <https://github.com/oneapi-src/oneapi-spec>`__ is in same
-    org. File issues if you have detailed feedback about the
-    specifications.
+* We will be publishing TAB presentations materials & notes with
+  names on `github
+  <https://github.com/oneapi-src/oneapi-tab>`__. Please contact
+  `Robert.S.Cohn@intel <mailto:Robert.S.Cohn@intel.com>`__ if you
+  have concerns. If you are a watcher on the repo, you will get
+  email notification for meeting notes. Follow-up discussions can be
+  in the form of github issues.
+* Specification is available on `oneapi.com
+  <https://spec.oneapi.com/>`__. DPC++ spec contains the list of
+  SYCL extensions with links to github docs describing them.
+* oneAPI open source projects are moving to `oneapi-src
+  <https://github.com/oneapi-src/>`__ organization on github.
+* Repo for oneAPI Specification `sources
+  <https://github.com/oneapi-src/oneapi-spec>`__ is in same
+  org. File issues if you have detailed feedback about the
+  specifications.
  
-* Unified Shared Memory (USM): James Brodman
+Unified Shared Memory (USM): James Brodman
+------------------------------------------
 
-  `Slides <presentations/2020-03-25-USM-for-TAB.pdf>`__
+* `Slides <presentations/2020-03-25-USM-for-TAB.pdf>`__
 
-  * Pointer-based memory management, complementary to SYCL buffers
-  * What is the latency for pointer queries?
+* Pointer-based memory management, complementary to SYCL buffers
+* What is the latency for pointer queries?
 
-    * Have not measured, but it requires calls into driver and is not
-      lightweight
-    * Can it be accelerated with bit masks?
-    * Could it be made fast enough so free() could check?
+  * Have not measured, but it requires calls into driver and is not
+    lightweight
+  * Can it be accelerated with bit masks?
+  * Could it be made fast enough so free() could check?
 
-  * Are there any issues when using multiple GPUs?
+* Are there any issues when using multiple GPUs?
 
-    * All pointers must be in same context
-    * Not likely to work if devices are not all from same vendor
-    * Peer-to-peer, GPU's directly accessing each other's memory, is
-      being considered for inclusion in Level Zero spec, and might be
-      added to DPC++ spec
-    * Non-restricted shared allocations should work fine
+  * All pointers must be in same context
+  * Not likely to work if devices are not all from same vendor
+  * Peer-to-peer, GPU's directly accessing each other's memory, is
+    being considered for inclusion in Level Zero spec, and might be
+    added to DPC++ spec
+  * Non-restricted shared allocations should work fine
 
-  * What about atomics?
+* What about atomics?
 
-    * We are trying to flesh out general details of atomics first, and
-      will define USM characteristics after.
+  * We are trying to flesh out general details of atomics first, and
+    will define USM characteristics after.
 
-  * OMP also uses the name USM, we need a document that
-    compares/contrasts the capability
+* OMP also uses the name USM, we need a document that
+  compares/contrasts the capability
 
-  * Are operations that prefetch (ensure data is resident on a
-    specific device) placed in queues? What does 'done' mean?
+* Are operations that prefetch (ensure data is resident on a
+  specific device) placed in queues? What does 'done' mean?
 
-    * Investigating
+  * Investigating
 
-  * Are hints suggestions or hard rules?
+* Are hints suggestions or hard rules?
 
-    * Device is free to define the behavior. Devices vary in their capability.
+  * Device is free to define the behavior. Devices vary in their capability.
 
-  * Can you change the flavor of allocation? (shared, device, ..)
+* Can you change the flavor of allocation? (shared, device, ..)
 
-    * No. What is the use case?
-    * Example: When we are limited by memory capacity, a library may
-      want to change the allocation.
+  * No. What is the use case?
+  * Example: When we are limited by memory capacity, a library may
+    want to change the allocation.
 
 2020-03-04
 ==========
