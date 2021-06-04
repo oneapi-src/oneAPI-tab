@@ -9,7 +9,7 @@ jobs:
     - name: Install prerequisites
       run: |
         python -m pip install --quiet --upgrade pip
-        pip install --quiet -r pre-commit
+        pip install --quiet pre-commit
     - name: Run pre-commit
       run: |
         pre-commit run --all
