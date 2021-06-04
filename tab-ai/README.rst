@@ -37,13 +37,13 @@ Welcome, Vision, oneAPI spec update - Sanjiv Shah, Intel
 Antares for SYCL - Wei Cui, Microsoft
 
 * `Slides <presentations/Antares4SyCL.pdf>`__
-  
+
 TensorFlow and oneDNN in Partnership - Penporn Koanantakool, Google
 
 * `Slides <presentations/2021-05-20-TF-and-onednn.pdf>`__
 * Question: Will XLA and Jit be supported?
 
-  Jit is already used inside oneDNN.  Currently XLA is not using oneDNN. 
+  Jit is already used inside oneDNN.  Currently XLA is not using oneDNN.
 
 Intel Extension for TensorFlow Demo - Jian Hui Li, Intel
 
@@ -116,7 +116,7 @@ oneDNN on ARM – Kentaro Kawakami : `Slides <presentations/oneAPI_development_o
   Fujistu team is working on Pull request with Google Mesh TF.
 
 oneDNN Graph API – Jian Hui Li : `Slides <presentations/oneDNNGraph-oneAPIAITAB.final.pdf>`__
-  
+
 * How easy is it to add Graph Optimizations to new HW Backends?
 
   Backends can develop their own graph optimizations to generate the
@@ -191,7 +191,7 @@ Level Zero – Ben Ashbaugh : `Slides <presentations/21ww07_AI_TAB_Level_Zero.pd
   does for each type of device/backend.
 
 ::
-   
+
   DPC++ device ----- CPU device -------------------- CPU jitted code is executed through sycl host_task
                 \--- GPU device ---- L0 backend  --- binary is wrapped in L0 module, then in sycl program, and run through SYCL RT
                                  \-- OCL backend --- binary is wrapped in OCL kernel, then in sycl program, and run through SYCL RT

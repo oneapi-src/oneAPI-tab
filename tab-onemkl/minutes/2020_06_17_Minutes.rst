@@ -57,7 +57,7 @@ Walk-through of the oneMKL Spec:
 * What about PBLAS and ScaLAPACK?
    * Cluster components are out of scope for version 1.0 of the spec.
 
-* In oneMKL, certain datatypes are supported, like std integers and complex numbers. 
+* In oneMKL, certain datatypes are supported, like std integers and complex numbers.
 * Additionally, since it is built on the DPC++ language, there are some types we use from the language itself (e.g., sycl::queue, sycl::buffer, etc.).  These show up in the interfaces.
 * Finally, we have some oneMKL defined datatypes, which were originally matched with the CBLAS type approach.
 * Theoretically we could have "F" or fill as a value for uplo; this may be expanded in future.

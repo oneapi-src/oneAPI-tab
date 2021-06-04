@@ -138,4 +138,3 @@ General RNG usage:
 
 * May want a specialized Engine, for instance, to support a thousand streams with a thousand threads.
    * This could be specified in the constructor.
-

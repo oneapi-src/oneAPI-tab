@@ -18,4 +18,3 @@ Meeting notes:
 | `February 24, 2021 <minutes/2021_02_24_Minutes.rst>`__
 | `March 24, 2021 <minutes/2021_03_24_Minutes.rst>`__
 | `May 19, 2021 <minutes/2021_05_19_Minutes.rst>`__
-

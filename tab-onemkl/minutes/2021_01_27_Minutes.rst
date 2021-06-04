@@ -105,7 +105,7 @@ Batch API extension requests:
 * Why use overloading, with functions having the same name?  It makes debugging difficult.
 
   * Overloading in oneMKL is used to handle different data types, when performing the same type of operation (e.g., gemm instead of dgemm). A similar rationale was applied for batch function naming.
-  * Concern from TAB that it can be hard to tell what is wrong when passing a lot of parameters and would suggest to use different names for the different types of batches. 
+  * Concern from TAB that it can be hard to tell what is wrong when passing a lot of parameters and would suggest to use different names for the different types of batches.
 
 * Why use `std::vector`?  `std::span` from C++20 is simply a pointer and a length.
 

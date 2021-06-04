@@ -2,11 +2,11 @@
  oneAPI Technical Advisory Board
 ================================
 
-This repository hosts notes and presentation materials from the 
+This repository hosts notes and presentation materials from the
 oneAPI Technical Advisory Board (TAB) meetings.  The Advisory
 Board is an invitation-only forum comprised of industry experts that help
 guide the oneAPI parallel programming ecosystem.  More information
-on oneAPI can be found at `oneapi.com <https://oneapi.com>`__. 
+on oneAPI can be found at `oneapi.com <https://oneapi.com>`__.
 
 The general community is invited to join the conversation by reviewing
 the `oneAPI Specification <https://spec.oneapi.com>`__, as well as the
@@ -23,6 +23,8 @@ you have a question about TAB, email `oneapi@intel.com
 Meeting notes:
 ==============
 
-| `oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) <tab-dpcpp-onedpl>`__
-| `oneAPI Technical Advisory Board Meeting (oneMKL) <tab-onemkl>`__
-| `oneAPI Technical Advisory Board Meeting (AI) <tab-ai>`__
+* `DPC++ & oneDPL <tab-dpcpp-onedpl>`__
+* `oneMKL <tab-onemkl>`__
+* `AI <Tab-ai>`__
+
+.. _ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL):

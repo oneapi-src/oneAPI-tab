@@ -1,0 +1,2332 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.16: http://docutils.sourceforge.net/" />
+<title>oneAPI Technical Advisory Board Meeting (DPC++ &amp; oneDPL) Meeting Notes</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 7952 2016-07-26 18:15:59Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: grey; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="oneapi-technical-advisory-board-meeting-dpc-onedpl-meeting-notes">
+<h1 class="title">oneAPI Technical Advisory Board Meeting (DPC++ &amp; oneDPL) Meeting Notes</h1>
+
+<div class="section" id="upcoming-topics">
+<h1>Upcoming Topics</h1>
+<ul class="simple">
+<li>Error handling</li>
+<li>Function pointers revisited</li>
+<li>[2nd half 2021] oneDPL C++ standard library support</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h1>2021-5-26</h1>
+<ul class="simple">
+<li>Robert Cohn (Intel)</li>
+<li>Aksel Simon Alpay (Heidelberg University)</li>
+<li>David Beckingsale (Lawrence Livermore National Laboratory)</li>
+<li>James Brodman (Intel)</li>
+<li>Christian Trott (Sandia National Laboratory)</li>
+<li>Erik Lindahl (Stockholm University)</li>
+<li>Michael Kinsner (Intel)</li>
+<li>Alexey Kukanov (Intel)</li>
+<li>Geoff Lowney (Intel)</li>
+<li>Greg Lueck (Intel)</li>
+<li>Andrew Lumsdaine (University of Washington, Pacific Northwest
+National Laboratory)</li>
+<li>Nevin Liber (Argonne National Laboratory)</li>
+<li>John Pennycook (Intel)</li>
+<li>Pablo Reble (Intel)</li>
+<li>James Reinders (Intel)</li>
+<li>Alison Richards (Intel)</li>
+<li>Romain Dolbeau (SiPearl)</li>
+<li>Ronan Keryell (Xilinx)</li>
+<li>Ruyman Reyes (Codeplay)</li>
+<li>Roland Schulz (Intel)</li>
+<li>Gergana Slavova (Intel)</li>
+<li>Timmie Smith (Intel)</li>
+<li>Umar Arshad (ArrayFire)</li>
+</ul>
+<div class="section" id="open-items">
+<h2>Open items</h2>
+<ul class="simple">
+<li>June TAB meeting is cancelled - overlaps with ISC'21</li>
+<li>Welcome to Romain Dolbeau, who joins us from SiPearl!</li>
+</ul>
+</div>
+<div class="section" id="invoke-simd-john-pennycook">
+<h2>invoke SIMD: John Pennycook</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2021-05-26-TAB-invoke_simd.pdf">Slides</a><ul>
+<li>Published slides have been updated based on discussion</li>
+</ul>
+</li>
+<li>Motivation</li>
+<li>Design Goals</li>
+<li>uniform&lt;T&gt;<ul>
+<li>Compiler can mark variables as:<ul>
+<li>Varying: different value for each work item</li>
+<li>Uniform: proven the same for each work item</li>
+</ul>
+</li>
+<li>uniform&lt;T&gt; overrides above compiler analysis, undefined if values
+are not the same</li>
+<li>Storage is implementation-defined. Can be scalar or vector.</li>
+<li>Discussion<ul>
+<li>Statement that it is an optimization hint and can be ignored is
+not accurate, user facing and can lead to bugs [Slides have been
+updated accordingly]</li>
+<li>Need debug options, when 1) assigned, and 2) modified<ul>
+<li>Cannot modify since it's a constant</li>
+</ul>
+</li>
+<li>Knowing it is constant changes viewpoint because it eliminates a
+class of bugs<ul>
+<li>Do we need to augment the name to make it clear it's a constant?</li>
+</ul>
+</li>
+<li>Name is common with OpenMP uniform, with some exceptions</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>invoke_simd<ul>
+<li>Explicit SIMD<ul>
+<li>Can invoke on a function that takes/returns SIMD/uniform
+arguments, SIMD mask<ul>
+<li>bool -&gt; SIMD mask</li>
+<li>arithmetic -&gt; SIMD</li>
+<li>uniform -&gt; scalar</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Discussion<ul>
+<li>Does reqd_sub_group_size have to be known at compile time to use invoke?<ul>
+<li>Yes. In current proposal, only possible to know this via an attribute
+that will be defined at compile-time.</li>
+</ul>
+</li>
+<li>Does it follow normal rules with templates/overloads?<ul>
+<li>Yes</li>
+</ul>
+</li>
+<li>Sub-group size<ul>
+<li>Taking an argument by reference is not allowed. Becomes hard
+to understand if it is reference to vector, or vector of
+references. OMP solves this by having linear reference but not
+available here.</li>
+</ul>
+</li>
+<li>How does it work on CPU? Can you set subgroup size to 8?<ul>
+<li>It is allowed. Same as GPU, changes SIMD width.</li>
+<li>This is only available in DPC++, SYCL does not guarantee this.</li>
+</ul>
+</li>
+<li>Discussion of SIMD-agnostic code: determining sub-group size<ul>
+<li>How do you reconcile this if you don't know the vector lengths?
+Those can vary by architecture, how can we be more arch-agnostic?
+Variability includes changing the sub-group size even during runtime.<ul>
+<li>That's really a C++ semantics concern, outside the scope of
+SYCL/DPC++</li>
+<li>Implementation could potentially still support through a
+kernel dispatched at launch time by first understanding the
+machine arch.  Would still need to know the set of possible
+sizes.</li>
+<li>Realistically, hardware vector lengths are limited. But,
+theoretically, a developer can optimize for any vector
+length.</li>
+<li>Seems like an appropriate topic for a change proposal in an
+upcoming C++ standard meeting.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id2">
+<h1>2021-4-21</h1>
+<ul class="simple">
+<li>Robert Cohn (Intel)</li>
+<li>Romain Dolbeau (SiPearl)</li>
+<li>David Beckingsale (Lawrence Livermore National Laboratory)</li>
+<li>Christian Trott (Sandia National Laboratory)</li>
+<li>En Shao (Institute of Compute Technology, China Academy of Sciences)</li>
+<li>Christian Trott (Sandia National Laboratory)</li>
+<li>Erik Lindahl (Stockholm University)</li>
+<li>Guangming Tan (Institute of Compute Technology, China Academy of Sciences)</li>
+<li>Simon P Garcia de Gonzalo (Barcelona Supercomputing Center)</li>
+<li>Michael Kinsner (Intel)</li>
+<li>Alexey Kukanov (Intel)</li>
+<li>Nevin Liber (Argonne National Laboratory)</li>
+<li>Geoff Lowney (Intel)</li>
+<li>Greg Lueck (Intel)</li>
+<li>Andrew Lumsdaine (University of Washington, Pacific Northwest
+National Laboratory)</li>
+<li>Pablo Reble (Intel)</li>
+<li>James Reinders (Intel)</li>
+<li>Alison Richards (Intel)</li>
+<li>Ronan Keryell (Xilinx)</li>
+<li>Timmie Smith (Intel)</li>
+<li>Stefan Yurkevitch (ArrayFire)</li>
+<li>Xinmin Tian (Intel)</li>
+<li>Tom Deakin (University of Bristol)</li>
+<li>Umar Arshad (ArrayFire)</li>
+<li>Ruyman Reyes (Codeplay)</li>
+<li>Pradeep Garigipati (ArrayFire)</li>
+<li>Andrew Richards (Codeplay)</li>
+<li>James Brodman (Intel)</li>
+</ul>
+<div class="section" id="onedpl-range-based-async-apis-alexey-kukanov">
+<h2>oneDPL range-based &amp; async APIs: Alexey Kukanov</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2021-04-21-oneDPL-for-TAB.pdf">Slides</a></li>
+<li>oneDPL recap</li>
+<li>Notable changes<ul>
+<li>Namespace oneapi::dpl, ::dpl, dropped oneapi::std because of
+usability</li>
+<li>Algorithms are blocking by default</li>
+<li>Execution policy<ul>
+<li>device_policy, fpga_policy</li>
+<li>Implicit conversion to sycl::queue</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Notable implementation-specific additions,
+not yet part of the spec:<ul>
+<li>&lt;random&gt;</li>
+<li>range-based API</li>
+<li>asynch API</li>
+</ul>
+</li>
+<li>&lt;random&gt;<ul>
+<li>Subset of C++ random</li>
+<li>Generate several RNs at once into sycl::vec</li>
+<li>Seed + offset lets you generate the same as one at a time API</li>
+<li>Feedback<ul>
+<li>for_each should not be part of std:<ul>
+<li>Have it for convenience, types prevent confusion with standard</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Range-based API<ul>
+<li>Ranges are new for C++20</li>
+<li>Used in algorithms, not yet for execution policy</li>
+<li>Not fully standard-compliant, not based on concepts, no projections</li>
+<li>Examples:<ul>
+<li>Fancy iterators allow combine into single kernel, but clumsy</li>
+<li>Ranges allows 1 kernel, more concise<ul>
+<li>Expressed as pipeline of transformations</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Using with execution policies<ul>
+<li>Range over:<ul>
+<li>Sequence of indexes</li>
+<li>USM data</li>
+<li>Buffer<ul>
+<li>With variants for all_read, all_write</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Looking for feedback on how to make it device copyable</li>
+</ul>
+</li>
+<li>oneDPL v2021.3 has 34 algorithms with range-based API</li>
+<li>Feedback: happy to see modern C++</li>
+</ul>
+</li>
+<li>Async api<ul>
+<li>Blocking is default</li>
+<li>Deferred waiting mode enabled by macro<ul>
+<li>Only for no return value functions</li>
+<li>Non-standard, will not be part of spec</li>
+</ul>
+</li>
+<li>Experimental async<ul>
+<li>Never wait, return future-like object</li>
+<li>Supports multi-device</li>
+</ul>
+</li>
+<li>API<ul>
+<li>Add _async suffix, alternatives: namespace, policy class</li>
+<li>Taken an arbitrary number of dependencies as arguments</li>
+<li>Returns an unspecified future-like type<ul>
+<li>Not specific because it is an extension and did not want to limit</li>
+<li>Inter-operable with sycl::event</li>
+<li>Holds internal buffers, so keep track of lifetime. Attached to return value.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Feedback<ul>
+<li>Do you have control over launching policy?<ul>
+<li>We use queue submit, so no control</li>
+</ul>
+</li>
+<li>Looks fine<ul>
+<li>Not sure adding dependencies is right, does not like argument number creep</li>
+<li>_async is ok since return value is different</li>
+</ul>
+</li>
+<li>Could look like CUDA graph. Add .then.</li>
+<li>Is this allowed to be eager?<ul>
+<li>Could start submitting at get</li>
+<li>Probably best to allow it be eager without requiring it.</li>
+</ul>
+</li>
+<li>Can you re-submit the same graph?<ul>
+<li>You can create separate function, which addresses convenience
+but not performance</li>
+<li>We are interested in looking at static graph</li>
+<li>.then allows more explicit graph building</li>
+<li>Looking at C++ executors, schedules, but proposals are not settled<ul>
+<li>It might address the issue of building/executing graphs</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Minimum C++<ul>
+<li>oneDPL supports C++11</li>
+<li>SYCL 2020 requires C++17</li>
+<li>Strong desire to move to c++17</li>
+<li>Feedback<ul>
+<li>Kokkos moved to 14 in Jan and will move to 17 by end of year,
+stakeholders are ok</li>
+<li>Surprises not good for users, should have very clear policy<ul>
+<li>e.g. support for latest-5 years</li>
+<li>Established cadence</li>
+</ul>
+</li>
+<li>Is oneDPL useable without 17? Relying on sycl features which need it.<ul>
+<li>We have different set of execution policies</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id3">
+<h1>2021-3-24</h1>
+<p>Attendees:</p>
+<ul class="simple">
+<li>Aksel Simon Alpay (Heidelberg University)</li>
+<li>James Brodman (Intel)</li>
+<li>John Melonakos (ArrayFire)</li>
+<li>Michael Kinsner (Intel)</li>
+<li>Alexey Kukanov (Intel)</li>
+<li>Nevin Liber (Argonne National Laboratory)</li>
+<li>Geoff Lowney (Intel)</li>
+<li>Greg Lueck (Intel)</li>
+<li>Andrew Lumsdaine (University of Washington, Pacific Northwest
+National Laboratory)</li>
+<li>John Pennycook (Intel)</li>
+<li>Pradeep Garigipati (ArrayFire)</li>
+<li>Pablo Reble (Intel)</li>
+<li>James Reinders (Intel)</li>
+<li>Alison Richards (Intel)</li>
+<li>Ronan Keryell (Xilinx)</li>
+<li>Roland Schulz (Intel)</li>
+<li>Gergana Slavova (Intel)</li>
+<li>Kevin Smith (Intel)</li>
+<li>Timmie Smith (Intel)</li>
+<li>Stefan Yurkevitch (ArrayFire)</li>
+<li>Xinmin Tian (Intel)</li>
+<li>Tom Deakin (University of Bristol)</li>
+<li>Umar Arshad (ArrayFire)</li>
+<li>Robert Cohn (Intel)</li>
+</ul>
+<div class="section" id="id4">
+<h2>Open items</h2>
+<ul class="simple">
+<li>IWOCL and SYCLcon 2021 <a class="reference external" href="https://www.iwocl.org/">registration is open</a></li>
+<li>Our next TAB meeting (on April 28) will coincide with an IWOCL live event.
+Will shift our TAB meeting to 1 week earlier (to April 21).</li>
+<li>What other topics should we discuss here? Give us your suggestions.</li>
+</ul>
+</div>
+<div class="section" id="sycl-2020-implementation-priorities-continued">
+<h2>SYCL 2020 implementation priorities (continued)</h2>
+<ul>
+<li><p class="first">Continued from <a class="reference internal" href="#sycl-2020-implementation-priorities">SYCL 2020 implementation priorities</a></p>
+</li>
+<li><p class="first"><a class="reference external" href="presentations/2021-02-24-TAB-dpcpp-implementation-prioritization.pdf">Slides</a></p>
+</li>
+<li><p class="first">No discussion on the following topics, please see slides for
+details.  Special request to group: provide feedback on images as it
+hasn't gotten much attention in the community.</p>
+<blockquote>
+<ul class="simple">
+<li>Kernel bundles</li>
+<li>Specialization constants</li>
+<li>Device copyable</li>
+<li>Sampled_image, unsampled_image</li>
+<li>Accessor to const T is read-only</li>
+<li>sycl::exception error codes, not class hierarchy</li>
+</ul>
+</blockquote>
+</li>
+<li><p class="first">Implemented features</p>
+<ul class="simple">
+<li>Kernels must be immutable<ul>
+<li>Change is due to high probability of bugs &amp; allowing more
+freedom of implementation</li>
+<li>A few folks have seen problems during implementation (when
+kernels could be mutable).  Lots of discussion on how to define
+the right behavior so ultimately decided to restrict
+mutability. If this group has use cases where restrictions need
+to be loosened, let the team know.</li>
+<li>Do we need to add a note/block article to describe the issue?
+Yes, documentation is a good idea.</li>
+</ul>
+</li>
+<li>marray<ul>
+<li>vec used for SPMD code, but designed for SIMD (want to move in
+that direction in the future)</li>
+<li>SIMD support via ESIMD, sycl::vec, std::simd</li>
+<li>marray recommended for vectors in SPMD code<ul>
+<li>Size does not contain padding</li>
+<li>No swizzle and write to element allowed</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>sycl::exception derives from std::exception<ul>
+<li>No discussion</li>
+</ul>
+</li>
+<li>Async errors no longer silently ignored<ul>
+<li>No discussion</li>
+</ul>
+</li>
+<li>sycl::bit_cast is c++20 bit_cast<ul>
+<li>No discussion</li>
+</ul>
+</li>
+<li>Queue<ul>
+<li>Without this, folks were missing a certain degree of control</li>
+<li>Basically, a missing constructor: explicit context &amp; device</li>
+</ul>
+</li>
+<li>Namespace from cl::sycl to sycl<ul>
+<li>Still accepts cl::sycl</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p class="first">Looking forward to further input from this group on prioritization
+for LLVM open source project. Want to know:</p>
+<ul class="simple">
+<li>What should be implemented next? What are you dependent on?</li>
+<li>What's missing DPC++ that's critical for your workloads</li>
+</ul>
+</li>
+<li><p class="first">Request for additional features</p>
+<ul class="simple">
+<li>Virtual function support<ul>
+<li>May not be possible on all devices, e.g. FPGA</li>
+<li>FPGA has some workarounds when virtual functions are needed through std::variant<ul>
+<li>Is variant something we can use in the general case as well? No.
+Requires developer to know all possible types &amp; code is not easy to re-write
+until you get pattern-matching.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Inheritance rules: single vs. multiple, restrictions<ul>
+<li>Could we use vtable size when conflicts arise?</li>
+<li>OpenMP committee is considering limiting to single inheritance to make implementation easier</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id5">
+<h1>2021-2-24</h1>
+<p>Attendees:</p>
+<ul class="simple">
+<li>Aksel Simon Alpay (Heidelberg University)</li>
+<li>David Beckingsale (Lawrence Livermore National Laboratory)</li>
+<li>Robert Cohn (Intel)</li>
+<li>James Brodman (Intel)</li>
+<li>Michael Kinsner (Intel)</li>
+<li>Alexey Kukanov (Intel)</li>
+<li>Nevin Liber (Argonne National Laboratory)</li>
+<li>Geoff Lowney (Intel)</li>
+<li>Greg Lueck (Intel)</li>
+<li>Andrew Lumsdaine (University of Washington, Pacific Northwest
+National Laboratory)</li>
+<li>John Pennycook (Intel)</li>
+<li>Pablo Reble (Intel)</li>
+<li>James Reinders (Intel)</li>
+<li>Roland Schulz (Intel)</li>
+<li>Gergana Slavova (Intel)</li>
+<li>Timmie Smith (Intel)</li>
+<li>Xinmin Tian (Intel)</li>
+<li>Tom Deakin (University of Bristol)</li>
+<li>Ronan Keryell (Xilinx)</li>
+<li>Alison Richards (Intel)</li>
+<li>Christian Trott (Sandia National Laboratory)</li>
+<li>John Melonakos (ArrayFire)</li>
+<li>Stefan Yurkevitch (ArrayFire)</li>
+<li>Umar Arshad (ArrayFire)</li>
+<li>Ruyman Reyes (Codeplay)</li>
+<li>Simon P Garcia de Gonzalo</li>
+<li>Pradeep Garigipati (ArrayFire)</li>
+<li>Andrew Richards (Codeplay)</li>
+</ul>
+<div class="section" id="sycl-2020-implementation-priorities">
+<h2>SYCL 2020 implementation priorities</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2021-02-24-TAB-dpcpp-implementation-prioritization.pdf">Slides</a></li>
+<li>Need your feedback on prioritizing implementation of SYCL 2020
+features for upstream LLVM</li>
+<li>Atomics<ul>
+<li>Could AddressSpace argument be generated at runtime? Other implementations
+have not used it.<ul>
+<li>Perhaps can consider a basic version of atomic_ref without it</li>
+</ul>
+</li>
+<li>Limitations on arbitray size atomics? Do we need to go beyond 64?<ul>
+<li>Yes, need it to support complex double.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Subgroups<ul>
+<li>How do we handle namespace changes and existing code?<ul>
+<li>We will have both for a period of time. Eventually DPC++
+extension will be deprecated.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Group Algorithms<ul>
+<li>What are the restrictions on where you call the APIs, especially
+nested loops?<ul>
+<li>Designed to be called from ndrange parallel. Cannot be called in
+hierarchical parallelsim (parallel for work group, parallel for
+work item).</li>
+<li>Could it work at work-group scope? We have it in hipSYCL.</li>
+<li>Pennycook to follow-up offline</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Sub-group Algorithms: no discussion, check slides for details</li>
+<li>Reductions<ul>
+<li>Do you support multiple reductions? Limited support only. For example,
+no more than one reducer per kernel is allowed.</li>
+<li>What happens if ndspan gets into C++23 but we are still on C++17?<ul>
+<li>Like span (C++20), we pre-adopt, eventually it becomes std::span</li>
+</ul>
+</li>
+<li>Why is parallel_for without explicit work-group size challenging?<ul>
+<li>Implementations have heuristics for work-group size. Can't use
+same heuristics because of other limitations: constraints on
+shared memory, etc.</li>
+</ul>
+</li>
+<li>Reduction code is 2/3 of the CUDA backend in Kokkos. It's important
+to have reductions in the standard - same code has failed by simply
+moving to a different version of the same hardware platform in the past.</li>
+<li>Any performance testing with span reductions? Past experience has shown
+that performance falls apartn when going beyond 8, you are better off
+doing scalar.</li>
+<li>Reductions aren't guaranteed to be deterministic? Right.</li>
+</ul>
+</li>
+<li>Group Mask: no discussion, check slides for details</li>
+<li>Accessor Changes: no discussion, check slides for details</li>
+<li>Work-group local memory<ul>
+<li>What is the rationale for using a function instead of wrapper
+type? Similar feature in hipSYCL but implemented with wrapper.<ul>
+<li>Thread local was closest. Did not want keyword. Thought wrapper type was
+confusing for scope &amp; visibility and has restrictions on where you can
+put it. Can't use as temporary. Looks like it is per work-item,
+but isn't.</li>
+<li>We want to align on function vs. wrapper for next spec version
+(Roland will follow-up with Aksel)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Multi_ptr: no discussion, check slides for details</li>
+<li>Heterogenous device<ul>
+<li>Is this a const expr function?<ul>
+<li>No. Only known at runtime.</li>
+</ul>
+</li>
+<li>Still looking at dispatching on the device, this is host dispatch.</li>
+</ul>
+</li>
+<li>Did not finish the remainder - will bring this discussion back in March<ul>
+<li>Focused on describing items that are not fully implemented yet.
+Looking for prioritization from this group on what to do first.</li>
+</ul>
+</li>
+<li>How should feedback be submitted?<ul>
+<li>Opening issues on <a class="reference external" href="https://github.com/intel/llvm">llvm github</a> is best. Ok to also use email to TAB members.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id6">
+<h1>2020-12-16</h1>
+<p>Attendees:</p>
+<ul class="simple">
+<li>Alexey Kukanov (Intel)</li>
+<li>Gergana Slavova (Intel)</li>
+<li>Xinmin Tian (Intel)</li>
+<li>Sanjiv Shah (Intel)</li>
+<li>Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)</li>
+<li>James Reinders (Intel)</li>
+<li>Mark Hoemmen (Stellar Science)</li>
+<li>Piotr Luszczek (University of Tennessee, Knoxville)</li>
+<li>Christian Trott (Sandia National Laboratory)</li>
+<li>Nevin Liber (Argonne National Laboratory)</li>
+<li>Marius Cornea (Intel)</li>
+<li>Michael Kinsner (Intel)</li>
+<li>Edward Smyth (Numerical Algorithms Group (NAG))</li>
+<li>Sarah Knepper (Intel)</li>
+<li>James Brodman (Intel)</li>
+<li>Geoff Lowney (Intel)</li>
+<li>Pablo Reble (Intel)</li>
+<li>Mehdi Goli (Codeplay)</li>
+<li>John Pennycook (Intel)</li>
+<li>Roland Schulz (Intel)</li>
+<li>Timmie Smith (Intel)</li>
+<li>Shane Story (Intel)</li>
+<li>Maria Kraynyuk (Intel)</li>
+<li>Jeff Hammond (Intel)</li>
+<li>Nichols Romero (Argonne National Laboratory)</li>
+<li>Penporn Koanantakool (Google)</li>
+<li>Alison Richards (Intel)</li>
+<li>Robert Cohn (Intel)</li>
+</ul>
+<div class="section" id="oneapi-how-we-got-here-where-are-we-going-geoff-lowney">
+<h2>oneAPI - how we got here, where are we going: Geoff Lowney</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2020-12-16-TAB-oneAPI-year-one.pdf">Slides</a></li>
+</ul>
+<p>Small group discussions on 3 major themes identified in Geoff's presentation</p>
+<ul class="simple">
+<li>Irregular Parallelism: led by Mike Kinsner &amp; James Brodman<ul>
+<li>Can we look to OpenMP? Mark up the work and later decide who does it.</li>
+<li>Dynamic dispatch but need to consider:<ul>
+<li>Chicken and egg</li>
+<li>Is this the right abstraction or is there a better option?</li>
+<li>Is a kernel too much?</li>
+<li>Do we need a smaller &quot;task&quot;?</li>
+</ul>
+</li>
+<li>Consider cross lane operations to help dynamically remap/move work. Do we need better
+ways to detect this?</li>
+<li>Can cooperative groups help here? Is converged control flow restriction too limiting?</li>
+<li>Tasking has been one approach<ul>
+<li>Granularity/complexity important - if it's too hard, an application might not use it</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>NUMA: led by Xinmin Tian<ul>
+<li><a class="reference external" href="presentations/2020-12-16-TAB-DPCPP-NUMA-Discussion.pdf">Slides</a></li>
+<li>Places (an abstraction) is a reasonable abstraction for NUMA affinity control</li>
+<li>The C++ standard committee executor WG is investigating NUMA support as well</li>
+<li>Ease-of-use considerations:<ul>
+<li>How to present NUMA control / usage model to users is very
+important for ease of use</li>
+<li>A big customer prefers a simpler method for applications w.r.t
+NUMA domains usage.  User expects implicit NUMA-aware support
+for applications cross-tile.</li>
+<li>We may need high abstractions such as “spread” and “close” for
+programmers</li>
+<li>Also need to support fine-level control for ninja programmers
+with a good mirror to architectural hierarchy</li>
+<li>GPU (HW and driver) may support a “fixed mode” for programmers
+on NUMA thread-affinity control</li>
+</ul>
+</li>
+<li>Performance:<ul>
+<li>TensorFlow uses and supports a high-level control of NUMA
+domains for TF performance</li>
+<li>Kokkos primarily uses OpenMP environment variables to get ~10x
+performance for some Kokkos users</li>
+<li>Good thread-affinity control is tied to implementation specifics</li>
+</ul>
+</li>
+<li>Scheduling:<ul>
+<li>How to support NUMA control has impact on portability and
+scheduling. Explicit NUMA control is served better in
+applications.  Use the subdevice (tile) as a GPU (a NUMA
+domain), then, the scheduling happens in the tile, which
+minimizes NUMA impact but is a bit more work for users.</li>
+<li>DPC++ (Gold) started with a high level control
+DPCPP_CPU_CU_AFFINITY={master | close | spread} for CPU.  There
+are scheduling implications as well for thread-data affinity.</li>
+<li>Need to give people an easy mode that works. Tying data to tasks
+is key: if we can design something where programmers say &quot;Here
+are my data dependencies, please schedule this in a way that
+gets good performance&quot; we'll have more luck than if we ask
+nonexperts to reason about things like whether pages should be
+interleaved and the granularity of thread scheduling.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Distributed computing: led by Jeff Hammond<ul>
+<li>Preference for send-recv, particularly in stencil codes</li>
+<li>TensorFlow doesn’t use MPI but we've reimplemented all of the MPI
+collective algorithms in MeshTensorFlow</li>
+<li>What is the memory consistency model?  Assume memory consistency
+only at kernel boundaries.  We did distributed GPU in Kokkos
+already and it works great on DGX but may not apply in other
+cases.</li>
+<li>Higher level abstractions are important but hard.  It’s nice to
+not have to implement the entire STL and start small.</li>
+<li>Still upset at MPI standard dropping C++ bindings.</li>
+<li>Getting things into ISO C++ is a huge pain.</li>
+<li>MPI-3 RMA is amazing. Should we consider as similar model in
+DPC++?</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id7">
+<h1>2020-10-28</h1>
+<p>Attendees:</p>
+<ul class="simple">
+<li>James Brodman (Intel)</li>
+<li>Robert Cohn (Intel)</li>
+<li>Tom Deakin (University of Bristol)</li>
+<li>Jeff Hammond (Intel)</li>
+<li>Ronan Keryell (Xilinx)</li>
+<li>Alexey Kukanov (Intel)</li>
+<li>Mike Kinsner (Intel)</li>
+<li>Jinpil Lee (RIKEN)</li>
+<li>Nevin Liber (Argonne National Laboratory)</li>
+<li>Geoff Lowney (Intel)</li>
+<li>Greg Lueck (Intel)</li>
+<li>Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)</li>
+<li>Heidi Poxon (HPE)</li>
+<li>Pablo Reble (Intel)</li>
+<li>James Reinders (James Reinders Consulting LLC)</li>
+<li>Alison Richards (Intel)</li>
+<li>Andrew Richards (Codeplay)</li>
+<li>Ruyman Reyes (Codeplay)</li>
+<li>Roland Schulz (Intel)</li>
+<li>Gergana Slavova (Intel)</li>
+<li>Timmie Smith (Intel)</li>
+<li>Christian Trott (Sandia National Laboratory)</li>
+</ul>
+<div class="section" id="sycl-oneapi-1-0-spec-feedback-roland-schulz-michael-kinsner">
+<h2>SYCL/oneAPI 1.0 Spec Feedback: Roland Schulz, Michael Kinsner</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2020-10-28-TAB-specFeedback.pdf">Slides</a></li>
+<li>oneAPI spec 1.0 released on 2020-09-28; SYCL 2020 provisional released<ul>
+<li>Thanks to TAB for their ongoing engagement</li>
+<li>Feedback provided has influenced both the DPC++ spec as well being fed into SYCL</li>
+</ul>
+</li>
+<li>Specifically looking for directional feedback: items that are missing, that need more focus, or
+are going in the wrong direction</li>
+<li>Extensions table in DPC++ spec section does not look up to date<ul>
+<li>oneAPI team to follow-up: e.g. SYCL provisional has parallel reduce but missing here</li>
+<li>The more we can say: &quot;this is just SYCL&quot;, the better</li>
+</ul>
+</li>
+<li>Want to know occupancy of kernels<ul>
+<li>Need to add the ability to set the global and local range in parallel_for range
+not nd_range, and perhaps also to assert no barriers in nd_range parallel_for.
+Would this be harder for CPU?</li>
+<li>SYCL has mechanism for query, but what it queries is back-end
+specific - need to add something at the user level</li>
+</ul>
+</li>
+<li>Better solution for trivially copyable issues<ul>
+<li>Everything you capture needs to be trivially copyable but implies
+destructor does not do anything specific</li>
+<li>Unified shared memory (USM) is one way to deal with it but
+it comes with penalties - need memcopyable solution</li>
+<li>Example: a tuple is unlikely to be trivially copyable</li>
+<li>Want the ability to have non-trivial destructors with byte-copyable objects</li>
+<li>Need follow-up meeting: this time next week</li>
+</ul>
+</li>
+<li>Static way to specify graphs of computations<ul>
+<li>After data movement is optimized, only thing left is latencies<ul>
+<li>Up to 40% latencies, in some cases</li>
+</ul>
+</li>
+<li>What about streams/events? They're not as effective as CUDA graphs.</li>
+<li>Construct up front vs record/replay?<ul>
+<li>In Kokkos, it needs to be explicitly constructed</li>
+<li>Having an explicit interface feels safer</li>
+<li>Vulkan/cl have been looking at command lists<ul>
+<li>Level 0 has support for command lists</li>
+</ul>
+</li>
+<li>Some benefit for paramertizability</li>
+<li>Would like to have timing of previous executions guide allocation/placement</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Auto-tuning for tiling/nd-range/work group size<ul>
+<li>Do I have to write heuristics for every platform when using oneAPI across GPU's/CPU's?</li>
+<li>Kokkos has moved from heuristics to auto-tuning, including an auto feature where users let
+Kokkos choose parameters</li>
+<li>Kernels can be called millions of time, auto-tuning in same run is
+not a big deal</li>
+<li>Not just work group, also want to control occupancy: run at lower occupancy
+to use less cache. Could achieve 2.5x speedup by reducing occupancy.</li>
+<li>Need a hint for parallel_for and query to know what happened</li>
+<li>Want hints from the user about whether auto-tuning might be worthwhile<ul>
+<li>Building a graph is one hint</li>
+<li>Hint about tuning parameter, does not change semantics, versus
+statements about barrier</li>
+<li>Using property list</li>
+<li>Lots of places where you hint</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Cooperative groups/barriers<ul>
+<li>Considering device barriers vs mpi-style</li>
+<li>Kokkos is not using this because can't be sure it can be supported everywhere,
+and might not be faster than forcing a kernel stop/start. Latencies
+are also a problem and the device runs at lower frequency.</li>
+<li>Going back to host is very expensive. Could we use wavefront algorithm?</li>
+<li>Tried it for solvers, did not work</li>
+<li>Prefer coarse-grain barriers because it is easier to support and barriers are just one among many sources of overhead</li>
+</ul>
+</li>
+<li>How can we get more feedback on oneDPL, oneTBB?<ul>
+<li>Should we continue to discuss in this meeting or a separate forum?</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id8">
+<h1>2020-09-23</h1>
+<p>Attendees:</p>
+<ul class="simple">
+<li>Robert Cohn (Intel)</li>
+<li>Gergana Slavova (Intel)</li>
+<li>Christian Trott (Sandia National Laboratory)</li>
+<li>Ruyman Reyes (Codeplay)</li>
+<li>Geoff Lowney (Intel)</li>
+<li>Heidi Poxon (HPE)</li>
+<li>James Brodman (Intel)</li>
+<li>James Reinders (James Reinders Consulting LLC)</li>
+<li>Mike Kinsner (Intel)</li>
+<li>Pablo Reble (Intel)</li>
+<li>Sergey Kozhukhov (Intel)</li>
+<li>Jinpil Lee (RIKEN)</li>
+<li>Timmie Smith (Intel)</li>
+<li>Ted Barragy (NAG Lead Computational Scientist supporting BP)</li>
+<li>Ronan Keryell (Xilinx)</li>
+<li>Roland Schulz (Intel)</li>
+<li>John Pennycook (Intel)</li>
+<li>David Beckingsale (Lawrence Livermore National Laboratory)</li>
+<li>Andrew Richards (Codeplay)</li>
+<li>Greg Lueck (Intel)</li>
+<li>Tom Deakin (University of Bristol)</li>
+</ul>
+<div class="section" id="id9">
+<h2>Open items</h2>
+<ul class="simple">
+<li>Welcome to Jinpil Lee who joins us from RIKEN! Jinpil is participating
+on the recommendation of Mitsuhisa Sato, RIKEN's deputy director.</li>
+<li>oneAPI spec v1.0 will be live next week. Thank you all in helping us
+achieve this tremendous milestone!</li>
+</ul>
+</div>
+<div class="section" id="extension-naming-greg-lueck">
+<h2>Extension naming: Greg Lueck</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2020-09-23-TAB-Function-pointers.pdf">Slides</a></li>
+<li>Purpose of this proposal is to prevent name conflicts between vendors
+extending the SYCL spec, and make the extension apparent in user code<ul>
+<li>Expect that SYCL new features will initially appear as extensions</li>
+</ul>
+</li>
+<li>3 options presented<ul>
+<li>Covers methods for macros, free functions, and members</li>
+<li>Options took into account:<ul>
+<li>Verbosity</li>
+<li>Similarity with past practice</li>
+<li>Similarity to macro name when all caps is used</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Option 1: All capitals</li>
+<li>Options 2: Initial capital</li>
+<li>Options 3: EXT prefix</li>
+<li>Discussion<ul>
+<li>Option 3 preferred by multiple people. Reasons why:<ul>
+<li>Most consistent</li>
+<li>Makes is clear this is an extension even if it's not obvious
+based on the extension string</li>
+<li>Any worry about additional verbosity?<ul>
+<li>Only 4 additional characters. Generally developers should be ok
+exchanging the extra characters for clarity.</li>
+<li>More verbosity might be good here as it forces people to be deliberate
+when using extensions</li>
+<li>For the vast majority, expect vendor-specific extensions to be
+temporary as they will be rolled into the standard. It is
+understood some may remain extensions forever because they are
+not suitable for standardization but those will be mostly
+exceptions.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Would like offline feedback on bad experiences with any of
+the options.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="function-pointers-sergey-kozhukhov">
+<h2>Function pointers: Sergey Kozhukhov</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2020-09-23-TAB-Extension-Naming.pdf">Slides</a></li>
+<li>Function pointers are important, we want to enable them in Intel
+implementation and SYCL spec</li>
+<li>The options shown are high-level summary of many detailed discussions -
+mostly looking for feedback on the overall direction</li>
+<li>Today, function pointers are not allowed in device code, want to relax this restriction</li>
+<li>How are function pointers represented in source code? 2 options:<ul>
+<li>(Option 1) Implicit: typical C/C++ function pointers</li>
+<li>(Option 2) Explicit: wrapper around pointer</li>
+</ul>
+</li>
+<li>Many options exist for language and implementation:<ul>
+<li>Attributes vs wrappers</li>
+<li>Part of function type</li>
+</ul>
+</li>
+<li>Based on past experience with Intel compiler implementation:<ul>
+<li>OpenMP: attributes were enabled but not part of type system</li>
+<li>Encountered difficulties in passing function pointers with different vector
+variants</li>
+</ul>
+</li>
+<li>Option 1: use C/C++ function pointers<ul>
+<li>Every pointer is created with default set of variants: e.g. linear,
+uniform</li>
+</ul>
+</li>
+<li>Discussion<ul>
+<li>Concerned about generating multiple variants. A lot of code
+generation. Is this really necessary, safe, clear how to implement
+with compilers?<ul>
+<li>Need it for virtual functions. Might need multiple variants for
+device.</li>
+<li>CUDA has bare-boned function pointer. Only usable in the context
+where it is created (device, host).<ul>
+<li>We would still need translation functions for passing function
+pointers between host and device</li>
+</ul>
+</li>
+<li>This is for SIMD. Need to know: vectorization factor (subgroup
+size), mask/unmask. Writing SPMD, and want to use SIMD, need
+called function to be in vector factor/mask.</li>
+</ul>
+</li>
+<li>Compiler must create these variants and make choices as it compiles/builds
+binary, how portable is this between different compilers, different hardware?<ul>
+<li>Not an easy answer, also need to take ease of debugging into account - does it
+crash when it fails?</li>
+<li>Each use case should be considered, including trade-offs for performance</li>
+</ul>
+</li>
+<li>Are attributes part of overload resolution? No.</li>
+<li>Option 2 is really for non-virtual functions but overall direction might be to
+do a hybrid approach</li>
+<li>Need more discussion on this topic. Bring back to October meeting.<ul>
+<li>Include more examples, clearer use case descriptions</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id10">
+<h1>2020-08-26</h1>
+<p>Attendees:</p>
+<ul class="simple">
+<li>Robert Cohn (Intel)</li>
+<li>Gergana Slavova (Intel)</li>
+<li>Alison Richards (Intel)</li>
+<li>Andrew Richards (Codeplay)</li>
+<li>Ruyman Reyes (Codeplay)</li>
+<li>David Beckingsale (Lawrence Livermore National Laboratory)</li>
+<li>Geoff Lowney (Intel)</li>
+<li>Hal Finkel (Argonne National Laboratory)</li>
+<li>James Brodman (Intel)</li>
+<li>John Pennycook (Intel)</li>
+<li>Jeff Hammond (Intel)</li>
+<li>Roland Schulz (Intel)</li>
+<li>Ronan Keryell (Xilinx)</li>
+<li>Ted Barragy (NAG Lead Computational Scientist supporting BP)</li>
+<li>Timmie Smith (Intel)</li>
+<li>Tom Deakin (University of Bristol)</li>
+<li>Xinmin Tian (Intel)</li>
+<li>Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)</li>
+<li>Christian Trott (Sandia National Laboratory)</li>
+<li>Greg Lueck (Intel)</li>
+</ul>
+<div class="section" id="id11">
+<h2>Open items</h2>
+<ul class="simple">
+<li>Spec: Robert Cohn<ul>
+<li>Looking for feedback on usefulness of the <a class="reference external" href="https://spec.oneapi.com/versions/0.9/oneAPI-spec.pdf">PDF version</a> of oneAPI
+spec</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="extensions-mechanism-greg-lueck">
+<h2>Extensions Mechanism: Greg Lueck</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2020-08-26-TAB-Extension-Mechanism.pdf">Slides</a></li>
+<li>Extension mechanism<ul>
+<li>Discussion<ul>
+<li>Extension of existing classes breaks binary compatibility?<ul>
+<li>When moving between vendors, you have to recompile, even
+without extensions</li>
+<li>It's the job of the implementor to ensure vendor-specific code
+runs on targeted hardware</li>
+</ul>
+</li>
+<li>Needs more verbose guidance on how to make changes that are
+source compatible: conversions, constructors, overload sets.
+Further discussion to happen offline.</li>
+<li>Compile-time warnings would be useful</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Optional features of devices<ul>
+<li>Similar to extension, because it may not be there</li>
+<li>has() is passed aspect enum. Use if/template to handle absence of
+feature</li>
+<li>Error handling<ul>
+<li>Throw runtime exception when using a feature that is not supported
+by device</li>
+</ul>
+</li>
+<li>devconstexpr: constant when compiling for device<ul>
+<li>Discussion<ul>
+<li>If this uses a keyword, it's no longer C++</li>
+<li>Could hide it in macro but that has other downsides</li>
+<li>Issues about lambda capture, device compiler, types not being
+present when feature is not supported.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="local-memory-allocation-john-pennycook">
+<h2>Local memory allocation: John Pennycook</h2>
+<ul class="simple">
+<li><a class="reference external" href="2020-08-26-TAB-LocalMemory.pdf">Slides</a></li>
+<li>Ability to declare local memory for static size, instead of just accessor</li>
+<li>group_local_memory allocates, returning multi_ptr</li>
+<li>Discussion<ul>
+<li>Dynamically sized arrays<ul>
+<li>Only static, use accessor for dynamic</li>
+</ul>
+</li>
+<li>Support for arrays (std::array) and type requirements
+(e.g. trivially destructible)<ul>
+<li>Arrays supported, only requirement is trivially destructible</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Not enough time for full discussion, looking forward to further feedback here</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id12">
+<h1>2020-07-22</h1>
+<p>Attendees:</p>
+<ul class="simple">
+<li>Robert Cohn (Intel)</li>
+<li>Gergana Slavova (Intel)</li>
+<li>Ilya Burylov (Intel)</li>
+<li>Alison Richards (Intel)</li>
+<li>Andrew Richards (Codeplay)</li>
+<li>Christian Trott (Sandia National Laboratory)</li>
+<li>David Beckingsale (Lawrence Livermore National Laboratory)</li>
+<li>Geoff Lowney (Intel)</li>
+<li>Hal Finkel (Argonne National Laboratory)</li>
+<li>James Brodman (Intel)</li>
+<li>John Pennycook (Intel)</li>
+<li>Mike Kinsner (Intel)</li>
+<li>James Reinders (James Reinders Consulting LLC)</li>
+<li>Jeff Hammond (Intel)</li>
+<li>Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)</li>
+<li>Roland Schulz (Intel)</li>
+<li>Ronan Keryell (Xilinx)</li>
+<li>Ruyman Reyes (Codeplay)</li>
+<li>Timmie Smith (Intel)</li>
+<li>Xinmin Tian (Intel)</li>
+</ul>
+<div class="section" id="accessors-ilya-burylov">
+<h2>Accessors: Ilya Burylov</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2020-07-22accessorsimplification.pdf">Slides</a></li>
+<li>Changes in accessors for SYCL 2020 provisional</li>
+<li>Device and host accessors have different behavior, not obvious from the call name<ul>
+<li>Absence of handler is interpreted different for host (blocking) and non-host (non-blocking) accessor</li>
+<li>Placeholder host accessor are not supported</li>
+<li>Considering making 2 new types of host accessor, blocking and non-blocking</li>
+<li>Discussion<ul>
+<li>Concerns about excessive overloading and implicit behavior</li>
+<li>Just call it non-blocking vs calling it a task<ul>
+<li>Names-based on semantics vs use-case</li>
+<li>Recommend to make the code be self-descriptive</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Creating more dedicated types/alias<ul>
+<li>Is this level of granularity enough?</li>
+</ul>
+</li>
+<li>Removed operator[](size_t index)<ul>
+<li>Allowed passing item instead</li>
+<li>Need implicit conversions from size_t and other types to id<ul>
+<li>Should check spec that it works that way</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Feedback from Argonne<ul>
+<li>Highly desirable to have uniform set of rules for naming things<ul>
+<li>Define a consistent prefix</li>
+<li>E.g. image_accessor vs host_image_accessor, should &quot;image&quot; always be first?</li>
+</ul>
+</li>
+<li>Deduction guides are useful, but don't solve the problem of strict argument order<ul>
+<li>Default arguments must be in order. Might be better to have
+specialized/more general.</li>
+<li>Kokkos experience: helper classes take variadic arguments to
+make typedef<ul>
+<li>Host accessor does not help, because it needs to be stored and
+must be generic</li>
+<li>Christian can provide an example to share with the group</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Confusion around how local memory, irregularity around usage<ul>
+<li>Local memory allocated by accessor, different from all other
+accessors. Normally allocated somewhere else.</li>
+<li>Difference between view &amp; allocation</li>
+<li>Working on a proposal, expect to bring it to this body for
+review soon</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Are 0 dimensional data structures used?<ul>
+<li>Yes, common in Kokkos<ul>
+<li>Atomic counters, error flags, ..</li>
+</ul>
+</li>
+<li>Would also like to see 0 dimensional buffer (no range, 1 element)</li>
+<li>Need subspan mechanism to get view vs 1-off solutions</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id13">
+<h1>2020-07-01</h1>
+<p>Attendees:</p>
+<ul class="simple">
+<li>Robert Cohn (Intel)</li>
+<li>Gergana Slavova (Intel)</li>
+<li>Alexey Kukanov (Intel)</li>
+<li>Antonio J. Peña (Barcelona Supercomputing Center)</li>
+<li>David Beckingsale (Lawrence Livermore National Laboratory)</li>
+<li>Geoff Lowney (Intel)</li>
+<li>Hal Finkel (Argonne National Laboratory)</li>
+<li>Heidi Poxon (HPE)</li>
+<li>James Brodman (Intel)</li>
+<li>John Pennycook (Intel)</li>
+<li>Roland Schulz (Intel)</li>
+<li>Ronan Keryell (Xilinx)</li>
+<li>Ruyman Reyes (Codeplay)</li>
+<li>Sandip Mandera (Intel)</li>
+<li>Timmie Smith (Intel)</li>
+<li>Tom Deakin (University of Bristol)</li>
+<li>Xinmin Tian (Intel)</li>
+<li>Alison Richards (Intel)</li>
+<li>Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)</li>
+<li>Andrew Richards (Codeplay)</li>
+</ul>
+<div class="section" id="id14">
+<h2>Open items</h2>
+<ul class="simple">
+<li>SYCL 2020 provisional spec is now public: James Brodman<ul>
+<li>Fairly major change vs. SYCL 1.2.1 including USM, quality-of-life
+improvements, new way of doing images</li>
+<li>A lot of the changes included were prototyped in DPC++ first</li>
+<li>Call for action: provide input on the spec either via the SYCL
+github (to be available soon) or through this group</li>
+</ul>
+</li>
+<li>DPC++ vs SYCL<ul>
+<li>With SYCL 2020, differences between DPC++ and SYCL are smaller,
+would be good to see a technical list of differences</li>
+<li>Would like to see a closer connection being made between DPC++ &amp; SYCL<ul>
+<li>DPC++ messaging has explicitly shifted to highlight the fact that
+DPC++ = ISO C++ + SYCL + extensions</li>
+</ul>
+</li>
+<li>What is the need for a separate name, why not call it SYCL + vendor
+extensions, similar to OpenMP?<ul>
+<li>DPC++ is a short-hand way to refer to the collection of extensions.
+While the difference between DPC++ &amp; SYCL 2020 is fairly small now due to
+the recent release, expectation is to continue to prototype new extensions
+through DPC++ before upstreaming to SYCL.</li>
+</ul>
+</li>
+<li>This feedback will be rolled up to ensure it reaches the right people</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="atomics-john-pennycook">
+<h2>Atomics: John Pennycook</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2020-07-01-TAB-Atomics.pdf">Slides</a></li>
+<li>deprecate cl::sycl::atomic replace with intel::atomic_ref<ul>
+<li>mostly aligned with c++2- std::atomic_ref</li>
+<li>Which address spaces?<ul>
+<li>local, global, or generic</li>
+</ul>
+</li>
+<li>What about constant?<ul>
+<li>Atomic does not seem relevant</li>
+<li>Issue about LLVM optimization, synchronization edges, etc. For
+more information, see comment 6 in <a class="reference external" href="https://bugs.llvm.org/show_bug.cgi?id=37716">LLVM PR37716</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>memory orderings and scopes</li>
+<li>single happens-before relation<ul>
+<li>questions about hardware implications, need for fences</li>
+<li>By specifying memory order/scope, you can tune performance</li>
+<li>Situations where fences are required dominates the
+performance. Need to do the exercise where fences are required for
+common patterns and look at other architectures, if it will be
+part of SYCL</li>
+</ul>
+</li>
+<li>changes to fences and barriers</li>
+<li>changes memory consistency model<ul>
+<li>makes sycl default behavior close to C++</li>
+<li>difference still exists because private memory</li>
+</ul>
+</li>
+<li>Questions<ul>
+<li>should we support std::atomic_ref in device code?<ul>
+<li>Yes as a migration solution, with expectation that eventually
+code uses SYCL native</li>
+<li>Do not want to support name, but give it different meaning</li>
+<li>Interesting to see if this supports different-sized &lt;T&gt;s</li>
+</ul>
+</li>
+<li>Do we need std::atom-like interface as well as atomic_ref?<ul>
+<li>Is the issue performance?<ul>
+<li>What are the semantics of std::atomic on host being
+accessed on device</li>
+<li>Argonne has code that uses std::atomic. Would it make sense to
+compile code that uses it in device code?</li>
+<li>what is code usage of std::atomic?<ul>
+<li>arrays, data structures</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id15">
+<h1>2020-05-27</h1>
+<p>Attendees:</p>
+<ul class="simple">
+<li>Ted Barragy (NAG Lead Computational Scientist supporting BP)</li>
+<li>David Beckingsale (Lawrence Livermore National Laboratory)</li>
+<li>James Brodman (Intel)</li>
+<li>Robert Cohn (Intel)</li>
+<li>Tom Deakin (University of Bristol)</li>
+<li>Hal Finkel (Argonne National Laboratory)</li>
+<li>Ronan Keryell (Xilinx)</li>
+<li>Mike Kinsner (Intel)</li>
+<li>Alexey Kukanov (Intel)</li>
+<li>Geoff Lowney (Intel)</li>
+<li>Andrew Lumsdaine (University of Washington, Pacific Northwest National Laboratory)</li>
+<li>Antonio J. Peña (Barcelona Supercomputing Center)</li>
+<li>John Pennycook (Intel)</li>
+<li>Heidi Poxon (HPE)</li>
+<li>Pablo Reble (Intel)</li>
+<li>James Reinders (James Reinders Consulting LLC)</li>
+<li>Alison Richards (Intel)</li>
+<li>Andrew Richards (Codeplay)</li>
+<li>Roland Schulz (Intel)</li>
+<li>Gergana Slavova (Intel)</li>
+<li>Timmie Smith (Intel)</li>
+<li>Christian Trott (Sandia National Laboratory)</li>
+</ul>
+<div class="section" id="data-parallel-c-library-continued-alexey-kukanov">
+<h2>Data Parallel C++ Library continued: Alexey Kukanov</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2020-05-oneDPL-for-TAB.pdf">Slides</a></li>
+<li>Namespaces<ul>
+<li>oneapi:: vs one:<ul>
+<li>Don't like 'one': too much chance for collision</li>
+<li>People will make jokes about 'one'</li>
+<li>'one' has poor searchability</li>
+<li>People can make alias if they want something shorter</li>
+</ul>
+</li>
+<li>Board recommends 'oneapi'</li>
+</ul>
+</li>
+<li>Top level include directory<ul>
+<li>one/dpl/ vs oneapi/dpl vs onedpl vs dpl</li>
+<li>Board recommends to follow the namespace structure: oneapi/dpl</li>
+<li>Can use symlinks/header that includes header for support old code</li>
+</ul>
+</li>
+<li>oneDPL execution policy</li>
+<li>predefined execution policy<ul>
+<li>Verbose: default_policy cpu_policy, ...</li>
+<li>Concise: cpu, gpu, default. Namespace will make it unique.</li>
+<li>Don't like pol, preferred spell it out, default preferred to deflt</li>
+<li>Generally concise is not preferred.  Code is read more than written so it's better to be verbose.</li>
+<li>Like to distinguish between type and variable. Using C++17 std way with _v will make the distinction clear.</li>
+<li>What about policy_gpu?<ul>
+<li>Not a big difference</li>
+</ul>
+</li>
+<li>Short names are not that short because you would normally have namespace</li>
+</ul>
+</li>
+<li>Sync vs Async<ul>
+<li>Currently some algorithms block, some do not block</li>
+<li>Board would prefer option 'c'<ul>
+<li>Standard API should be blocking</li>
+<li>Add an explicit async API for those implementations that need it</li>
+</ul>
+</li>
+<li>For current implementation, move into namespace?</li>
+<li>No code out there now. Making it synchronous is a performance
+but not correctness issue. Like async, but if goal is to follow C++,
+then require all blocking</li>
+</ul>
+</li>
+<li>Range-based API for algorithms<ul>
+<li>Allows concise expression of pipelines</li>
+<li>Did we miss algorithms?  Please review list and provide feedback.</li>
+<li>Add ranges now, or as extension/experimental?</li>
+<li>Would be useful for graph library</li>
+<li>No disagreement about delaying making it part of spec<ul>
+<li>Ok to have it implemented even though it's not part of spec.
+No experience in HPC community with using ranges so having it
+available would give people a chance to experiment.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Extension APIs<ul>
+<li>No discussion, see details in slide 14</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id16">
+<h1>2020-04-22</h1>
+<p>Attendees:</p>
+<ul class="simple">
+<li>Bharat Agrawal (Ansys)</li>
+<li>David Beckingsale (Lawrence Livermore National Laboratory)</li>
+<li>James Brodman (Intel)</li>
+<li>Robert Cohn (Intel)</li>
+<li>Tom Deakin (University of Bristol)</li>
+<li>Hal Finkel (Argonne National Laboratory)</li>
+<li>Jeff Hammond (Intel)</li>
+<li>Mike Kinsner (Intel)</li>
+<li>Alexey Kukanov (Intel)</li>
+<li>Geoff Lowney (Intel)</li>
+<li>Antonio J. Peña (Barcelona Supercomputing Center)</li>
+<li>John Pennycook (Intel)</li>
+<li>Pablo Reble (Intel)</li>
+<li>James Reinders (James Reinders Consulting LLC)</li>
+<li>Ruyman Reyes (Codeplay)</li>
+<li>Andrew Richards</li>
+<li>Alison Richards (Intel)</li>
+<li>Gergana Slavova (Intel)</li>
+<li>Timmie Smith (Intel)</li>
+<li>Xinmin Tian (Intel)</li>
+<li>Phuong Vu (BP)</li>
+</ul>
+<div class="section" id="administrative">
+<h2>Administrative</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/oneAPI-TAB-Rules-of-the-Road.pdf">Rules of the road</a></li>
+<li>Notes published immediately after the meeting on
+<a class="reference external" href="https://github.com/oneapi-src/oneAPI-tab/tree/master/tab-dpcpp-onedpl">Github</a></li>
+<li>Email <a class="reference external" href="mailto:Robert.S.Cohn&#64;intel.com">Robert.S.Cohn&#64;intel.com</a> or submit a github PR to add/remove name, add
+affiliation to attendees list</li>
+</ul>
+</div>
+<div class="section" id="data-parallel-c-library-alexey-kukanov">
+<h2>Data Parallel C++ Library: Alexey Kukanov</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2020-04-22-oneDPL-for-TAB.pdf">Slides</a></li>
+<li>Recap<ul>
+<li>STL API</li>
+<li>Parallel STL</li>
+<li>non-standard API extensions</li>
+</ul>
+</li>
+<li>Required C++ version<ul>
+<li>Minimum DPC++ version will be C++17</li>
+<li>Is it ok for oneDPL?</li>
+<li>Will limit host-side environment. Default is C++14 for latest
+host compilers</li>
+<li>Discussion:<ul>
+<li>Where are livermore compilers?<ul>
+<li>C++11 is fine, RAJA is C++11-based, some customers not ready for C++14</li>
+<li>What is the issue?<ul>
+<li>People running on systems where supported gcc version is old</li>
+<li>But not about the code</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Why is host compiler different?</li>
+<li>If we require only 14, can we still make deduction work
+smoothly? Yes.</li>
+<li>At Argonne, there is a range of conservatism, we should not
+impose artificial barriers<ul>
+<li>Provide C++17 features and ease of use when available, but
+there is value in being more conservative</li>
+<li>On the other hand, we don't want to create 2 dialects</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Top-level namespace<ul>
+<li>DPC++ has multiple namespaces: sycl::, sycl::intel</li>
+<li>oneDPL adds a namespace</li>
+<li>Discussion<ul>
+<li>Strictly standard could be nested, new things own namespace<ul>
+<li>Requires change to sycl spec</li>
+</ul>
+</li>
+<li>Standard allows to use the sycl::intel extension</li>
+<li>Recommend top-level oneapi namespace<ul>
+<li>Can use C++ using to bring it into sycl::intel if desired</li>
+<li>Example: oneapi::mkl</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Standard library classes<ul>
+<li>Issues<ul>
+<li>Some classes cannot be fully supported</li>
+<li>3 different implementations</li>
+</ul>
+</li>
+<li>Options<ul>
+<li>White-listed</li>
+<li>Freestanding implementation</li>
+<li>Duplicate, bring standard library into SYCL<ul>
+<li>Spec says whether require implementation or to host to host</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Analysis of pro/cons, see slide</li>
+<li>Propose to go the combined route:<ul>
+<li>Whitelist the things that 'just work'</li>
+<li>API's that need substantial adjustments are defined in SYCL spec</li>
+<li>Freestanding for the rest</li>
+<li>Analysis, see slide</li>
+</ul>
+</li>
+<li>Discussion<ul>
+<li>Seems like a practical solution</li>
+<li>For freestanding, would there be conversions for standard types? Yes.</li>
+</ul>
+</li>
+<li>Slide shows mapping, whitelisted, custom, SYCL<ul>
+<li>Discussion<ul>
+<li>Functional can't be whitelisted</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Not enough time for remaining topics, moved to next meeting</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id17">
+<h1>2020-03-25</h1>
+<p>Attendees: David Beckingsale, James Brodman, Robert Cohn, Tom Deakin,
+Hal Finkel, Mike Kinsner, Alexey Kukanov, Erik Lindahl, Geoff Lowney,
+Antonio J. Peña, John Pennycook, Pablo Reble, James Reinders, Ruyman
+Reyes, Alison Richards, Roland Schulz, Timmie Smith, Xinmin Tian</p>
+<div class="section" id="github-robert-cohn">
+<h2>Github: Robert Cohn</h2>
+<ul class="simple">
+<li>We will be publishing TAB presentations materials &amp; notes with
+names on <a class="reference external" href="https://github.com/oneapi-src/oneapi-tab">github</a>. Please contact
+<a class="reference external" href="mailto:Robert.S.Cohn&#64;intel.com">Robert.S.Cohn&#64;intel</a> if you
+have concerns. If you are a watcher on the repo, you will get
+email notification for meeting notes. Follow-up discussions can be
+in the form of github issues.</li>
+<li>Specification is available on <a class="reference external" href="https://spec.oneapi.com/">oneapi.com</a>. DPC++ spec contains the list of
+SYCL extensions with links to github docs describing them.</li>
+<li>oneAPI open source projects are moving to <a class="reference external" href="https://github.com/oneapi-src/">oneapi-src</a> organization on github.</li>
+<li>Repo for oneAPI Specification <a class="reference external" href="https://github.com/oneapi-src/oneapi-spec">sources</a> is in same
+org. File issues if you have detailed feedback about the
+specifications.</li>
+</ul>
+</div>
+<div class="section" id="unified-shared-memory-usm-james-brodman">
+<h2>Unified Shared Memory (USM): James Brodman</h2>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2020-03-25-USM-for-TAB.pdf">Slides</a></li>
+<li>Pointer-based memory management, complementary to SYCL buffers</li>
+<li>What is the latency for pointer queries?<ul>
+<li>Have not measured, but it requires calls into driver and is not
+lightweight</li>
+<li>Can it be accelerated with bit masks?</li>
+<li>Could it be made fast enough so free() could check?</li>
+</ul>
+</li>
+<li>Are there any issues when using multiple GPUs?<ul>
+<li>All pointers must be in same context</li>
+<li>Not likely to work if devices are not all from same vendor</li>
+<li>Peer-to-peer, GPU's directly accessing each other's memory, is
+being considered for inclusion in Level Zero spec, and might be
+added to DPC++ spec</li>
+<li>Non-restricted shared allocations should work fine</li>
+</ul>
+</li>
+<li>What about atomics?<ul>
+<li>We are trying to flesh out general details of atomics first, and
+will define USM characteristics after.</li>
+</ul>
+</li>
+<li>OMP also uses the name USM, we need a document that
+compares/contrasts the capability</li>
+<li>Are operations that prefetch (ensure data is resident on a
+specific device) placed in queues? What does 'done' mean?<ul>
+<li>Investigating</li>
+</ul>
+</li>
+<li>Are hints suggestions or hard rules?<ul>
+<li>Device is free to define the behavior. Devices vary in their capability.</li>
+</ul>
+</li>
+<li>Can you change the flavor of allocation? (shared, device, ..)<ul>
+<li>No. What is the use case?</li>
+<li>Example: When we are limited by memory capacity, a library may
+want to change the allocation.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id18">
+<h1>2020-03-04</h1>
+<ul class="simple">
+<li>Follow-up from last meeting: John Pennycook<ul>
+<li>Prototype implementation published as <a class="reference external" href="https://github.com/intel/llvm/pull/1236">PR</a> on github</li>
+<li>Addressed feedback on types for reductions: assertion checks if
+are accumulating in type different from initial type</li>
+</ul>
+</li>
+<li>Minimum version of C++: James Brodman <a class="reference external" href="presentations/2020-03-04-TAB-C++-Minimum-Version.pdf">Slides</a><ul>
+<li>Currently C++11, want to move to C++17</li>
+<li>Considered C++14 + key features</li>
+<li>Clang default is 14</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id19">
+<h1>2020-01-28</h1>
+<p><a class="reference external" href="presentations/2020-01-28-TAB-DPCPPMeeting2_v7.pdf">Slides</a></p>
+<ul class="simple">
+<li>Follow-up from last meeting</li>
+<li>Review of group collectives</li>
+<li>Simplifying language for common patterns</li>
+</ul>
+</div>
+<div class="section" id="id20">
+<h1>2019-11-17</h1>
+<p>Slides:</p>
+<ul class="simple">
+<li><a class="reference external" href="presentations/2019-11-17-oneAPI-vision-for-TAB.pdf">Overview</a></li>
+<li><a class="reference external" href="presentations/2019-11-17-dpcpp-language-and-extensions.pdf">DPC++</a></li>
+<li><a class="reference external" href="presentations/2019-11-17-oneDPL.pdf">oneDPL</a></li>
+<li>What is oneAPI?<ul>
+<li>oneAPI is a programming model for accelerators. It contains nine
+elements, in four distinct groups:<ul>
+<li>Language &amp; its library<ul>
+<li>oneAPI Data Parallel C++ (DPC++)</li>
+<li>oneAPI Data Parallel C++ Library (oneDPL)</li>
+</ul>
+</li>
+<li>Deep Learning Libraries<ul>
+<li>oneAPI Deep Neural Network Library (oneDNN)</li>
+<li>oneAPI Collective Communications Library (oneCCL)</li>
+</ul>
+</li>
+<li>Domain-focused Libraries<ul>
+<li>oneAPI Math Kernel Library (oneMKL)</li>
+<li>oneAPI Data Analytics Library (oneDAL)</li>
+<li>oneAPI Threading Building Blocks (oneTBB)</li>
+<li>oneAPI Video Processing Library (oneVPL)</li>
+</ul>
+</li>
+<li>Hardware Interface Layer<ul>
+<li>oneAPI Level Zero (Level Zero)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>What is the minimum base language for DPC++?  Are newer standards
+supported? Have you talked about changing the DPC++ baseline to C++
+14?<ul>
+<li>C++11 is the base language for DPC++; more modern versions of C++
+can be used.  Our goal is to carefully define interoperability
+with features from newer C++ standards so that implementations of
+DPC++ are consistent.  (The Intel open source toolchain is based
+on trunk clang, so it is very modern.)</li>
+<li>For SYCL the minimum base language is ISO C++11 (in SYCL
+1.2.1). C++11 features are used in the definition of language
+features.  This allows tools to compile SYCL even if they only
+support C++11.  Tools supporting newer C++ will compile code using
+newer C++ features, without issue.</li>
+<li>Changing the baseline to C++14 is something that will happen
+shortly as part of the SYCL specification.  We expect to see a
+formal process and timeline defined that allows developers and
+implementers to reason about what the minimum version will be in
+future SYCL specifications.  And again, be aware that this is the
+minimum version which a compiler must support because mandatory
+language features use aspects of that C++ version.  Newer C++ can
+always be used if a toolchain supports it all that you lose is
+guaranteed compatibility with other implementations that don’t
+support as modern a C++ version.</li>
+</ul>
+</li>
+<li>Why is the base OpenCL version 1.2 instead of 2.0?<ul>
+<li>OpenCL doesn’t have significant adoption beyond 1.2. The Khronos
+OpenCL working group is moving to a more flexible model, where
+only desired features beyond 1.x must be supported.  We’re
+aligning with that direction and want DPC++ to be deployable on a
+wide base of OpenCL implementations (which is 1.2 today).  DPC++
+features such as USM have OpenCL extensions to enable key features
+from DPC++ to be available on top of all OpenCL versions, such as
+1.2.</li>
+</ul>
+</li>
+<li>The 0.5 specification has a table specifying which language features
+are required on a device and which are optional, e.g.,
+pipes/channels are required on FPGA and subgroups not required on
+FPGA. How did you make this decision?<ul>
+<li>Most features should be supported on all devices for functional
+portability, even if not performant.  However, some language
+features are naturally IP specific.</li>
+<li>Pipes are an easy example.  Pipes are designed for spatial
+architectures and require independent forward progress across
+kernels for many uses, a forward progress guarantee that we don’t
+want to impose on all devices.  OpenCL 2.0 tried to make pipes
+usable on GPUs as well as FPGAs and ended up with a bloated
+feature that nobody uses because it can’t achieve performance
+anywhere, even on FPGA.</li>
+<li>Implementation effort is also a consideration.  We don’t want to
+create large additional effort in DPC++ implementations for a
+feature on an IP where it is expensive to implement and will
+rarely be used.  We see a balance between requiring implementation
+effort vs portability of a feature across all devices.</li>
+<li>Subgroups are not required on FPGA, because implementations
+typically do not vectorize across work-items.  However, subgroups
+can be easily implemented with a subgroup size of 1.  Would this
+be a useful change to the specification?</li>
+</ul>
+</li>
+<li>Unified Shared Memory (USM) how does this work with OpenCL?<ul>
+<li>We have published the appropriate extensions for OpenCL to enable
+USM.  USM should be considered an alternative to (or a replacement
+for) the SVM features added to OpenCL 2.0, with USM being designed
+to be much more usable.  Note our proposed OpenCL USM extension
+builds on top of even older OpenCL versions.</li>
+</ul>
+</li>
+<li>Directed Acyclic Graphs (DAGs) buffers/accessors allow creation of
+implicit DAG edges. However, this feature does not interact well
+with C++ classes. Will DAGs independent of buffers be added, for
+better C++ support/integration?<ul>
+<li>The USM extension adds an explicit “depends on” mechanism, for DAG
+edge creation without buffers/accessors.  Please give us feedback
+if you want tweaks or different interfaces for specific use cases.</li>
+</ul>
+</li>
+<li>Will USM replace OpenSHMEM?<ul>
+<li>No. USM is currently defined within a single node, whereas
+OpenSHMEM is a scale-out model for distributed memory. We believe
+OpenSHMEM and USM are independent and expect both to work
+together.</li>
+<li>In terms of the mental model for USM vs SYCL buffers, it is a bit
+like a PGAS language (e.g. UPC) vs MPI because USM supports
+load-store between different physical address spaces, whereas SYCL
+buffers are opaque objects, but one does need to understand MPI or
+PGAS to program in SYCL.</li>
+</ul>
+</li>
+<li>Do the USM allocator functions permit the definition of new allocators?<ul>
+<li>Yes, it is possible to define your own memory allocation model.
+That is hidden in “…” in the slides - there is a C++ allocator
+interface.  The USM extension defines a variety of mechanisms for
+allocation.</li>
+</ul>
+</li>
+<li>Do the USM allocator functions permit the definition of new
+allocators?<ul>
+<li>Yes, it is possible to define your own memory allocation model.
+That is hidden in “…” in the slides - there is a C++ allocator
+interface.  The USM extension defines a variety of mechanisms for
+allocation.</li>
+</ul>
+</li>
+<li>Reductions<ul>
+<li>Motivation.  Reductions are foundational for parallel processing;
+users should not need to write out the details of their
+implementation. The compiler team should do a very good job of
+optimizing the reduction call based on target architecture. A
+bunch of physicists and chemists should not have to do this to run
+molecular dynamics. It needs to be provided in the language; most
+programmers will call SYCL reduce and be happy. The proposed DPC++
+extension will be proposed to Khronos as an extension to the SYCL
+standard.</li>
+<li>Determinism.  With floating point arithmetic, deterministic
+reductions can be very expensive.  We chose not to define
+determinism or ordering in this version, but we would like to know
+what specific requirements you have. We believe that both
+non-deterministic and deterministic reductions have a place and
+need to be enabled.  We’ve started with non-deterministic because
+they cover many uses and are much more performant on some
+hardware.<ul>
+<li>It is OK for default to be non-deterministic but also want the
+ability to set a runtime flag and have determinism if required.
+This should be set on a per reduction/per kernel-level, not
+globally.</li>
+<li>The specification shouldn’t over specify.  In specific (not all)
+cases I want to have determinism.</li>
+</ul>
+</li>
+<li>Hardware issues.  On the Intel GPU, we have 3 levels of reduction:
+EU level reduction, SLM level reduction, global reduction. We need
+to be careful and think about how the language level reduction
+will map to HW for both non-deterministic and deterministic
+reduction.<ul>
+<li>If you want this to be an industry specification you must be
+very careful DON’T THINK OF INTEL HW think of any possible
+hardware available.</li>
+</ul>
+</li>
+<li>Compiler issues.  How can the compiler support multiple devices
+efficiently?  You can have only one SYCL application.  How can you
+know it’s going to run on a FPGA or on what HW?  How do you get it
+to run best on the HW?<ul>
+<li>Some flows create outputs for multiple targets, known at compile
+time.  These implementations will be specialized. SPIR-V for
+generic targets requires a generic implementation, unless these
+primitives are defined through SPIR-V. The fat binary direct
+specialization flow is expected for performance. Should library
+calls for reduction be defined at the SPIR-V level?</li>
+</ul>
+</li>
+<li>Parallel reduce or Parallel For.  Don't like that you are
+doing parallel_for with a reduction clause…  There is a reason
+that TBB has reduce.  Why are you making a different choice?<ul>
+<li>We are treating this in the same way as collectives there are
+several collectives that operate on multiple work items that are
+running.  Treat reduction as across the iteration space.</li>
+<li>Can we make a language distinction between loops with completely
+independent iterations and ones with some type of dependencies?
+How can we distinguish between the two?  That would be useful.
+Then the reduction question becomes more salient never call a
+synchronization across work groups.</li>
+<li>We should have a broadcast primitive.  You want reduction plus
+broadcast.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Standardization efforts work well when there is enough experience
+and the effort can be focused on standardizing best practices.  Are
+we at this point or are their fundamental unresolved issues?<ul>
+<li>Consider the MPI forum work.  Everyone knew how to do proper
+message passing just an issue of setting an API.</li>
+<li>MPI2 RMA is not so good… don’t want that.  I started doing an
+industry wide study of data parallelism and went through TBB,
+Kokkos, RAJA, and then stumbled on SYCL.  There are important
+questions but with DPC++ we are at a similar level of experience
+to MPI1 message passing systems on supercomputers.  This is meant
+to be iterative, not converge on one true solution immediately.
+These are mostly syntax debates Kokkos vs Raja syntax debates.</li>
+<li>This discussion is a core reason to have iteration with respect to
+DPC++ extensions.</li>
+</ul>
+</li>
+<li>Is the kernel argument restrict for USM pointers or buffers?<ul>
+<li>Both.</li>
+</ul>
+</li>
+<li>Optional Lambda naming<ul>
+<li>Required lambda naming causes a variety of problems, particularly
+for libraries.  The Intel open source DPC++ implementation has had
+optional lambda naming for a while now.</li>
+<li>Lambda names are very useful for debugging and profiling.  Give it
+a string as a profiling.  Names are optional, but still a type.
+Request for:<ul>
+<li>Need to have a string-based name AND</li>
+<li>We should add the option to have string names on buffers - look
+at Kokkos as example</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Other implementations - How can you make this more attractive for
+your competitors to adopt this? Some of us have spent years
+developing OpenCL code due to vendor-independence and
+portability. Will look to see if DPC++ gets adopted by other
+vendors.<ul>
+<li>Codeplay has announced they will support DPC++ on top of Nvidia
+hardware. See article here.</li>
+</ul>
+</li>
+<li>What is oneAPI?  What is DPC++?  What is SYCL?<ul>
+<li>oneAPI is the programming model, consisting of a language, a set
+of libraries and an HW interface layer.</li>
+<li>DPC++ is the language, built on ISO C++ and Khronos SYCL and
+extensions.</li>
+<li>Some think of oneAPI as the platform, and DPC++ as the language
+built on C++ and SYCL.  Most of the extensions that form DPC++ are
+being fed back into SYCL for consideration and hopefully inclusion
+in future standards.</li>
+</ul>
+</li>
+<li>Really like what you are saying, however DPC++ could be perceived as
+“pulling an OpenACC”. Why not just call it SYCL?<ul>
+<li>We are aware of that possible misperception. We want to be very
+explicit about how we are different than OpenACC versus OpenMP:<ul>
+<li>We are not forking from SYCL, we are building on top of it.</li>
+<li>We are very explicit that DPC++ == ISO C++ and Khronos SYCL and Extensions</li>
+<li>We are discussing all our extensions openly with the SYCL committee.</li>
+<li>We are not forming another standards foundation/group.</li>
+<li>We are being very open, using permissive licensing and an open implementation</li>
+<li>The collective set of extensions does need a name.</li>
+<li>We are working with both Khronos SYCL and ISO C++ to put as many
+of these extensions into those standards as possible. That will
+take time and we will continue to work on it.</li>
+<li>We intend to make the codesign process with our customers much
+faster than is possible otherwise</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>What does STL vector container mean in the context of accelerator?<ul>
+<li>Ideally, we want to get the full STL working, however as you note,
+we know there are challenges. For example, a parallel push on
+vector is problematic. We may allow some operations but not all.</li>
+<li>Need to worry about pointer, shared pointer, and container
+semantics.</li>
+<li>Push in a parallel context?  A lot of C++ was not made for
+parallelism.</li>
+<li>Simple acts: pointers, iterators on top of that…</li>
+<li>Two high-level things:<ul>
+<li>What do we expect to support for device-side memory allocation?</li>
+<li>Can I free it on the host or on the device?  A lot of uses where
+we have code paths to do that (particle codes, etc.) But you
+don’t want to build something like vector push-back.  You want
+to allocate in chunks. How you build that in?  What primitive
+do you want to provide in a parallel construct.  Don’t pick the
+convenient thing to do… you are making a standard so think
+about it and how you want this be careful and offer what will
+work over time.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Capturing objects in a lambda does USM guarantee that you have a
+coherent connection between host/accelerator?<ul>
+<li>No</li>
+</ul>
+</li>
+<li>What about Python, Java, C#? Will those be part of the oneAPI effort
+in the future?<ul>
+<li>Our thought process is to focus on the lower levels of the stack
+and allow others to build on it. We do not want to push into
+higher levels of the stack it is a large space. Instead, we want
+to offer an open specification, in open source, and provide
+infrastructure that others can build upon. Some examples:<ul>
+<li>with our LLVM work, we hope to allow anybody to build additional
+languages that can easily by powered by oneAPI and add
+accelerator support. An LLVM-based language like Julia could
+easily leverage this work to support any oneAPI platform</li>
+<li>The hardware interface layer, Level Zero, could be used by any
+language if so desired.</li>
+<li>Level Zero could also be implemented by any HW vendor to
+leverage the entire oneAPI SW stack.</li>
+<li>We will plug oneDNN and oneCCL into deep learning
+frameworks. This could then enable any HW vendor to implement
+oneDNN and oneCCL to plug into all frameworks instead of
+building framework-specific interfaces</li>
+<li>We will plumb the oneAPI libraries into the Python ecosystem via
+numpy, scipy, scikit-learn, pandas interfaces.</li>
+<li>The Python numba compiler could leverage the LLVM infrastructure
+to enable accelerator support.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>USM vs buffers<ul>
+<li>There are a few other reasons why buffers allow you to work out
+the memory model.  Note OpenCL only gives you buffers.  Buffers
+allow the accelerators to know what they need to work on.  You may
+be able to create an accelerator that doesn’t use pointers but may
+use a DMA system.</li>
+<li>I can see why people want USM but mixing USM w/ buffers may not
+make sense.  It may be better us use buffer with indices into
+arrays to build data structures.</li>
+</ul>
+</li>
+<li>Data migration with USM<ul>
+<li>Is there an interface that will allow you to do on-demand paging?
+Will you be able to adapt to where the data is?  If it’s on the
+GPU, run on the GPU; if it is on the CPU, run on the CPU.</li>
+<li>C++ had no notion of this without NUMA.</li>
+</ul>
+</li>
+<li>Other general comments<ul>
+<li>Like that you are getting feedback on github.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</body>
+</html>

@@ -48,7 +48,7 @@ Exceptions/Error handling:
 
 Open Discussion:
 
-* Board strongly recommends requiring inheriting from std::exception, rather than allowing it. 
+* Board strongly recommends requiring inheriting from std::exception, rather than allowing it.
    * Helps applications to handle exceptions consistently.
    * In general, it's really helpful if custom exceptions inherit from ``std::exception``.
 
@@ -75,7 +75,7 @@ Open Discussion:
    * It can be handled through an ``if`` branch in user code.  For numerical issues, can have a fast path in the code; try LU, if it fails, switch to QR.  Debatable if it should be an exception.
    * Negative numbers from the ``info`` parameter in LAPACK are truly errors, you can't do anything. But positive numbers indicate a failure during computations, such as passing a non-positive definite matrix to Cholesky (potrf).
    * In this case, potrf would throw an exception, and the ``info`` code of the problem can be obtained by the ``get_info()`` method of the exception object.
-   * Concern that large production runs may assert that no exceptions are thrown, to devote all core-hours to compute. 
+   * Concern that large production runs may assert that no exceptions are thrown, to devote all core-hours to compute.
    * Sometimes LU is called to determine if a matrix is singular.  Users can't be expected to detect a singular matrix; the algorithm finds that out for them.
    * But having both error codes and exceptions on a single function call may be unwieldy. The ``std::filesystem`` has both, but users do not like functions that return an error code also throw an exception.
    * In some cases it may be okay, but don't want a function that will have informational errors and malloc exceptions tied to the same number.
