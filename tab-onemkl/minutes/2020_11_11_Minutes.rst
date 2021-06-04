@@ -9,7 +9,7 @@ Materials:
 
 * `Overview of oneMKL Vector Math domain <../presentations/2020-11-11_Slides.pdf>`__
 
-Attendees: 
+Attendees:
 
 * Rachel Ertl (Intel)
 * Mehdi Goli (Codeplay)

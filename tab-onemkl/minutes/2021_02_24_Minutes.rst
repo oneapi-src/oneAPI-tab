@@ -64,7 +64,7 @@ APIs for the initialization and release steps:
 
 * We use an opaque handle to store the matrices. This allows each implementation to store its own optimized format - closed to users.  You create a handle and give it the data.  For example, in set_csr_data, you pass in the matrix handle, number of rows and columns, whether it uses 0- or 1-based indexing, and then the three needed arrays.
 * There is a set_matrix_property not yet defined, but it could be useful for the user to tell oneMKL that the column indices are sorted.
-* Key point: the current types we support are 32-bit and 64-bit integers, and 32-bit and 64-bit real and complex floating point types. We are open to supporting other types as needed.  For example, in deep learning applications there may be interest in having 16-bit floating point types.  
+* Key point: the current types we support are 32-bit and 64-bit integers, and 32-bit and 64-bit real and complex floating point types. We are open to supporting other types as needed.  For example, in deep learning applications there may be interest in having 16-bit floating point types.
 * Things like transpose and whether it is unit or non-unit diagonal are enums.
 
 * Does symmetric mean values or structure?
@@ -80,7 +80,7 @@ APIs for the initialization and release steps:
 * For supporting symmetric, does it depend on which triangle (upper or lower)?
 
   * The symmetric property would be assuming you were given the entire matrix data and it is symmetric, and you're just setting an informational flag. Think of it as hints to optimizers. The data is in here and you can skip the step of making it symmetric.
-  * On the other hand, the api SY{MV} with a fill mode lower or upper implies that we should use the data from the lower or upper part and use it as if the matrix were symmetric (even though in general, we are only using the data and pattern from that half).  The other part of data does not have to be present, but if it is you could also set the matrix_property::is_symmetric as a hint to optimizers. 
+  * On the other hand, the api SY{MV} with a fill mode lower or upper implies that we should use the data from the lower or upper part and use it as if the matrix were symmetric (even though in general, we are only using the data and pattern from that half).  The other part of data does not have to be present, but if it is you could also set the matrix_property::is_symmetric as a hint to optimizers.
 
 * Does your CSR format support duplicates within the row?  Or do you need to avoid this?
 
@@ -107,7 +107,7 @@ Currently supported APIs:
 
 * Why is there no optimize_symv?
 
-  * It is not defined yet because we have not needed it yet. From a spec level, though, it makes sense to have all of the analysis-related APIs.  It may be that they do nothing in an implementation, but we should have the APIs. 
+  * It is not defined yet because we have not needed it yet. From a spec level, though, it makes sense to have all of the analysis-related APIs.  It may be that they do nothing in an implementation, but we should have the APIs.
 
 * Do the triangular functions (trmv, trsv) allow you to specify unit diagonal?
 
@@ -150,7 +150,7 @@ GEMV Example:
 
 Forward looking - sparse * sparse:
 
-* Two variants: one with sparse output; one with dense output. 
+* Two variants: one with sparse output; one with dense output.
 * It may be useful to also perform a transpose-type operation on C, though that was not previously done in Intel oneMKL C/Fortran sparse BLAS.  That would allow dropping a transpose in case of B^T*A^T vs (A*B)^T.
 * It is important to have dense operations on devices. Accelerators do not like triangular matrices because of the additional checks for diagonal. If you fill in 0s, you can do computations much faster even though you are operating on 0s. The outside interfaces are triangular matrices, while internal may have an extra output buffer.
 
