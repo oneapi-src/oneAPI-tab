@@ -1,3 +1,6 @@
+.. image:: https://github.com/oneapi-src/oneAPI-tab/actions/workflows/checks.yaml/badge.svg
+   :target: https://github.com/oneapi-src/oneAPI-tab/actions
+
 ================================
  oneAPI Technical Advisory Board
 ================================
