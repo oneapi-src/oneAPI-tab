@@ -1,0 +1,171 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2021-06-16
+==========
+
+Materials:
+
+* `Overview of sparse matrix * sparse matrix API <../presentations/2021-06-16_Slides.pdf>`__
+
+Attendees:
+
+* Hartwig Anzt (KIT, UTK)
+* Romain Dolbeau (SiPearl)
+* Rachel Ertl (Intel)
+* Mehdi Goli (Codeplay)
+* Mark Hoemmen (Stellar Science)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* Vincent Pascuzzi (LBNL)
+* Spencer Patty (Intel)
+* Alison Richards (Intel)
+* Edward Smyth (NAG)
+* Julia Sukharina (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Overview of sparse matrix * sparse matrix API - Spencer Patty
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* Request to know more about hipSYCL support, once plan is defined.
+
+Sparse matrix * sparse matrix multiplication:
+
+* We have reviewed proposal internally, but would really like feedback from the TAB to ensure it meets various usage needs.
+
+Comparison of existing sparse * sparse APIs:
+
+* Number of different aspects we are looking at.
+* The math operation varies quite a bit, whether or not it fuses a matrix addition (and even if it does it can be different).
+* The number of stages can vary, and how the stages are tracked (different APIs, enum arguments).
+* The ability to handle both sparsity patterns and the full matrix (patterns and values).
+* Who handles the memory allocation of the output matrix C (user vs library), temporary workspace, and matrix formats supported.
+
+* When you say structured, does that mean there is a different way to compute values given the structure?
+
+  * Yes. In Inspector-Executor (IE) sparse BLAS, you can compute just the structure, then you can come back and compute the values as well. There are lots of graph algorithms where you do not need the values, just the structure, so save the FLOPs! Similar functionality available in Ginkgo - it just represents the sparsity pattern of the matrix.
+
+Proposal:
+
+* Start off with just the matrix product: C = op(A) * op(B), supporting real sparse matrices in CSR format.
+* Possible future extension to put in fused sparse matrix add: the C structure should not change when adding D.
+* One of the extensions would be for complex precisions, which would then support Hermitian operation.
+* Meets the needs of a lot of use cases, and matches support in lots of libraries, while still being extensible.
+
+* Would it support different types of fused add?
+
+  * That would be nice.
+
+Matrix allocation of C:
+
+* The size of the output sparse matrix C is not known a priori. As part of algorithm, need to discover what is the size.
+* Lots of users have told us they want to control the memory pool, though it does require more work on the part of the users.  Wrinkle for temporary work spaces; adding this in as well.
+
+* If you have to determine the size of the output to dynamically determine the size, would that be done on the host?
+
+  * This is intrinsically a host-driven task, so host can do allocation. In some way, there needs to be a divide from doing computations on the device and allocating on the host, then continuing on with the kernels on the device.
+
+* In the oneMKL interfaces project, we would support different backends. Supporting a library that handles library allocation via oneMKL APIs that support user allocation would be difficult, and vice versa.
+* Rest of the proposal focuses on Scenario 1, with User Allocation of memory.
+
+Proposed APIs:
+
+* Call this operation matmat, in the sparse namespace: sparse::matmat.
+* Enums to handle different stages of work.
+* There are 3 sparse matrices involved, each of which can have a different view (transposed, symmetric, etc.), so that information is part of the matmat_descr_t descriptor.
+* All sizes are communicated as std::int64_t type since sizes can easily exceed the 4 billion limit.
+* One of the goals of this API is to be as asynchronous as possible. This is tricky because memory allocation is a synchronization point.
+* The sizeTempBuffer object needs to be run-time aware, to do these synchronizations as needed.
+* The tempBuffer is essentially a workspace provided by the user, which can be used as needed by the implementation. On the USM side, it's just a void*. On the buffer side, it's std::byte, which is as close to a type-less object of size as possible. Internally can view as different type.
+
+
+* Did you consider a callback approach to the memory allocation problem?
+
+  * We have not spent a lot of time thinking about that.
+  * It could be a function that takes a size and returns a buffer.
+  * There are use cases where dynamically anytime is bad, though could allocate from a pool.
+  * Could be called on the host if needed.
+  * Something to consider…a way to unify the two. Need to think more. If you have an idea how to do that, please share!
+
+* The tempBuffer is a pointer to a buffer? Any reason it is not an object?
+
+  * You may call it with nothing, a null pointer. I have a hard time thinking of asynchronous-ness when things live on the stack. With the pointer, it is on the heap, and asynchronous can handle it better.
+  * It is a pointer because the buffer holds the memory itself. You can't have an empty buffer (size 0), but the API could be called with a null buffer.
+  * sizeTempBuffer gives the size of the buffer, encapsulated in a runtime container.
+
+Comparison of existing sparse * sparse APIs again:
+
+* One of the early design features is that it does not fuse a sparse add. Otherwise, it fits nicely into cuSPARSE, rocSPARSE, hipSPARSE approach.
+* Chose 3 stage because some other implementations also have 3 stages, and it is easier to fit a 2 stage into the 3 stage oneMKL APIs, than vice versa.
+* Starting with CSR matrix data, support user allocation of everything, will support both structure only and structure+values, use an enum argument for the stages.
+
+Enum for Stages:
+
+* 3 stage approach: Each stage has a size query, performs the computation, then finalizes the workload. Difference between sparsity pattern and full matrix has to do with the final 2 stages and is up to library implementations.
+* The TAB agrees that the 3 stage approach is reasonable as it is compatible with other libraries.
+
+* Concern about accuracy of the work estimation, especially for users with GPUs that have limited memory.
+
+  * Easy to exhaust available memory if work estimation is conservative and requests twice as much memory as really needed.
+  * Some users prefer stability and accurate memory usage estimates over higher performance.
+  * A 2-stage symbolic, numeric approach is closer to the actual operations being done, for certain algorithms. However, modern algorithms, especially those that work well on the GPU, do not fit well into that approach, as you cannot get good performance.
+
+* What happens if you run out of memory doing something?
+
+  * An exception would be thrown; oneMKL exceptions have messages and can provide information through them.
+  * Strong preference to keep consistency with other oneMKL APIs that throw exceptions, even if it is not idiomatic for C++, than to add an extra argument or flag in the matmat descriptor.
+
+Matrix view descriptor:
+
+* Introduce an opaque pointer handle, which includes things like how the library should view the matrix data.
+* In all of the other sparse BLAS APIs, we mimic the dense BLAS naming style. This is feasible because there is only a single sparse matrix involved. We can put into the API the ge/tr/sy to tell how we should view the matrix handle. But for sparse matrix sparse matrix multiplication, there are 3 sparse matrices. So we took a different approach and gave each matrix its own descriptor of how it should be viewed.
+* The descriptor would be extended over time (Hermitian for complex, block types potentially). Most common use case is just three general matrices.
+
+* Do symmetric and triangular have their usual meaning that they ignore entries in the wrong half?
+
+  * Yes, but symmetric_full says you have the full matrix, and it is symmetric.
+
+* Does it assume entries are sorted in each row?
+
+  * We would need to assume that and would have to do some sort of binary search to find the diagonal. If only the lower part is in there, the binary search would be immediate. If not, it would take some work to find it. Sortedness does come into play for symmetric or triangular views. It does not matter for general.
+
+* Right hand side of slide 14 shows APIs that work with this opaque pointer.
+* Chose to do a C-style instead of a C++ class with constructors/destructors for the descriptor. This works fine, though user has to manage lifetime of descriptor.
+
+Look at how it is used for buffer version:
+
+* 3 main steps in green:
+
+  * Step 1: query for size, then allocate. Implicit runtime synchronization. Then call the work-estimation function.
+  * Step 2: temp buffer is created and passed to the compute stage.
+  * Step 3: Finally, query nnz. For buffers, the runtime handles dependencies of buffers. Create the two arrays and add them into the CSR structure, then call finalize. Notice it is called with nullptrs. Once all done, you can use it! Then clean up your stuff.
+
+
+* Do you have to wait on the queue before you can release the matrix descriptor?
+
+  * Those can be interchanged. Once you are done with descriptor, the descriptor is done.
+  * It is an opaque pointer passed by value; so it is passed by reference essentially. So this operation needs to complete before the opaque structure is free. Way around it would be to make it a pass-by-value.
+  * You either need a queue.wait() or internally make a copy (which is fine since these are all enums).
+  * Nvidia introduced on-stream allocator in CUDA 11.
+  * Callbacks have to be lightweight and cannot make any system calls.
+  * Lifetime of descriptor was missed in internal reviews, but probably requires the implementation to make a copy of the opaque structure.
+  * Passing the descriptor by value would imply ABI changes if you later add fields to it, so probably would need to copy it internally (still passing by reference or pointer, but documenting that it is copied right away).
+
+* Assume I have another matmat, with same sparsity but different values. Can I skip steps 1/2, and just apply step 3?
+
+  * Temp buffers 1 and 2 are used internally throughout. End of finalize (step 3.3), we remove tracking of them.
+  * If I did not apply step 3.3, would I be able to avoid calls, or do I need to start from scratch if only values changed?
+  * This is tricky. There is an implicit agreement that a user does not change the sparse matrix handle. Likewise, the library agrees not to change user data. If a user goes in and changes values, this affects anything that has been optimized in - the library does not know about it.
+  * Could do a notify-values-changed function, or a set-values function that changes just values (not sparsity).
+  * If you change the values, you would still call compute/finalize. Pass the same arrays, just need to update a value. The dependency tree is complicated. If you change a value, you need to figure out what all is changed.
+  * Note that for the finite element case, you would be changing all the values at once.
+
+Discussion ended on slide 15; will cover USM API example and possible future extensions at the next meeting.
