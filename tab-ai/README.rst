@@ -22,7 +22,8 @@ Guy Tamir, Intel                 Jayaram Bobba, Intel Habana
 Igor Lopatin, Intel              Andrew Chen, VastAI Tech
 Penporn Koanantakool, Google     AG Ramesh, Intel
 Emad Barsoum, Cerebras           Andrey Nikolaev, Intel
-Zack S Waters, Intel
+Zack S Waters, Intel             Guangming Tan, ICT CAS
+En Shao, ICT CAS
 ===============================  ===============================
 
 Welcome, Vision, oneAPI spec update - Sanjiv Shah, Intel
