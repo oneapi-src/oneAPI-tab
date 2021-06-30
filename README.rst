@@ -28,6 +28,6 @@ Meeting notes:
 
 * `DPC++ & oneDPL <tab-dpcpp-onedpl>`__
 * `oneMKL <tab-onemkl>`__
-* `AI <Tab-ai>`__
+* `AI <tab-ai>`__
 
 .. _ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL):
