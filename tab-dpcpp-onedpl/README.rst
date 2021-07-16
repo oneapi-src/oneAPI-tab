@@ -5,6 +5,7 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Upcoming Topics
 ===============
 
+* [July 28] Review of property_lists(s), including compile-time support
 * Error handling
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
