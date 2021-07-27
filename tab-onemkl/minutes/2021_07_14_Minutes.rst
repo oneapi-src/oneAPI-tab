@@ -1,0 +1,147 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2021-07-14
+==========
+
+Materials:
+
+* `Sparse matrix multiply and multi-tile/multi-GPU <../presentations/2021-07-14_Slides.pdf>`__
+
+Attendees:
+
+* Hartwig Anzt (KIT, UTK)
+* Marius Cornea (Intel)
+* Rachel Ertl (Intel)
+* Mark Hoemmen (Stellar Science)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* Spencer Patty (Intel)
+* Edward Smyth (NAG)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* (Finish) Overview of sparse matrix * sparse matrix API - Spencer Patty
+* Multi-tile/multi-GPU discussion - Maria Kraynyuk
+* Wrap-up and next steps
+
+Sparse matrix * sparse matrix:
+
+* Summary of what the API will look like: In sparse namespace, called matmat. Starting with C = op(A) * op(B). Focusing on users allocating memory.
+* In all cases, expect user to allocate C memory.  matmat_request will be used to handle different stages.
+* Temp buffer allocation can be handled by implementation.
+
+3 steps (3-stage algorithm):
+
+1. Work estimation
+2. Compute
+3. Finalize
+
+* Within each step, there is a query for the size, allocation of memory, and then do the work.
+* We always know what the dimension of c_rowptr is (# rows + 1). We do fill that in the compute stage. We fill in the row ptr as well during the compute stage. That is used when creating nnz. At the end of the compute stage, we know how the data is allocated over nnz - not where on each row, but how many per row.
+
+* Suggestion to use uniq_ptr in the example to avoid memory leak if exceptions are thrown.
+
+* Lots of people would really like to see the functionality where you can re-use part of what you created (same data structures, same sparsity patterns, but different values) for other multiplications. Is this possible?
+
+  * It would be up to the library implementation to handle that or re-compute everything internally.
+  * get_nnz does not account for values, just sparsity patterns.
+  * There is also the option to compute just the sparsity pattern (compute_structure). This assumes no structural non-zeros.
+
+USM Example:
+
+* Same example as before but with USM instead. Using malloc_shared to create USM pointer. Thing to point out: for all implementations of USM, it is not host-thread safe. So cannot offload a thread to do your allocations. We have a wait after filling buffer size before we allocate. Expect it will become host-thread safe in future, but this is currently a limitation. So there are a few waits in this example.
+
+Additional Examples:
+
+* Examples where user only creates C, not the temp buffers. This simplifies the examples a lot.
+* Internally, recognize nullptr being passed and so the implementation needs to handle allocation and management itself.
+
+Possible Future Extensions:
+
+* Ability for library to allocate C matrix, plus corresponding query to get access to those arrays (e.g., get_csrdata).
+* Fused sparse matrix add.
+* Fully supporting complex data, including conjugate operation.
+* Supporting mixed precision.
+* Possibility of supporting dense matrix type in sparse matrix handle, to allow for a more general matrix-matrix multiplication.
+* Support other matrix formats.
+
+* One thing that prevents some users from using vendor matrix-matrix multiply: mix of local and global data and not wanting to copy entire matrix. Need to perform A*(B_local + B_remote).
+
+  * Having local and remote in different arrays makes it tricky; interesting to think through. Curious if there is a way to make it act like a single array even though it is not. Please share any examples of code where this functionality would help.
+
+* For sparse matrix API, what is the timeframe for solidification? Want to be able to give sense of urgency to feedback.
+
+  * Plan to have at least functional in Intel oneMKL product in the oneMKL 2021.4 release (what we are currently working towards). We would need to know within 1-2 weeks, based on our release process. We have not yet started the process of formally putting into the spec.
+
+Multi-tile/Multi-GPU:
+
+* Motivation: We want to review more complex configurations.
+* Current oneMKL API is targeted for single SYCL queue (device).
+* Today, we will cover multi-tile device usage modes, how oneMKL API can work with these multi-tile devices, and then future considerations for multi-GPUs.
+
+Multi-tile Device Usage Modes:
+
+* Most common is when tiles are hidden - implicit scaling. Uses one queue and all computations are automatically distributed across tiles. It is up to drivers/runtimes how it will be put on tiles in the most optimal way.
+* Explicit scaling: multi-tile device will be partitioned into multiple devices (one per tile). In this case, if you have just one context, memory allocation will still be automatically distributed across tiles. Or you can have multiple contexts, and memory allocations will be pinned to each sub-device.
+
+Example for implicit and explicit scaling for oneMKL API:
+
+* Current oneMKL DPC++ API can be used for both multi-tile scaling modes (implicit and explicit).
+* In case of implicit scaling, just create queue, create one device, create data for whole device, and call the function.
+* For explicit scaling, first create device. If GPU provides multiple tiles, create sub devices and provide partition type by numa. If we have two tiles, we will get two subdevices. Create a different context and queue for each subdevice. Put half the data on one tile, half on the other tile. This is an example of how the app could implement explicit scaling.
+
+Future considerations:
+
+* This is the most complicated topic: extensions for multi-GPUs. Multi-GPU can be implemented via current API for single queue, with most control on the higher-level app side. Two different types of APIs to consider.
+
+Low-Level API vs High-Level API:
+
+* Low-level API will expect multiple queues, probably with some changes in how memory input data will be passed. High-level API do not have queues as an input.
+* On low-level API, expectation is device management would happen on user side. Runtime can probably handle shared data. For high-level API, library or runtime side handles device and data management.
+* Low-level API does not require internal state; most control is on the user side.
+* High-level API - everything happens magically; the app/user does not need to work with multiple GPUs.
+* Lots of cons for both approaches.
+* Low-level: some device data/management complexity - will be close to the single device API. Unclear how library can handle data locations on different GPUs, especially for different vendor GPUs.
+* High-level: there is a complex internal state. How to synchronize all this stuff in the high-level API and the user app. If you have already launched some kernels and want to run more, how to put this in a single API. If the library decides the configuration, it may not be the most optimal (e.g., if you have a little data and 8 GPUs, library may choose just 1 GPU, which could be suboptimal).
+
+* If a library wanted to provide a high-level API, is there any advantage for the library NOT to also provide a low-level API?
+
+  * It can, but there is a question of adoption. May make more sense for some algorithms to provide both; only high-level for others.
+
+Examples of API from existing libraries:
+
+* Low-level API: clBLAS: bunch of parameters at end to work with different devices (provide multiple queues, pointers, events).
+* High-level API: cuBLASXt: nothing special to GPU, just provide handle and standard parameters. Also allow you to put data anywhere and all data management handled inside the library. Can also use some additional control options by providing hints.
+
+Summary:
+
+* Not clear in general what will be implementation and adoption for both API extension types.
+* Start with vendor-specific API extension to see how it can be generalized for oneMKL specification. See if it seems it would be implemented/supported by multiple vendors.
+
+Discussion:
+
+* Not a clear distinction between the low-level and high-level APIs. A lot seems to happen on the library side for both.
+
+  * That is true; it is not fully clear what library-specific details are happening just by looking at the APIs.
+
+* Are we thinking of a single CPU host with multiple GPUs attached? Or is this for "many" GPUs - essentially distributed nodes with GPUs attached?
+
+  * Good question. It is not clear - it could be any configuration if we are talking about a general API. Maybe something else should be provided in the case of multiple nodes/multiple CPUs.
+
+* If you have an API that takes an array of queues, that is a single-host API. I cannot enumerate a million queues - I may not even have access to them. Can I create a queue for a remote host? That presumes a lot.
+
+  * Not aware of this configuration, but the idea for sycl queue is not to just execute on same host. In case of low-level API, it kind of forces the library to execute only on a certain set of devices. Potentially can decide in the library that not all devices are needed. For high-level APIs, the library makes all decisions, but using hints from user side (what devices are better to use, or to use CPU for part of work). Only the user can see whole picture.
+
+* For high-level API, you have to ask if it is synchronous or asynchronous, and if async, with respect to which queue.
+
+  * Great question - again, this is not clear. Need to provide very good expectation with respect to behavior. Possibly need to provide info on what devices were used. May need lots of additional control options. Would need working examples, perhaps already used somewhere, to see if it makes sense to have this, or not really. May make more sense for the user to handle on their side, using MPI and just one queue.
+
+* High-level API - manages high-level access, but it has internal state to hide the complexity. Is there a way to get access to that internal state, and transition from high-level to low-level?
+
+  * That is also an option. In this case, would have one API for both groups of users. For users who do not care, just a simple API. For advanced user, could get all info from the state. Good idea: mix of both.
