@@ -5,10 +5,90 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 Upcoming Topics
 ===============
 
-* [July 28] Review of property_lists(s), including compile-time support
 * Error handling
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
+
+2021-5-26
+=========
+
+* Robert Cohn (Intel)
+* Aksel Simon Alpay (Heidelberg University)
+* Andrew Richards (Codeplay)
+* Antonio J. Peña (Barcelona Supercomputing Center)
+* James Brodman (Intel)
+* Jessica Davies (Intel)
+* Joseph Garvey (Intel)
+* Michael Kinsner (Intel)
+* Nevin Liber (Argonne National Laboratory)
+* Geoff Lowney (Intel)
+* Greg Lueck (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest
+  National Laboratory)
+* John Pennycook (Intel)
+* Pablo Reble (Intel)
+* Alison Richards (Intel)
+* Ronan Keryell (Xilinx)
+* Ruyman Reyes (Codeplay)
+* Roland Schulz (Intel)
+* Jason Sewall (Intel)
+* Gergana Slavova (Intel)
+* Timmie Smith (Intel)
+* Stefan Yurkevitch (ArrayFire)
+* Tom Deakin (University of Bristol)
+* Umar Arshad (ArrayFire)
+
+Open items
+----------
+
+* SC21
+
+  Anyone travelling to it? No affirmative
+
+DPC++ Enhanced property_list
+----------------------------
+
+* New property list
+
+  * Can be known at compile-time by compiler, preference for runtime values
+  * migrate attributes (which should not be semantic) to properties
+    (which can be semantic)
+  * example: memory semantics
+
+* Status
+
+  * PR in github intel/llvm
+  * implemented as oneapi extension
+
+    * want to fold back into property list
+
+  * Proposed for next major SYCL version
+  * want feedback now
+
+* Styles
+
+  * no associated value: no_init
+  * runtime only:
+  * compile-time: work_group_size
+
+  * Q: How can it be attached to lamba?
+
+    * Not directly possible. Example properties are passed to
+      parallel_for
+    * turn lambda into function object and add property there
+    * hipsycl uses wrapper function
+    * More discussion. Study this offline.
+
+* Def of properties
+
+  * no longer nested namespaces
+
+* Feedback
+
+  * Good to see progress, have seen it before in SYCL committee
+  * Any device specific properties makes sense in portable
+    way. Implementation can ignore.
+
 
 2021-5-26
 =========
