@@ -41,53 +41,82 @@ Upcoming Topics
 Open items
 ----------
 
-* SC21
+* SC21: Anyone travelling to it? Potentially, if it actually happens.
+* Want to hear from TAB on priorities for SYCL & DPC++: what's a must fix,
+  what's nice to have, etc.
 
-  Anyone travelling to it? No affirmative
+DPC++ Enhanced property_list: Mike Kinsner & team
+--------------------------------------------------
 
-DPC++ Enhanced property_list
-----------------------------
-
+* `Slides <presentations/2021-07-28-TAB-DPCPP-properties.pdf>`__
 * New property list
 
-  * Can be known at compile-time by compiler, preference for runtime values
-  * migrate attributes (which should not be semantic) to properties
+  * Enables property to be known at compile-time by compiler,
+    preference for runtime values
+  * Migrate attributes (which should not be semantic) to properties
     (which can be semantic)
-  * example: memory semantics
+  * Example: memory semantics
 
 * Status
 
-  * PR in github intel/llvm
-  * implemented as oneapi extension
+  * PR in is github intel/llvm (`link <https://github.com/intel/llvm/pull/4203>`__)
+  * Currently implemented as oneapi extension
 
-    * want to fold back into property list
+    * Eventually want to fold it back into property_list
+      as part of SYCL spec
 
-  * Proposed for next major SYCL version
-  * want feedback now
+  * Proposed for next major SYCL version - send your feedback now
+    so proposal can be holistic
 
 * Styles
 
-  * no associated value: no_init
-  * runtime only:
-  * compile-time: work_group_size
+  * Proposal will extend SYCL properties mechanism to include
+    values known at compile-time:
+  
+    * no associated value: no_init
+    * runtime only: context_bound
+    * [NEW] compile-time: work_group_size
 
   * Q: How can it be attached to lamba?
 
     * Not directly possible. Example properties are passed to
-      parallel_for
-    * turn lambda into function object and add property there
-    * hipsycl uses wrapper function
-    * More discussion. Study this offline.
+      parallel_for.
+    * Could potentially wrap your lambda into a function object
+      and add property there. HipSYCL uses this method.
+    * Could also have new unique name for new kernel properties: 
+      that might make it easier to identify each property
+    * How to distinguish where some properties apply to launch, some apply to lambda?
+    * How would a library vendor consume the properties if in a lambda?
+    * Needs more discussion. Study this offline & bring a separate proposal for
+      launch mechanism (e.g. parallel_for).
 
-* Def of properties
+* Definition of properties
 
-  * no longer nested namespaces
+  * No longer nested namespaces. Convention is to collapse object names
+    to reduce verbosity.
+
+* property_list is invariant to property ordering
+
+  * Have a proof-of-concept, will be made public shortly
+  
+* Interaction with existing SYCL runtimes classes
+
+  * User doesn't have to know when they set the property
+  * Currently planning to add for accessor, can decide on others on
+    case-by-case basis
 
 * Feedback
 
   * Good to see progress, have seen it before in SYCL committee
-  * Any device specific properties makes sense in portable
-    way. Implementation can ignore.
+  * Ensure any device specific properties are portable
+  
+    * Don't break semantics, implementation should be able
+      to ignore hints
+  
+  * Want to be able to mix-and-match between vendor-specific & generic
+    extensions
+    
+    * Yes, should be able to do that
 
 
 2021-5-26
