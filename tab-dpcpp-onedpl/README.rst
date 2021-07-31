@@ -72,7 +72,7 @@ DPC++ Enhanced property_list: Mike Kinsner & team
 
   * Proposal will extend SYCL properties mechanism to include
     values known at compile-time:
-  
+
     * no associated value: no_init
     * runtime only: context_bound
     * [NEW] compile-time: work_group_size
@@ -83,9 +83,10 @@ DPC++ Enhanced property_list: Mike Kinsner & team
       parallel_for.
     * Could potentially wrap your lambda into a function object
       and add property there. HipSYCL uses this method.
-    * Could also have new unique name for new kernel properties: 
+    * Could also have new unique name for new kernel properties:
       that might make it easier to identify each property
-    * How to distinguish where some properties apply to launch, some apply to lambda?
+    * How to distinguish where some properties apply to launch, some
+      apply to lambda?
     * How would a library vendor consume the properties if in a lambda?
     * Needs more discussion. Study this offline & bring a separate proposal for
       launch mechanism (e.g. parallel_for).
@@ -98,7 +99,7 @@ DPC++ Enhanced property_list: Mike Kinsner & team
 * property_list is invariant to property ordering
 
   * Have a proof-of-concept, will be made public shortly
-  
+
 * Interaction with existing SYCL runtimes classes
 
   * User doesn't have to know when they set the property
@@ -109,13 +110,13 @@ DPC++ Enhanced property_list: Mike Kinsner & team
 
   * Good to see progress, have seen it before in SYCL committee
   * Ensure any device specific properties are portable
-  
+
     * Don't break semantics, implementation should be able
       to ignore hints
-  
+
   * Want to be able to mix-and-match between vendor-specific & generic
     extensions
-    
+
     * Yes, should be able to do that
 
 
