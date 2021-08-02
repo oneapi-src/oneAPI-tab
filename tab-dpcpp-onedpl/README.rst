@@ -9,7 +9,7 @@ Upcoming Topics
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
 
-2021-5-26
+2021-7-28
 =========
 
 * Robert Cohn (Intel)
