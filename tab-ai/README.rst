@@ -2,6 +2,97 @@
 oneAPI Technical Advisory Board Meeting (TAB-AI) Meeting Notes
 ==============================================================
 
+2021-08-10
+==========
+
+Agenda
+------
+
+=======================================  =====================  =============
+Why oneAPI, DPC++ Kick-off               James Brodman, Intel   30 min
+oneAPI Threading Building Blocks         Mike Voss, Intel       25 min
+oneAPI Data Analytics Library (oneDAL)   Nikolay Petrov, Intel  25 min
+Opens / Topics                           All                    10 min
+=======================================  =====================  =============
+
+Attendees
+---------
+
+=================================   ===============================
+Andrew Richards, Codeplay           Andrey Nikolaev, Intel
+Mehdi Goli, Codeplay                Sujoy Saraswati, Habana
+Atsushi Ike, Fujitsu                Tong Gu, Intel
+Kentaro Kawakami, Fujitsu           Meena Arunachalam, Intel
+Penporn Koanatakool, Google         Alison Richards, Intel
+Sheng Zha, Apache MxNet             James Brodman, Intel
+Judy Fox, University of Virginia    Michael Voss, Intel
+Jun Qian, Vast AI Tech              Ligang Tian, Intel
+Andrew Chen, Vast AI Tech           Guy Tamir, Intel
+Nikolay A Petrov, Intel             Jian Hui Li, Intel
+Rahul Khanna, Intel
+=================================   ===============================
+
+Discussion
+----------
+
+Question: Is TBB a good fit for heterogeneous compute or only for CPU?
+
+Answer: Our strategy has been to keep TBB on the host but to work well
+alongside of offloading to an accelerator.  Thought about how to
+integrate executors into TBB.  We may have our generic algos accept
+executors.  There are ways we might expand TBB to accept executors
+that offload to accelerators.  In general, though, TBB is the way we
+do efficient threading on the host.
+
+|
+
+Question: Are there things SYCL could learn from TBB?
+
+Answer: Could be additional hints given for optimizing performance
+with subgroups that could happen.  TBB does have these controls that
+could be tuned for performance (or you can use the default and you may
+be fine with that).  Setting partitioners.  None of that is exposed
+yet in SYCL.
+
+There is not a good interface for expressing graphs yet in SYCL so
+there may be a way to gain some learnings there.  In SYCL you have
+implicit graphs…but not explicit graphs so this could be an area of
+learning from TBB.  Benefit would be to do some optimization and reuse
+offload of kernels.  Host offload - give it the chunk it once and then
+que up the kernels in a more optimal fashion.  Need to have repeatable
+graphs in SYCL.
+
+|
+
+Question: Is this result on CPU or GPU– Slide Scikit Learn for
+training and inference
+
+Answer: CPU
+
+Comment: Judy Fox mentioned she is teaching a python course and this
+will give a lot of exposrue to Python.  Scikit learn bench – you can
+easily download this and try out different sizes and algos and play
+with that; Check out Medium.com blog for data analytic software for
+additional information.
+
+OPENS
+-----
+
+Discuss upcoming topics from the team – happy to have members present
+or share topics.  A few ideas:
+
+Andrew Richards, Codeplay: doing simple code and showing how it goes
+through SYCL and oneAPI Stack.  They are showing how it ends up on the
+HW.  Showing the flow.
+
+Medhi Goli, Codeplay: SYCL integrated w/ Tensorflow – Eigen support
+the SYCL standard / oneAPI and how it supports CUDA as well
+
+Codeplay: Support oneAPI on Nvidia GPUs
+
+`Intel Extension for scikit-learn on youTube <https://www.youtube.com/watch?v=h5GamIZDrhE&list=PLg-UKERBljNxsCltpcXU_Haz9xQSCN_SB&index=8>`__
+
+
 2021-05-20
 ==========
 Attendees:
