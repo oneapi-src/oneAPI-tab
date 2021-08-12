@@ -32,6 +32,15 @@ Nikolay A Petrov, Intel             Jian Hui Li, Intel
 Rahul Khanna, Intel
 =================================   ===============================
 
+Slides
+------
+
+`DPC++ <presentations/oneAPI and Data Parallel C++ for AI TAB.pdf>`__
+
+`oneDAL <presentations/AI_TAB_oneTBB_0821.pdf>`__
+
+`oneTBB <presentations/AI_TAB_oneDAL ML.pdf>`__
+
 Discussion
 ----------
 
