@@ -35,11 +35,11 @@ Rahul Khanna, Intel
 Slides
 ------
 
-`DPC++ <presentations/oneAPI and Data Parallel C++ for AI TAB.pdf>`__
+`DPC++ <presentations/oneAPI%20and%20Data%20Parallel%20C%2B%2B%20for%20AI%20TAB.pdf>`__
 
 `oneDAL <presentations/AI_TAB_oneTBB_0821.pdf>`__
 
-`oneTBB <presentations/AI_TAB_oneDAL ML.pdf>`__
+`oneTBB <presentations/AI_TAB_oneTBB_0821.pdf>`__
 
 Discussion
 ----------
