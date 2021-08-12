@@ -37,7 +37,7 @@ Slides
 
 `DPC++ <presentations/oneAPI%20and%20Data%20Parallel%20C%2B%2B%20for%20AI%20TAB.pdf>`__
 
-`oneDAL <presentations/AI_TAB_oneTBB_0821.pdf>`__
+`oneDAL <presentations/AI_TAB_oneDAL%20ML.pdf>`__
 
 `oneTBB <presentations/AI_TAB_oneTBB_0821.pdf>`__
 
