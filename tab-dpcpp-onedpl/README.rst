@@ -9,6 +9,73 @@ Upcoming Topics
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
 
+2021-8-25
+=========
+
+* Robert Cohn (Intel)
+* Aksel Simon Alpay (Heidelberg University)
+* Andrew Richards (Codeplay)
+* Ben Ashbaugh (Intel)
+* James Brodman (Intel)
+* Romain Dolbeau (SiPearl)
+* Alexey Kukanov (Intel)
+* Geoff Lowney (Intel)
+* Greg Lueck (Intel)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest
+  National Laboratory)
+* Nevin Liber (Argonne National Laboratory)
+* Paul Petersen (Intel)
+* Pablo Reble (Intel)
+* James Reinders (Intel)
+* Alison Richards (Intel)
+* Ronan Keryell (Xilinx)
+* Ruyman Reyes (Codeplay)
+* Roland Schulz (Intel)
+* Sanjiv Shah (Intel)
+* Timmie Smith (Intel)
+* Stefan Yurkevitch (ArrayFire)
+* Xinmin Tian (Intel)
+* Tom Deakin (University of Bristol)
+* Mike Voss (Intel)
+
+* Level Zero Runtime API: Ben Ashbaugh
+
+  * Add a layer above today's level zero for utility functions that are
+    shared by language runtimes. Make it part of level zero with a spec.
+
+  * Discussion
+
+    * Does this mean PI goes away? We are writing plugins.
+    * Support in principle, but it needs to be done with the
+      community. Can't be a PR that shows up. We need a spec, discussion.
+
+* Resource manager: Mike Voss
+
+  * Discussion
+
+    * What happens when a constraint cannot be satisfied? e.g. NUMA
+
+      * Considering options:
+
+        * If required constraint cannot be met, then reject request
+          and let requestor decide what to do.
+
+      * no strong opinion on the behavior, but it needs to be
+        specified so application can respond
+
+* Level Zero Runtime for CPU: Xinmin Tian
+
+  * Refactor and formalize plugin interface to support CPU
+
+  * Discussion
+
+* General discussion
+
+  * Codeplay experience: functionality they creating in PI plugins
+    could be re-used
+
+
+
 2021-7-28
 =========
 
