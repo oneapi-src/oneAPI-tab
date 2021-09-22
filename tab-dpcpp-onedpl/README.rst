@@ -9,6 +9,96 @@ Upcoming Topics
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
 
+2021-9-22
+=========
+
+* Robert Cohn (Intel)
+* Aksel Simon Alpay (Heidelberg University)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest
+* Ben Ashbaugh (Intel)
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* James Brodman (Intel)
+* Madhura Chatterjee (Intel)
+* Christian Trott (Sandia National Laboratory)
+* Romain Dolbeau (SiPearl)
+* En Shao (Institute of Compute Technology, China Academy of Sciences)
+* Elvis Fefey (Intel)
+* Joseph Koston (Intel)
+* Alexey Kukanov (Intel)
+* Geoff Lowney (Intel)
+* Greg Lueck (Intel)
+* Javier Martinez (Intel)
+* Nevin Liber (Argonne National Laboratory)
+* John Pennycook (Intel)
+* Pablo Reble (Intel)
+* James Reinders (Intel)
+* Alison Richards (Intel)
+* Ronan Keryell (Xilinx)
+* Ruyman Reyes (Codeplay)
+* Gergana Slavova (Intel)
+* Timmie Smith (Intel)
+* Stefan Yurkevitch (ArrayFire)
+* Xinmin Tian (Intel)
+* Tom Deakin (University of Bristol)
+* Umar Arshad (ArrayFire)
+* Mike Voss (Intel)
+* Anuya Welling (Intel)
+
+Dynamic Selection. Mike Voss
+----------------------------
+
+* Q&A
+
+  * Why not SYCL Queue?
+
+    * More abstract/higher level than level zero or SYCL
+
+      * Use manages memory allocation, data transfer, etc
+      * Applies to more than SYCL
+      * SYCL can offer queue with same functionality
+
+    * Mixing of direct use of sycl queue and higher level may lead to
+      inter-operability issues
+
+    * hipsycl has similar functionality, but not possible to fully
+      implement SYCL q, e.g. get_device
+
+  * What if my kernel requires a GPU or other conditions?
+
+    * You can create a policy that is limited to a universe of devices
+    * You can have different kernels for different devices
+
+  * Having to check the queue sounds fragile for long-lived code
+
+    * In POC, we have a fallback to the CPU, or you can limit the
+      universe
+
+  * How clever will your selector be? Will it look at instruction mix,
+    bytes to flops, ...?
+
+    * Specification will provide some simple to reason about polices:
+      round robin, autotuing, .... But expect complicated policies
+      could exist.
+
+  * How do you express data management?
+
+    * Putting it in higher-level doesn't allow consideration of data
+      transfers.
+
+  * Custom policy? Using characteristics of the work submitted?
+
+    * Yes. Don't want to put anything but the simplest policy in the spec.
+
+  * queue vs execution policy?
+
+    * Doesn't have to be either/or. C++ policies are permission to
+      compiler, e.g. std:par. this is more like an
+      executor/scheduler. kokkos makes policy and resources
+      orthogonal. May not be better to mash them together.
+
+
+
+
 2021-8-25
 =========
 
