@@ -14,7 +14,7 @@ Upcoming Topics
 
 * Robert Cohn (Intel)
 * Aksel Simon Alpay (Heidelberg University)
-* Andrew Lumsdaine (University of Washington, Pacific Northwest
+* Andrew Lumsdaine (University of Washington, Pacific Northwest)
 * Ben Ashbaugh (Intel)
 * David Beckingsale (Lawrence Livermore National Laboratory)
 * James Brodman (Intel)
@@ -44,59 +44,71 @@ Upcoming Topics
 * Mike Voss (Intel)
 * Anuya Welling (Intel)
 
-Dynamic Selection. Mike Voss
+Dynamic Selection: Mike Voss
 ----------------------------
 
-* Q&A
+* `Slides <presentations/2021-09-22-TAB-dynamic-selection.pdf>`__
+* Why not SYCL Queue?
 
-  * Why not SYCL Queue?
+  * More abstract/higher level than level zero or SYCL
 
-    * More abstract/higher level than level zero or SYCL
+    * User manages memory allocation, data transfer, etc.
+    * SYCL queue does not support explicit graphs, which is needed
+      by users and will be supported in the dynamic selection proposal
+    * SYCL can offer queue with same functionality
 
-      * Use manages memory allocation, data transfer, etc
-      * Applies to more than SYCL
-      * SYCL can offer queue with same functionality
+  * Mixing of direct use of SYCL queue and higher level functions
+    (e.g. oneDNN) may lead to inter-operability issues
 
-    * Mixing of direct use of sycl queue and higher level may lead to
-      inter-operability issues
+  * hipSYCL has similar functionality: multi-device scheduler,
+    but they cannot fully implement all SYCL queue features
+    (e.g. get_device)
 
-    * hipsycl has similar functionality, but not possible to fully
-      implement SYCL q, e.g. get_device
+* What if my kernel requires certain conditions (e.g. GPU only)?
 
-  * What if my kernel requires a GPU or other conditions?
+  * You can create a policy that is limited to a universe of devices
+  * You can have different kernels for different devices
+  * You can extend the execution policy: create one that's application-
+    specific, or provide a fallback policy
 
-    * You can create a policy that is limited to a universe of devices
-    * You can have different kernels for different devices
+* Future-proofing: having to check the queue sounds fragile for
+  long-lived code
 
-  * Having to check the queue sounds fragile for long-lived code
+  * In our initial proof-of-concept, we have a fallback to the CPU,
+    or you can limit the device universe you define
 
-    * In POC, we have a fallback to the CPU, or you can limit the
-      universe
+* How clever will your selector be? Will it look at instruction mix,
+  bytes to flops, others?
 
-  * How clever will your selector be? Will it look at instruction mix,
-    bytes to flops, ...?
+  * Specification will provide some simple-to-reason-about policies:
+    round-robin, static ranking, auto-tuning, etc.
+  * We do expect for more complicated policies to exist, might allow
+    custom policies to be defined.
+  * Who makes the choices will impact how this is designed.
+    Example: auto-tuning will require certain user inputs.
 
-    * Specification will provide some simple to reason about polices:
-      round robin, autotuing, .... But expect complicated policies
-      could exist.
+* How do you express data management?
 
-  * How do you express data management?
+  * Putting it in higher level abstraction doesn't allow
+    consideration of data transfers.
 
-    * Putting it in higher-level doesn't allow consideration of data
-      transfers.
+* How will custom scoring policies be defined? Should the spec provide
+  a way to attach characteristics to the task submitted?
 
-  * Custom policy? Using characteristics of the work submitted?
+  * Yes, that's a possibility. Want to avoid putting anything but
+    the simplest policy in the spec.
+  * Alternatively, could pass properties at submission time
 
-    * Yes. Don't want to put anything but the simplest policy in the spec.
+* Should we purseu the queue or execution policy path for dynamic
+  selection?
 
-  * queue vs execution policy?
-
-    * Doesn't have to be either/or. C++ policies are permission to
-      compiler, e.g. std:par. this is more like an
-      executor/scheduler. kokkos makes policy and resources
-      orthogonal. May not be better to mash them together.
-
-
+  * Doesn't have to be either/or, might need both. Certain kernels
+    will take better advantage of queue-like APIs, which others will
+    be better suited for execution policy.
+  * The problem with C++ execution policies are that they're basically
+    just permissions for the compiler, e.g. std:par.
+  * This is more like an executor/scheduler. Kokkos makes policy and resources
+    orthogonal. May not be better to mash them together.
 
 
 2021-8-25
@@ -128,6 +140,10 @@ Dynamic Selection. Mike Voss
 * Tom Deakin (University of Bristol)
 * Mike Voss (Intel)
 
+Level Zero Feature Evolution
+----------------------------
+
+* `Slides <presentations/2021-08-25-TAB-oneAPIv2-runtime.pdf>`__
 * Level Zero Runtime API: Ben Ashbaugh
 
   * Add a layer above today's level zero for utility functions that are
