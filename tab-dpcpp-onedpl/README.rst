@@ -99,7 +99,7 @@ Dynamic Selection: Mike Voss
     the simplest policy in the spec.
   * Alternatively, could pass properties at submission time
 
-* Should we purseu the queue or execution policy path for dynamic
+* Should we pursue the queue or execution policy path for dynamic
   selection?
 
   * Doesn't have to be either/or, might need both. Certain kernels
