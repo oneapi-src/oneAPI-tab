@@ -1,0 +1,149 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2021-10-06
+==========
+
+Materials:
+
+* `DPC++ APIs for oneMKL Data Fitting <../presentations/2021-10-06_Slides.pdf>`__
+
+Attendees:
+
+* Marius Cornea (Intel)
+* Romain Dolbeau (SiPearl)
+* Pavel Dyakov (Intel)
+* Alina Elizarova (Intel)
+* Andrey Fedorov (Intel)
+* Mehdi Goli (Codeplay)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (ANL)
+* Ye Luo (ANL)
+* Piotr Luszczek (UTK)
+* Vincent Pascuzzi (BNL)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+* Nikita Semin (Intel)
+* Edward Smyth (NAG)
+* Shane Story (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* DPC++ APIs for oneMKL Data Fitting - Nikita Semin and Andrey Fedorov
+* Wrap-up and next steps
+
+New member introduction:
+
+* Ye Luo - Computational scientist at Argonne National Labs (ANL). Major was Material Science and Physics. Doing simulations of materials at atomic scale, solving Schrödinger equation. Work on multiple methods, including quantum Monte Carlo, and Density Functional Theory (DFT), which solves the same equation in a different manner. These heavily rely on matrices; mostly dense linear algebra, sometimes sparse. Most time spent doing BLAS - heavy on matrix-matrix multiplications, also rely on linear solvers (LU, matrix inversion, solving eigenvalues). All parallel over MPI, then over threading, and some SIMD: use all the technologies offered by modern HPC and GPUs. In Density Functional Theory, use 1D/2D/3D FFTs, depending on the problem.
+
+DPC++ APIs for oneMKL Data Fitting:
+
+* Data fitting is set of functions to perform interpolation and integration.
+
+Data layouts for coefficients and functions:
+
+* Row major, column major, and first coordinate. The "first coordinate" layout assumes independent memory for each set of coefficients/functions. It is useful if you do not want to calculate functions 1-4, but only functions 1 and 3.
+
+Usage of Data Fitting:
+
+* Many C/C++/Python libraries contain interpolation functions, as well as applications that use it.
+* NumPy and cuPy have only linear 1D interpolation. SciPy and Eigen use cubic splines interpolation, for example.
+* Splines are pretty wide-spread functionality. For most of the interpolation of the previously-mentioned libraries, it is spline based.
+
+Proposal for oneMKL specification changes:
+
+* For proof that the specification is implementable, we can have Data Fitting DPC++ APIs as an experimental feature for the Intel oneMKL product, with a chance to change interfaces based on feedback. There's no de facto standard interface for data fitting. Opened oneMKL spec issue `#379 <https://github.com/oneapi-src/oneAPI-spec/issues/379>`__ for discussions; please feel free to make any comments there.
+
+What do you think about adding Data Fitting APIs to oneMKL specification?
+
+* The oneMKL TAB expects it would be useful to provide because making splines can be difficult, so providing portable DPC++ APIs would be user friendly.
+* The oneMKL TAB recommends to keep in mind how it would extend to 2D/3D. For example, providing both a scattered collection of points as well as a grid of points.
+* Experience with two scenarios: first is one spline function, but many evaluations, based on particle distances; second is evaluating multiple functions on a single position (row or column major). For the second scenario, that could be vectorized on CPU or GPU, but not many opportunities for optimization for the first scenario.
+* Use both 1D and 3D cubic splines; use 1D quintic, but that is difficult to handle.
+
+Proposed APIs:
+
+* Target is to support both Buffer and USM APIs and make them flexible to cover all use cases.
+* Decided to split into 3 main parts:
+
+  * Spline classes, support linear, quadratic, and cubic splines.
+  * Free functions that operate with the spline objects.
+  * Handlers that will let us simplify the APIs, show how the data is stored.
+
+* Partitions could be uniform, non-uniform, or quasi-uniform.
+* Interpolation sites could be uniform, non-uniform, or sorted.
+* Coefficients, functions, and interpolation results can be stored in row-major, column-major, or first-coordinate.
+
+Basic example:
+
+* User should include header file and initialize some data.
+* User creates special handlers for the data. We can use deduction guides since DPC++ uses C++17 - user will not need to specify any templates for these handlers.
+* After this, create a spline object that will concentrate all the data.
+* Then, compute spline coefficients by calling construct function.
+* Then call interpolate. The user can do some work on the coefficients as desired. Having free functions for construct and interpolate gives the ability to create dependencies between function calls; construct and interpolate return events.
+* In this simple case, when the user calls interpolate right after construct, the user doesn't need to specify it.
+* The handlers may be created on the go.
+
+* Why have a separate construct function, and not have the constructor do the work?
+
+  * 2 main reasons. We want to return an event from the construct function, but cannot from a constructor. We want to let the user control when the computations are performed, so we use a separate function.
+  * These are host APIs: the interpolation is being done on the device, but called from the host.
+
+* Does the user need to carry the cfh (coefficient function handler) around, ensuring the lifetime is longer than that of the cubic_spline?
+
+  * No, because cfh does not own the memory.
+  * Handlers are mostly views, used to specify some template parameters that can be deduced.
+  * If we want to be able to deduce template parameters, we need to use a handler. This simplifies usage.
+  * The user can create a handler on the fly if they do not want to specify any template parameters; it does not need to be kept until the end of the interpolation.
+
+* Why doesn't the spline own its own coefficients? That is, why do the APIs separate the compute from the memory management?
+
+  * There may be workflows where the coefficients are computed by the user, so this workflow is supported. But this is not the main use case.
+  * In the more common use case where the spline computes the coefficients,  the user will still need to know the size of the coefficients.
+  * The oneMKL TAB recommends to consider having APIs where the spline manages the coefficients. This may be especially important once/if 2D splines are supported.
+
+Advanced example:
+
+* Use an std::vector of pointers for coefficients.
+* Deduction guides available in C++17, so user does not need to specify any template parameters. But sometimes we cannot use deduction guides. If user wants to use quasi_uniform partition, the user needs to pass the template parameter to the handler, but then the user doesn't need to specify when creating cubic_spline.
+* Other part of usage model stays the same - similar usage for different situations. In these two examples, spline object has the same type and can be stored in some container. Our spline objects do not depend on how we store data (column/row major, or first coordinate) - still has the same type.
+
+Spline interface:
+
+* Interfaces for different orders of splines are nearly the same.
+* The class has only 2 template parameters.
+* The design allows us to store splines with different layouts in the same containers.
+* The constructor takes handlers, values corresponding to quantity of partitions and quantity of functions, and handlers for internal and boundary conditions.
+
+* Is the order of template parameters going from cubic_spline to spline_base really swapped?
+
+  * Good catch; they will be the same order.
+
+* What is the role of the partition handler?
+
+  * The main goal is to tell the layout; the partitions (x values) should be sorted.
+
+* Is it permitted to mix precision types? For example, double precision partition and single precision function?
+
+  * No, everything has to be the same floating point type. You also cannot mix buffer and USM.
+
+* Why do we need so many separate templates and handlers? It seems like the user would have to juggle a lot of stuff: a wrapper for the coefficients plus several handlers - the user would need to write a wrapper to encapsulate all these pieces.
+
+  * We use multiple handlers as in case when the user wants to specify some certain layout (which can’t be deduced) usage of handlers let the user specify it only for handler. In opposite case the user will have to specify all template parameters corresponding to layouts of coefficients/functions/partitions/boundary_conditions/internal_conditions, specify if coefficients were computed or not, and specify the type of floating point storage (float* or sycl::buffer<float>, or the same for double), in total 7 parameters. We consider it to be not convenient.
+  * The oneMKL TAB suggests reducing the number of handlers/templates: It seems that 1 handler is needed along with the cubic_spline object, and perhaps managing pointer to coefficients, but that should be sufficient.
+
+* Is it necessary to store the queue in the cubic spline?
+
+  * Yes so that it can be checked that the memory was allocated in the same context as the queue.
+  * Note that if the spline managed the memory, then you could get away from this.
+  * Because of this, the user would need two separate queues and two separate cubic_spline handlers if they wanted to have two queues doing the same interpolation without interfering with each other.
+
+* Is it possible to separate the execution part of the logic from the data part of the logic?
+
+  * The execution part is in the construct function. It does not take a queue.
+
+Meeting ended on Slide 16, before finishing slides, but further discussion and feedback on the oneMKL specification issue `#379 <https://github.com/oneapi-src/oneAPI-spec/issues/379>`__ is highly welcome!

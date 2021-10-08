@@ -20,3 +20,4 @@ Meeting notes:
 | `May 19, 2021 <minutes/2021_05_19_Minutes.rst>`__
 | `June 16, 2021 <minutes/2021_06_16_Minutes.rst>`__
 | `July 14, 2021 <minutes/2021_07_14_Minutes.rst>`__
+| `October 6, 2021 <minutes/2021_10_06_Minutes.rst>`__
