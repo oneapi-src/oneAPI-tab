@@ -62,44 +62,7 @@ oneAPI Distributed Computing: David Ozog &  Robert Cohn
       per thread,
     * coherency only on kernel boundary, don't need to synchronize
       frequently, otherwise no doable for PGAS
-
-  * Q: SYCL cannot support fence
-
-
-
-
-
-* Aksel Simon Alpay (Heidelberg University)
-* Andrew Lumsdaine (University of Washington, Pacific Northwest)
-* Ben Ashbaugh (Intel)
-* David Beckingsale (Lawrence Livermore National Laboratory)
-* James Brodman (Intel)
-* Madhura Chatterjee (Intel)
-* Christian Trott (Sandia National Laboratory)
-* Romain Dolbeau (SiPearl)
-* En Shao (Institute of Compute Technology, China Academy of Sciences)
-* Elvis Fefey (Intel)
-* Joseph Koston (Intel)
-* Alexey Kukanov (Intel)
-* Geoff Lowney (Intel)
-* Greg Lueck (Intel)
-* Javier Martinez (Intel)
-* Nevin Liber (Argonne National Laboratory)
-* John Pennycook (Intel)
-* Pablo Reble (Intel)
-* James Reinders (Intel)
-* Alison Richards (Intel)
-* Ronan Keryell (Xilinx)
-* Ruyman Reyes (Codeplay)
-* Gergana Slavova (Intel)
-* Timmie Smith (Intel)
-* Stefan Yurkevitch (ArrayFire)
-* Xinmin Tian (Intel)
-* Tom Deakin (University of Bristol)
-* Umar Arshad (ArrayFire)
-* Mike Voss (Intel)
-* Anuya Welling (Intel)
-
+    * SYCL cannot support fence from kernels
 
 
 Upcoming Topics
