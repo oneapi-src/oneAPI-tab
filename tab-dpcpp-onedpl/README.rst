@@ -9,6 +9,106 @@ Upcoming Topics
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
 
+2021-10-27
+==========
+
+* Robert Cohn (Intel)
+
+oneAPI Distributed Computing: David Ozog &  Robert Cohn
+-------------------------------------------------------
+
+* `Slides <presentations/2021-10-27-TAB-distributed-computing.pdf>`__
+* PGAS and OpenSHMEM
+
+  * symmetric heap is remote accessible
+  * put/get/atomic
+  * collectives
+  * memory ordering
+
+* OpenSHMEM specification
+
+  * active vendor/government/academic
+  * new features
+
+    * thread safety
+    * communication contexts
+    * teams
+
+  * upcoming
+
+    * memory spaces
+    * GPU
+
+  * Q: Are there reference implementations?
+
+    * Sandia OpenSHMEM is closest to reference implementation, most
+      likely to support new features. There are others.
+
+  * Feedback:
+
+    * Kokkos has implemented communication library for PGAS and
+      GPU. Does cacheing and aggregation, performs better than
+      lower-level vendor libraries.
+
+* OpenSHMEM integration with oneAPI
+
+  * Host OpenSHMEM Can work with SYCL/USM
+  * Can do GPU initiated memory
+  * issues with resource sharing with MPI
+  * need subset & extensions, to execute on device
+  * feedback:
+
+    * aggregation useful for put/get, does not require API change, put
+      per thread,
+    * coherency only on kernel boundary, don't need to synchronize
+      frequently, otherwise no doable for PGAS
+
+  * Q: SYCL cannot support fence
+
+
+
+
+
+* Aksel Simon Alpay (Heidelberg University)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest)
+* Ben Ashbaugh (Intel)
+* David Beckingsale (Lawrence Livermore National Laboratory)
+* James Brodman (Intel)
+* Madhura Chatterjee (Intel)
+* Christian Trott (Sandia National Laboratory)
+* Romain Dolbeau (SiPearl)
+* En Shao (Institute of Compute Technology, China Academy of Sciences)
+* Elvis Fefey (Intel)
+* Joseph Koston (Intel)
+* Alexey Kukanov (Intel)
+* Geoff Lowney (Intel)
+* Greg Lueck (Intel)
+* Javier Martinez (Intel)
+* Nevin Liber (Argonne National Laboratory)
+* John Pennycook (Intel)
+* Pablo Reble (Intel)
+* James Reinders (Intel)
+* Alison Richards (Intel)
+* Ronan Keryell (Xilinx)
+* Ruyman Reyes (Codeplay)
+* Gergana Slavova (Intel)
+* Timmie Smith (Intel)
+* Stefan Yurkevitch (ArrayFire)
+* Xinmin Tian (Intel)
+* Tom Deakin (University of Bristol)
+* Umar Arshad (ArrayFire)
+* Mike Voss (Intel)
+* Anuya Welling (Intel)
+
+
+
+Upcoming Topics
+===============
+
+* Error handling
+* Function pointers revisited
+* [2nd half 2021] oneDPL C++ standard library support
+
 2021-9-22
 =========
 
