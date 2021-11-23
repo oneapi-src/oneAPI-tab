@@ -9,6 +9,69 @@ Upcoming Topics
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
 
+2021-10-27
+==========
+
+* Robert Cohn (Intel)
+
+oneAPI Distributed Computing: David Ozog &  Robert Cohn
+-------------------------------------------------------
+
+* `Slides <presentations/2021-10-27-TAB-distributed-computing.pdf>`__
+* PGAS and OpenSHMEM
+
+  * symmetric heap is remote accessible
+  * put/get/atomic
+  * collectives
+  * memory ordering
+
+* OpenSHMEM specification
+
+  * active vendor/government/academic
+  * new features
+
+    * thread safety
+    * communication contexts
+    * teams
+
+  * upcoming
+
+    * memory spaces
+    * GPU
+
+  * Q: Are there reference implementations?
+
+    * Sandia OpenSHMEM is closest to reference implementation, most
+      likely to support new features. There are others.
+
+  * Feedback:
+
+    * Kokkos has implemented communication library for PGAS and
+      GPU. Does cacheing and aggregation, performs better than
+      lower-level vendor libraries.
+
+* OpenSHMEM integration with oneAPI
+
+  * Host OpenSHMEM Can work with SYCL/USM
+  * Can do GPU initiated memory
+  * issues with resource sharing with MPI
+  * need subset & extensions, to execute on device
+  * feedback:
+
+    * aggregation useful for put/get, does not require API change, put
+      per thread,
+    * coherency only on kernel boundary, don't need to synchronize
+      frequently, otherwise no doable for PGAS
+    * SYCL cannot support fence from kernels
+
+
+Upcoming Topics
+===============
+
+* Error handling
+* Function pointers revisited
+* [2nd half 2021] oneDPL C++ standard library support
+
 2021-9-22
 =========
 
