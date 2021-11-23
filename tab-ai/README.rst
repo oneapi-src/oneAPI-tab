@@ -2,6 +2,97 @@
 oneAPI Technical Advisory Board Meeting (TAB-AI) Meeting Notes
 ==============================================================
 
+2021-11-10
+==========
+
+Agenda
+------
+
+================================================================  ===============================  =============
+Overview of oneAPI and SYCL: how all the pieces fit together      Andrew Richards, Codeplay        5 min
+Mapping AI software to SYCL and oneAPI: ONNX, Eigen, TensorFlow   Mehdi Goli, Codeplay             20 min
+Mapping SYCL to accelerator hardware, using RISC-V as an example  Alastair Murray, Codeplay        20 min
+Experience of using SYCL and oneAPI with National Labs            Gordon Brown, Codeplay           15 min    
+Opens / Topics                                                    All                              30 min
+================================================================  ===============================  =============
+
+Attendees
+---------
+
+=================================   ===============================
+Richards, Alison, Intel             Guoliang, Vastaitech (来)
+Alastair Murray, Codeplay           Ashbaugh, Ben, Intel
+Hanchinmani, Milind, Intel          Dolbeau, Romain, SiPearl
+Andrew Chen (来宾), vastaitech      Ike, Atsushi/池 敦, Fujitsu
+Li, Wei, Intel                      Mehdi Goli, Codeplay
+Brodman, James, Intel               ICT Lixian Ma (来宾), ICT CAS
+Li, Jian Hui, Intel                 Ruyman Reyes, Codeply
+Rayanki, Sreenivasulu, Intel        Brown, Gordon, Codeplay
+Tamir, Guy, Intel                   Andrew Richards, Codeplay
+Petrov, Nikolay A, Intel            Penporn Koanantakool, Google
+Nalawadi, Rajeev K, Intel           Curley, Joseph C, Intel
+En Shao (来宾), ICT CAS             Sheng Zha, AWS, Apache MX Net
+=================================   ===============================
+
+
+Questions and Answer
+--------------------
+
+* Is Codeplay upstreaming the ONNX stuff?  It is all open source and
+  it will be up-streamed very soon.
+* Does the SYCL EP claim the entire graph or is it claiming in the
+  form of multiple subgraphs?  It actually supports the entire graph
+  and distributes it to the entire backend.  SYCL execution goes on
+  SYCL DNN and all of the implementation of those nodes are available.
+* Will the SYCL backend replace all the other backends inside ONNX RT?
+  If Codeplay were the owner of it, it should replace all other
+  backends…
+
+  No, each existing backend has its own pros and cons. Vendor
+  optimized backend are useful when speed/performance on a particular
+  device is the key. Pure SYCL-backend would be useful when
+  portability on various devices is the key. Especially for devices
+  that are new or do not have rich library ecosystem, by enabling SYCL
+  they can benefit from the SYCL library ecosystem, supported by
+  multiple vendors. You can also have cross-platform performance
+  portability via SYCL interoperability with other backends. This
+  approach integrates the existing vendor optimised backend in SYCL to
+  provide a unique SYCL-interface for memory management and runtime
+  control from the user’s point of view while reusing the highly
+  optimised vendor backend. oneAPI initiative approach has already
+  enabled cross-platform performance portability support on oneDNN via
+  SYCL-interoperability for both CUDA and OpenCL-based backend.
+* Do you always beat oneDNN or are you as good as oneDNN?  You get
+  both portability and performance.
+* Can you get both portability and performance?  There is always a
+  trade-off between performance and level of abstraction that leads to
+  portability.  An assembly code can beat application written in
+  high-level language in terms of performance, but will struggle in
+  terms of portability.
+* The question is how close you are?  Are you achieving 80% of
+  customized library?  75% of performance we can achieve – range
+  between 75%-100%.  It is important to clarify that if you have an
+  interface like oneDNN, you have a common API for all the vendors as
+  well as SYCL.  It is difficult to replace HW vendor libraries when
+  not all HW vendors provide enough performance counters and detailed
+  hardware information
+* Do you support training?  At the moment no; inference mode at the
+  moment.  We do support training through the TF backend and oneDNN
+  backend.
+* How to build the DPC tool chain with support for HIP and AMD.  Is
+  there some open source for the DPC and SYCL support.  YES – all of
+  this is upstreamed into Intel LLVM depository…  The tool chain has
+  been open sourced in there – YES.
+* On the collectives, what is the scale out support?  This refers to
+  the SYCL support with the CUDA backend targeting NVIDIA HW Support.
+  There hasn’t been anything done for oneCCL or any other API.
+* Do we have some implementations for the group collectives?  Memory
+  copy to do some support for the communication node between different
+  nodes?  These collectives are for within the kernel functions so
+  they are only for a single kernel, they don’t extend into multiple
+  nodes.  There is no communication between different nodes – only
+  within oneGPU.  Group collectives following the SYCL naming.
+
 2021-08-10
 ==========
 
