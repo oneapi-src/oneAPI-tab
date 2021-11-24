@@ -34,6 +34,9 @@ Nalawadi, Rajeev K, Intel           Curley, Joseph C, Intel
 En Shao (来宾), ICT CAS             Sheng Zha, AWS, Apache MX Net
 =================================   ===============================
 
+Slides_
+
+.. _Slides: presentations/Codeplay-oneAPI-AI-TAB-Nov2021.pdf
 
 Questions and Answer
 --------------------
