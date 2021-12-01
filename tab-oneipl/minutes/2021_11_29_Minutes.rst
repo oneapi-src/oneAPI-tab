@@ -73,7 +73,13 @@ This input will help to shape its next revisions.
 
 Overview of oneIPL:
 
-* Victor Getmanskiy presented the high level overview of oneIPL.
+* Victor Getmanskiy presented the high level overview of oneIPL. oneIPL provides the DPC++ API for image processing functionality, which is inherited from classic Intel IPP and is supporting XPU execution. So all oneIPL DPC++ API contains CPU optimized kernels, kernels optimized for GPU and could be also extended to support other xPU optimisations in future.
+
+* oneIPL API provides C++ abstraction over image data which maps to the most accelerated memory available for the format and data type: Host memory, Shared memory, Device memory or partially Device tiled memory.
+
+* oneIPL API is based on DPC++ and sycl::queue to be able to construct pipelines of image processing and include any oneAPI API calls based on DPC++ queue targeted to different xPUs. Calls are asynchronous and scheduled by runtime for the target devices.
+
+* Currently the provisional oneIPL Spec v0.5 is published. It contains all functionality which is targeted for oneIPL 2022 Q1 beta release. The functionality contains most commonly used functions like Geometry transformations (Resizing, mirroring), Color conversions (RGB to Plane, RGB to NV12), Filtering, Type conversion and other functions.
 
 * The list of topics for the first technical discussions are listed in the `presentation <../presentations/2021-11-29_Slides.pdf>`__.
 
