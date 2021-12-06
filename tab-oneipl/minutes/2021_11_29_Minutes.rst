@@ -54,14 +54,14 @@ Welcome to the oneIPL TAB participants:
   invited to the oneIPL TAB.  And today on the bridge also we have a
   lot of people who helped to organize all this activity:
 
-   - This is IPL managers: Craig Garland who is leading Intel
-     Performance Libraries department, which includes not only Image
-     Processing team, but Math Kernal Library (oneMKL) and several
-     other domains. Svetlana Podogova and Valentin Kubarev - the
-     engineering managers of Intel performance libraries for Image and
-     Signal Processing.
-   - Business Development Group
-   - Technical Consulting Engineers
+  - This is IPL managers: Craig Garland who is leading Intel
+    Performance Libraries department, which includes not only Image
+    Processing team, but Math Kernel Library (oneMKL) and several
+    other domains. Svetlana Podogova and Valentin Kubarev - the
+    engineering managers of Intel performance libraries for Image and
+    Signal Processing.
+  - Business Development Group
+  - Technical Consulting Engineers
 
 oneAPI industry initiative:
 
@@ -98,7 +98,7 @@ oneAPI Technical Advisory Board activity:
 
 * There are 3 other TABs in different domains: the first TAB was
   created about 2 years ago for DPC++ language and library, then
-  oneMKL (Math Kernal Libraries) TAB started in May 2020, and AI TAB
+  oneMKL (Math Kernel Libraries) TAB started in May 2020, and AI TAB
   (oneDNN and oneCCL) is active since Feb 2021. More information about
   TABs may be found in `oneAPI TAB GitHub`_.
 
