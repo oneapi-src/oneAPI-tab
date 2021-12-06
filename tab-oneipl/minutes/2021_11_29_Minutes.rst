@@ -54,12 +54,12 @@ Welcome to the oneIPL TAB participants:
   invited to the oneIPL TAB.  And today on the bridge also we have a
   lot of people who helped to organize all this activity:
 
-  - This is IPL managers: Craig Garland who is leading Intel
-    Performance Libraries department, which includes not only Image
-    Processing team, but Math Kernel Library (oneMKL) and several
-    other domains. Svetlana Podogova and Valentin Kubarev - the
-    engineering managers of Intel performance libraries for Image and
-    Signal Processing.
+  - IPL managers: Craig Garland who is leading Intel Performance
+    Libraries department, which includes not only Image Processing
+    team, but Math Kernel Library (oneMKL) and several other
+    domains. Svetlana Podogova and Valentin Kubarev - the engineering
+    managers of Intel performance libraries for Image and Signal
+    Processing.
   - Business Development Group
   - Technical Consulting Engineers
 
