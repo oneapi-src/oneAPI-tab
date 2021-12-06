@@ -7,7 +7,7 @@ oneIPL Technical Advisory Board Meeting Notes
 
 Slides:
 
-* `oneIPL TAB kickoff <../presentations/2021-11-29_Slides.pdf>`__
+* `oneIPL TAB kickoff`_
 
 Attendees:
 
@@ -22,7 +22,7 @@ Attendees:
 * Valentin Kubarev  (Intel)
 * Dmitriy Budnikov  (Intel)
 * Vladimir Kostarev (Intel)
-* Robert Schneider (Siemens Halthineers)
+* Robert Schneider (Siemens Healthineers)
 * An Le (Intel)
 * Mark Rabotnikov (Philips)
 * Maksim Shabunin (Intel)
@@ -40,68 +40,144 @@ Agenda:
 
 Welcome to the oneIPL TAB participants:
 
-* Welcome to the oneAPI Technical Advisory Board (or TAB) for Image Processing Kickoff meeting
-We really appreciate you were able to join our community and our aim is to make this collaboration as much effective as we can.
-The goal of todays meeting is to make the overview of oneAPI initiative and especially of Image processing domain, to describe what kind of collaboration do we expect and to follow up with you on future TAB meetings.
+* Welcome to the oneAPI Technical Advisory Board (or TAB) for Image
+  Processing Kickoff meeting We really appreciate you were able to
+  join our community and our aim is to make this collaboration as much
+  effective as we can.  The goal of todays meeting is to make the
+  overview of oneAPI initiative and especially of Image processing
+  domain, to describe what kind of collaboration do we expect and to
+  follow up with you on future TAB meetings.
 
-* The oneIPL Technical Advisory Board includes experts from Siemens Helthineers, Philips, Adobe, Samsung Medison, Sonoscape and Xinje. Also the experts form OpenCV, G-API and oneIPL projects are invited to the oneIPL TAB.
-And today on the bridge also we have a lot of people who helped to organize all this activity:
-   - This is IPL managers: Craig Garland who is leading Intel Performance Libraries department, which includes not only Image Processing team, but Math Kernal Library (oneMKL) and several other domains. Svetlana Podogova and Valentin Kubarev - the engineering managers of Intel performance libraries for Image and Signal Processing.
+* The oneIPL Technical Advisory Board includes experts from Siemens
+  Helthineers, Philips, Adobe, Samsung Medison, Sonoscape and
+  Xinje. Also the experts form OpenCV, G-API and oneIPL projects are
+  invited to the oneIPL TAB.  And today on the bridge also we have a
+  lot of people who helped to organize all this activity:
+
+   - This is IPL managers: Craig Garland who is leading Intel
+     Performance Libraries department, which includes not only Image
+     Processing team, but Math Kernal Library (oneMKL) and several
+     other domains. Svetlana Podogova and Valentin Kubarev - the
+     engineering managers of Intel performance libraries for Image and
+     Signal Processing.
    - Business Development Group
-   - Technical Consulting Engineers  
-  
+   - Technical Consulting Engineers
+
 oneAPI industry initiative:
 
-* Nowadays there is a very diverse environment of architectures which are widely used. It includes different types of platforms which are CPUs, GPUs, FPGAs, specific types of accelerators.
-This turns to be a difficult task for developers to support all of these architectures, so they really require some unified environment that allows them to program across all those without deep understanding all of details of each architecture. 
-That is what oneAPI industry initiative is targeted for. 
+* Nowadays there is a very diverse environment of architectures which
+  are widely used. It includes different types of platforms which are
+  CPUs, GPUs, FPGAs, specific types of accelerators.  This turns to be
+  a difficult task for developers to support all of these
+  architectures, so they really require some unified environment that
+  allows them to program across all those without deep understanding
+  all of details of each architecture.  That is what oneAPI industry
+  initiative is targeted for.
 
-* The oneAPI is an open unified standard based specification for heterogenous programming which includes DPC++ language spec as a core part, Level Zero spec for the system interface for the oneAPI languages and libraries and a number of elemets covering different domains like maths operations, data processing, video processing and now we are preparing to extend it for Image processing area also. The initial launch of oneAPI Spec v1 in Sept 2020 and since that time the speed of specification development and the number of participants in oneAPI community are actively growing.
+* The oneAPI is an open unified standard based specification for
+  heterogenous programming which includes DPC++ language spec as a
+  core part, Level Zero spec for the system interface for the oneAPI
+  languages and libraries and a number of elemets covering different
+  domains like maths operations, data processing, video processing and
+  now we are preparing to extend it for Image processing area
+  also. The initial launch of oneAPI Spec v1 in Sept 2020 and since
+  that time the speed of specification development and the number of
+  participants in oneAPI community are actively growing.
 
-* More information about oneAPI may be found in `oneAPI home page <https://www.oneapi.io/>`__ and `oneAPI Spec page <https://www.oneapi.io/spec/>`__.
+* More information about oneAPI may be found in `oneAPI home page`_
+  and `oneAPI Spec page`_.
 
 oneAPI Technical Advisory Board activity:
 
-* The TAB is the place where the future versions of oneAPI specification is discussed. This is invitation-based forum of industry experts, who give their inputs to the oneAPI Specification. It is very critical to hear the input from different companies to adopt the specification and make it unified and meet the challenges of Image Processing area.
+* The TAB is the place where the future versions of oneAPI
+  specification is discussed. This is invitation-based forum of
+  industry experts, who give their inputs to the oneAPI
+  Specification. It is very critical to hear the input from different
+  companies to adopt the specification and make it unified and meet
+  the challenges of Image Processing area.
 
-* There are 3 other TABs in different domains: the first TAB was created about 2 years ago for DPC++ language and library, then oneMKL (Math Kernal Libraries) TAB started in May 2020, and AI TAB (oneDNN and oneCCL) is active since Feb 2021. More information about TABs may be found in `oneAPI TAB GitHub <https://github.com/oneapi-src/oneAPI-tab>`__
+* There are 3 other TABs in different domains: the first TAB was
+  created about 2 years ago for DPC++ language and library, then
+  oneMKL (Math Kernal Libraries) TAB started in May 2020, and AI TAB
+  (oneDNN and oneCCL) is active since Feb 2021. More information about
+  TABs may be found in `oneAPI TAB GitHub`_.
 
-* The goal of oneIPL TAB is to review and collect feedback on oneIPL spec. Make the new specification to address the challenges of Image Processing development and adjust it to the industry needs
-This input will help to shape its next revisions.
+* The goal of oneIPL TAB is to review and collect feedback on oneIPL
+  spec. Make the new specification to address the challenges of Image
+  Processing development and adjust it to the industry needs This
+  input will help to shape its next revisions.
 
-* The latest version of oneIPL Spec is published on `oneIPL Spec page <https://spec.oneapi.io/oneipl/latest/index.html>`__
+* The latest version of oneIPL Spec is published on `oneIPL Spec
+  page`_.
 
 Overview of oneAPI Image Processing Library (oneIPL):
 
-* Victor Getmanskiy presented the high level overview of oneIPL. oneIPL provides the DPC++ API for image processing functionality, which is inherited from classic Intel Integrated Performance Primitives (Intel IPP) and is supporting xPU execution. So all oneIPL DPC++ API contains CPU optimized kernels, GPU optimized kernels and could be also extended to support other xPU optimisations in future.
+* Victor Getmanskiy presented the high level overview of
+  oneIPL. oneIPL provides the DPC++ API for image processing
+  functionality, which is inherited from classic Intel Integrated
+  Performance Primitives (Intel IPP) and is supporting xPU
+  execution. So all oneIPL DPC++ API contains CPU optimized kernels,
+  GPU optimized kernels and could be also extended to support other
+  xPU optimisations in future.
 
-* oneIPL API provides C++ abstraction over image data which maps to the most accelerated memory available for the format and data type: Host memory, Shared memory, Device memory or partially Device tiled memory.
+* oneIPL API provides C++ abstraction over image data which maps to
+  the most accelerated memory available for the format and data type:
+  Host memory, Shared memory, Device memory or partially Device tiled
+  memory.
 
-* oneIPL API is based on DPC++ and sycl::queue to be able to construct pipelines of image processing and include any oneAPI API calls based on DPC++ queue targeted to different xPUs. Calls are asynchronous and scheduled by runtime for the target devices.
+* oneIPL API is based on DPC++ and sycl::queue to be able to construct
+  pipelines of image processing and include any oneAPI API calls based
+  on DPC++ queue targeted to different xPUs. Calls are asynchronous
+  and scheduled by runtime for the target devices.
 
-* Currently the provisional oneIPL Spec v0.5 is published. It contains all functionality which is targeted for oneIPL first beta release in 2022. The functionality contains most commonly used functions like Geometry transformations (Resizing, mirroring), Color conversions (RGB to Plane, RGB to NV12), Filtering, Type conversion and other functions.
+* Currently the provisional oneIPL Spec v0.5 is published. It contains
+  all functionality which is targeted for oneIPL first beta release
+  in 2022. The functionality contains most commonly used functions
+  like Geometry transformations (Resizing, mirroring), Color
+  conversions (RGB to Plane, RGB to NV12), Filtering, Type conversion
+  and other functions.
 
-* The list of topics for the first technical discussions are listed in the `presentation <../presentations/2021-11-29_Slides.pdf>`__.
+* The list of topics for the first technical discussions are listed in
+  `oneIPL TAB kickoff`_.
 
 oneIPL TAB rules and schedule:
 
-* DO NOT share any confidential information or trade secrets with the group
+* DO NOT share any confidential information or trade secrets with the
+  group
 
-* Focus on high level dicsussion of oneIPL Specification - not on the implementation details
+* Focus on high level dicsussion of oneIPL Specification - not on the
+  implementation details
 
-* Please submit the feedback in writing on GitHub in accordance to `oneAPI Contribution Guidelines <https://spec.oneapi.io/versions/latest/introduction.html#contribution-guidelines>`__. This will allow Intel to further upstream your feedback to other standards bodies, including The Khronos Group SYCL specification. 
+* Please submit the feedback in writing on GitHub in accordance to
+  `oneAPI Contribution Guidelines`_. This will allow Intel to further
+  upstream your feedback to other standards bodies, including The
+  Khronos Group SYCL specification.
 
-* The oneIPL TAB will be 1-hour meeting per 2 weeks while discussing main content of Spec v0.5
+* The oneIPL TAB will be 1-hour meeting per 2 weeks while discussing
+  main content of Spec v0.5
 
-* Will move to 1 meeting per 4 weeks after the main topics are covered 
+* Will move to 1 meeting per 4 weeks after the main topics are covered
 
-* Thechnical expert (any TAB member) presents the proposal to spec the group is discussing the topic and collecting feedback
+* Thechnical expert (any TAB member) presents the proposal to spec the
+  group is discussing the topic and collecting feedback
 
-* All the materials and meetign minutes will be published on `oneAPI TAB GitHub <https://github.com/oneapi-src/oneAPI-tab>`__
+* All the materials and meeting minutes will be published on `oneAPI
+  TAB GitHub`_.
 
-* The offline feedback from oneIPL TAB members will be also processed and discussed on next meeting
+* The offline feedback from oneIPL TAB members will be also processed
+  and discussed on next meeting
 
-* The first technical meeting for oneIPL TAB is planned for December 16th. Then we will make a New Year holidays and start bi-weekly seria of meeting from January 20th (ww4) or February 3rd (ww6) - TBD
+* The first technical meeting for oneIPL TAB is planned for December
+  16th. Then we will make a New Year holidays and start bi-weekly
+  series of meeting from January 20th (ww4) or February 3rd (ww6) - TBD
 
-* For the mid-area topics the cross-component TAB could be organized. The first Cross TAB session is planned to December 14th - the invitation is sent to oneIPL TAB Members. Feel free to attend.
+* For the mid-area topics the cross-component TAB could be
+  organized. The first Cross TAB session is planned to December 14th -
+  the invitation is sent to oneIPL TAB Members. Feel free to attend.
 
+.. _`oneAPI Contribution guidelines`: https://spec.oneapi.io/versions/latest/introduction.html#contribution-guidelines
+.. _`oneAPI TAB GitHub`: https://github.com/oneapi-src/oneAPI-tab
+.. _`oneAPI home page`: https://www.oneapi.io/
+.. _`oneAPI Spec page`: https://www.oneapi.io/spec/
+.. _`oneIPL Spec page`: https://spec.oneapi.io/oneipl/latest/index.html
+.. _`oneIPL TAB kickoff`: ../presentations/2021-11-29_Slides.pdf
