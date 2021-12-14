@@ -12,7 +12,7 @@ Agenda
 Introduction               Geoff Lowney
 Unified Runtime            P. Petersen, Z. Waters, A. Kukanov, T. Smith
 Distributed Programming    David Ozog, Maria Gazaran, Robert Cohn
-Domain Specific Libraries  Ilya Burlov
+Domain Specific Libraries  Ilya Burylov
 =========================  ============================================
 
 
@@ -61,41 +61,42 @@ Slides_
 
 - Unified Runtime
 
-  Adobe only uses native runtime on each platform: Metal or Direct X
+  - Adobe only uses native runtime on each platform: Metal or Direct X
 
-  Need Vulcan back end support – requires more image processing, which
-  is missing from oneAPI – prefers to write in oneAPI in C++ vs
-  GLSL/etc. Needs texture support, image basic support, access to how
-  a texture is stored (linearly or swizzled, 3D texture or a view on
-  that with two images, etc)
+  - Need Vulcan back end support – requires more image processing,
+    which is missing from oneAPI – prefers to write in oneAPI in C++
+    vs GLSL/etc. Needs texture support, image basic support, access to
+    how a texture is stored (linearly or swizzled, 3D texture or a
+    view on that with two images, etc)
 
-  Working on imaging support for oneAPI.
+  - Working on imaging support for oneAPI.
 
-  AR: Zack to connect with Ilya on image support
+  - AR: Zack to connect with Ilya on image support
 
 – Does Level Zero support OpenCL?
 
-  Level Zero is low level to support GPU and devices, (lower level
-  than OpenCL). OpenCL is a true citizen (tom deakin)
+  - Level Zero is low level to support GPU and devices, (lower level
+    than OpenCL). OpenCL is a true citizen (tom deakin)
 
 – We are doing a lot of work in SYCL and NVIDIA Backend.  Very
   interested in level zero – looked at level zero but it was so low
   level compared to CUDA and Hip; Need something higher level to
   implement the sycl support and support other platforms above CUDA
-  and HIP – need other ways to do that; if you think in terms of SYCL
-  – how would they do that with multiple streams in cuda and or
+  and HIP – need other ways to do that; if you think in terms of
+  SYCL. How would they do that with multiple streams in cuda and or
   multiple queues.  A lot of conversations to have a unified RT for
   other platforms.
 
-  This is a .1 spec, would like to get additional engagement for
-  others; in terms of a timeline, is there something we could share?
-  We need to put the draft on the github – we have the AR to put that
-  up.  We do intend to have an easy migration path – for other hw.
-  Clean up and standardize in the PI layer – we welcome your feedback
-  as we define.  On the right track w/ the unified RT; one of the nice
-  things through the adaptors is the ability to expose the extensions
-  and expose the native platform experiences – if you need access for
-  CUDA and low-level interfaces or APIs, you could be able to choose
+  - This is a .1 spec, would like to get additional engagement for
+    others; in terms of a timeline, is there something we could share?
+    We need to put the draft on the github – we have the AR to put
+    that up.  We do intend to have an easy migration path – for other
+    hw.  Clean up and standardize in the PI layer – we welcome your
+    feedback as we define.  On the right track w/ the unified RT; one
+    of the nice things through the adaptors is the ability to expose
+    the extensions and expose the native platform experiences – if you
+    need access for CUDA and low-level interfaces or APIs, you could
+    be able to choose
 
 - SYCL for CUDA or for HIP – is the backend to call cublas directly –
   very important feature that they need – they are happy to
@@ -104,30 +105,31 @@ Slides_
 – Level zero behavior is expected to standardize all the backends –
   doubtful. They are more familiar with other APIs.
 
-  Thread Safety – SPEC says level zero is not thread safe.  (ZACK – AR
-  to look at that).  Spec says you can call for multiple threads.  2)
+  - Thread Safety – SPEC says level zero is not thread safe.  (ZACK –
+    AR to look at that).  Spec says you can call for multiple
+    threads.  2)
 
-  No primary contact to provide libraries to interact w/o knowing each
-  other; user exports (unfriendly for developers).  Need to have a
-  Level Zero adaptor to unify the behavior w/ other runtimes.  That is
-  more of his expectation.
+  - No primary contact to provide libraries to interact w/o knowing
+    each other; user exports (unfriendly for developers).  Need to
+    have a Level Zero adaptor to unify the behavior w/ other runtimes.
+    That is more of his expectation.
 
-  Adaptors – where you need divergence, you can access the lower level
-  platform…  Need to access multiple lower level architectures –
-  directly allocated from cublas or cuda low level (goes through the
-  primary context and recognizes each other – independent but not
-  convenient like that w/ CUDA).  Unified RT is the opportunity for
-  supporting those explicit constructs.
+  - Adaptors – where you need divergence, you can access the lower
+    level platform…  Need to access multiple lower level architectures
+    – directly allocated from cublas or cuda low level (goes through
+    the primary context and recognizes each other – independent but
+    not convenient like that w/ CUDA).  Unified RT is the opportunity
+    for supporting those explicit constructs.
 
-  You can call from multiple threads but you need to be careful. Can't
-  operate on the same object from multiple threads.  Small
-  clarification: You can't operate on the same object from multiple
-  threads without synchronization.
+  - You can call from multiple threads but you need to be
+    careful. Can't operate on the same object from multiple threads.
+    Small clarification: You can't operate on the same object from
+    multiple threads without synchronization.
 
 – Is Unified RT for users to use or Implementers to use?
 
-  Aimed at End Users or under a parallel language layer – don’t need
-  to discuss now but need to know who the target market is.
+  - Aimed at End Users or under a parallel language layer – don’t need
+    to discuss now but need to know who the target market is.
 
 - Having this TLS magical CUDA state is a limitation for performance;
   And it is actually very non-thread safe, just in a more dangerous
@@ -152,11 +154,11 @@ Slides_
 - How big of a problem is this?  Do we need to enable CPU
    Resources?
 
-  People do want it.
+  - People do want it.
 
 - Would this help TBB and NUMA issues on Intel CPUs?
 
-  That is exactly why we are pursuing this.
+  - That is exactly why we are pursuing this.
 
 - We need to support both 32 bit (WASM) and 64 bit system. From high
   end workstation to iOS/Android devices. So portability and ability
@@ -181,8 +183,8 @@ Slides_
   integrated w/ SYCL)
 
 - For combining MPI and SYCL, have you looked at the Celerity project?
-   https://celerity.github.io/ Celerity · High-level C++ for
-   Accelerator Clusters High-level C++ for Accelerator Clusters
+  https://celerity.github.io/ Celerity · High-level C++ for
+  Accelerator Clusters High-level C++ for Accelerator Clusters
 
 - [Off-topic; Potential Collab] I have yet to see 'XPU' with 'X' ==
   'Q'. Something I'm interested in is having a qpu_selector, where
