@@ -102,8 +102,8 @@ Slides_
   very important feature that they need – they are happy to
   collaborate on this (Codeplay).
 
-– Level zero behavior is expected to standardize all the backends but
-  they are more familiar with other APIs.
+– Unified runtime expected to abstract all the backends but they are
+  more familiar with other APIs.
 
 - Thread Safety – SPEC says level zero is not thread safe.  (ZACK – AR
   to look at that).  Spec says you can call for multiple threads.  2)
