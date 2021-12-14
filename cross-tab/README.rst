@@ -10,7 +10,7 @@ Agenda
 
 =========================  ============================================
 Introduction               Geoff Lowney
-Unified Runtime            P. Petersen, Z. Waters, A. Kukanov, T. Smith
+Unified Runtime            Paul Petersen, Z. Waters, A. Kukanov, T. Smith
 Distributed Programming    David Ozog, Maria Gazaran, Robert Cohn
 Domain Specific Libraries  Ilya Burylov
 =========================  ============================================
@@ -75,8 +75,8 @@ Slides_
 
 – Does Level Zero support OpenCL?
 
-  - Level Zero is low level to support GPU and devices, (lower level
-    than OpenCL). OpenCL is a true citizen (tom deakin)
+  - Level Zero provides low level access to GPU and devices, and is
+    intended to be lower-level than OpenCL. OpenCL is a true citizen.
 
 – We are doing a lot of work in SYCL and NVIDIA Backend.  Very
   interested in level zero – looked at level zero but it was so low
@@ -126,10 +126,9 @@ Slides_
     Small clarification: You can't operate on the same object from
     multiple threads without synchronization.
 
-– Is Unified RT for users to use or Implementers to use?
+– Is Unified RT for users to use or Implementers to use
 
-  - Aimed at End Users or under a parallel language layer – don’t need
-    to discuss now but need to know who the target market is.
+  - Aimed at end Users or under a parallel language layer
 
 - Having this TLS magical CUDA state is a limitation for performance;
   And it is actually very non-thread safe, just in a more dangerous
