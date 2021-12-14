@@ -105,26 +105,25 @@ Slides_
 – Level zero behavior is expected to standardize all the backends but
   they are more familiar with other APIs.
 
-  - Thread Safety – SPEC says level zero is not thread safe.  (ZACK –
-    AR to look at that).  Spec says you can call for multiple
-    threads.  2)
+- Thread Safety – SPEC says level zero is not thread safe.  (ZACK – AR
+  to look at that).  Spec says you can call for multiple threads.  2)
 
-  - No primary contact to provide libraries to interact w/o knowing
-    each other; user exports (unfriendly for developers).  Need to
-    have a Level Zero adaptor to unify the behavior w/ other runtimes.
-    That is more of his expectation.
+- No primary context to allow libraries to interact w/o knowing each
+  other; user exports (unfriendly for developers).  Need to have a
+  Level Zero adaptor to unify the behavior w/ other runtimes.  That is
+  more of his expectation.
 
-  - Adaptors – where you need divergence, you can access the lower
-    level platform…  Need to access multiple lower level architectures
-    – directly allocated from cublas or cuda low level (goes through
-    the primary context and recognizes each other – independent but
-    not convenient like that w/ CUDA).  Unified RT is the opportunity
-    for supporting those explicit constructs.
+- Adaptors – where you need divergence, you can access the lower level
+  platform…  Need to access multiple lower level architectures –
+  directly allocated from cublas or cuda low level (goes through the
+  primary context and recognizes each other – independent but not
+  convenient like that w/ CUDA).  Unified RT is the opportunity for
+  supporting those explicit constructs.
 
-  - You can call from multiple threads but you need to be
-    careful. Can't operate on the same object from multiple threads.
-    Small clarification: You can't operate on the same object from
-    multiple threads without synchronization.
+- You can call from multiple threads but you need to be careful. Can't
+  operate on the same object from multiple threads.  Small
+  clarification: You can't operate on the same object from multiple
+  threads without synchronization.
 
 - Having this TLS magical CUDA state is a limitation for performance;
   And it is actually very non-thread safe, just in a more dangerous
@@ -146,10 +145,9 @@ Slides_
 
 - CPU runtime composability
 
-- How big of a problem is this?  Do we need to enable CPU
-   Resources?
+- Do people want to program CPU with SYCL?
 
-  - People do want it.
+  - Yes
 
 - Would this help TBB and NUMA issues on Intel CPUs?
 
