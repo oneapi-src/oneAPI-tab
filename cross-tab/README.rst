@@ -59,23 +59,21 @@ Slides_
 
 .. _Slides: presentations/cross-tab-2021-12-14.pdf
 
-- Unified Runtime
+- Adobe only uses native runtime on each platform: Metal or Direct X
 
-  - Adobe only uses native runtime on each platform: Metal or Direct X
+- Need Vulcan back end support – requires more image processing, which
+  is missing from oneAPI – prefers to write in oneAPI in C++ vs
+  GLSL/etc. Needs texture support, image basic support, access to how
+  a texture is stored (linearly or swizzled, 3D texture or a view on
+  that with two images, etc)
 
-  - Need Vulcan back end support – requires more image processing,
-    which is missing from oneAPI – prefers to write in oneAPI in C++
-    vs GLSL/etc. Needs texture support, image basic support, access to
-    how a texture is stored (linearly or swizzled, 3D texture or a
-    view on that with two images, etc)
+- Working on imaging support for oneAPI.
 
-  - Working on imaging support for oneAPI.
-
-  - AR: Zack to connect with Ilya on image support
+- AR: Zack to connect with Ilya on image support
 
 – Does Level Zero support OpenCL?
 
-  - Level Zero provides low level access to GPU and devices, and is
+- Level Zero provides low level access to GPU and devices, and is
     intended to be lower-level than OpenCL. OpenCL is a true citizen.
 
 – We are doing a lot of work in SYCL and NVIDIA Backend.  Very
@@ -87,16 +85,15 @@ Slides_
   multiple queues.  A lot of conversations to have a unified RT for
   other platforms.
 
-  - This is a .1 spec, would like to get additional engagement for
-    others; in terms of a timeline, is there something we could share?
-    We need to put the draft on the github – we have the AR to put
-    that up.  We do intend to have an easy migration path – for other
-    hw.  Clean up and standardize in the PI layer – we welcome your
-    feedback as we define.  On the right track w/ the unified RT; one
-    of the nice things through the adaptors is the ability to expose
-    the extensions and expose the native platform experiences – if you
-    need access for CUDA and low-level interfaces or APIs, you could
-    be able to choose
+- This is a .1 spec, would like to get additional engagement for
+  others; in terms of a timeline, is there something we could share?
+  We need to put the draft on the github – we have the AR to put that
+  up.  We do intend to have an easy migration path – for other hw.
+  Clean up and standardize in the PI layer – we welcome your feedback
+  as we define.  On the right track w/ the unified RT; one of the nice
+  things through the adaptors is the ability to expose the extensions
+  and expose the native platform experiences – if you need access for
+  CUDA and low-level interfaces or APIs, you could be able to choose
 
 - SYCL for CUDA or for HIP – is the backend to call cublas directly –
   very important feature that they need – they are happy to
