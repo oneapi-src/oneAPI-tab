@@ -102,8 +102,8 @@ Slides_
   very important feature that they need – they are happy to
   collaborate on this (Codeplay).
 
-– Level zero behavior is expected to standardize all the backends –
-  doubtful. They are more familiar with other APIs.
+– Level zero behavior is expected to standardize all the backends but
+  they are more familiar with other APIs.
 
   - Thread Safety – SPEC says level zero is not thread safe.  (ZACK –
     AR to look at that).  Spec says you can call for multiple
@@ -125,10 +125,6 @@ Slides_
     careful. Can't operate on the same object from multiple threads.
     Small clarification: You can't operate on the same object from
     multiple threads without synchronization.
-
-– Is Unified RT for users to use or Implementers to use
-
-  - Aimed at end Users or under a parallel language layer
 
 - Having this TLS magical CUDA state is a limitation for performance;
   And it is actually very non-thread safe, just in a more dangerous
