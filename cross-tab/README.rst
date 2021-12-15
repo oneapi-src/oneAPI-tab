@@ -47,7 +47,7 @@ Rahman, Md, Intel                   Sheng Zha, AWS MXNET
 Nevin Liber, Argonne                Alastair Murray, Codeplay
 Paul, Sriraj, Intel                 Andrew Richards, Codeplay   
 Anzt, Hartwig, KIT                  Ronan Keryell, Xilinx
-Shabunin, Maksim, Intel             Erik Lindahl, Stockholm University       
+Shabunin, Maksim, Intel             Erik Lindahl, Stockholm University
 =================================   ===============================
 
 
