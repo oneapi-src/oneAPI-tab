@@ -21,34 +21,33 @@ Attendees
 
 =================================   ===============================
 Tian, Xinmin, Intel                 Lowney, Geoff, Intel
-Slavova, Gergana S, Intel           Richards, Alison L
+Slavova, Gergana S, Intel           Richards, Alison, Intel
 Smith, Timmie, Intel                Podogova, Svetlana, Intel
 Brodman, James, Intel               Ashbaugh, Ben, Intel
 Lueck, Gregory M, Intel             Garland, Craig, Intel
-SBaik (Samsung) (게스트)            Burylov, Ilya, Intel
+SBaik, Samsung (게스트)              Burylov, Ilya, Intel
 Garzaran, Maria, Intel              Sohrab Amirghodsi, Adobe
 Ozog, David M, Intel                Kawakami, Kentaro/川上 健太, Fujitsu Labs
-Cohn, Robert S, Intel               Pat Quillen
-John M (ArrayFire)                  Edward Smyth
-Luo, Ye                             Mehdi Goli, Codeplay
-Tom Deakin, Univ of Bristol         Bharat Agrawal
-Khanna, Rahul, Intel                Rabotnikov, Mark
+Cohn, Robert, Intel                 Pat Quillen, Math Works
+Edward Smyth, NAG                   Ike, Atsushi/池 敦, Fujitsu
+Luo, Ye, ANL                        Mehdi Goli, Codeplay
+Tom Deakin, Univ of Bristol         Bharat Agrawal, Ansys
+Khanna, Rahul, Intel                Rabotnikov, Mark, Philips Medical System
 Knepper, Sarah, Intel               Waters, Zack S, Intel
-Story, Shane                        Kharkov, Egor, Intel
+Story, Shane, Intel                 Kharkov, Egor, Intel
 Kukanov, Alexey, Intel              Kubarev, Valentin, Intel
-Pascuzzi, Vincent                   Petersen, Paul, Intel
-Luszczek, Piotr Rafal               Stefan(ArrayFire) (Guest)
-Schneider, Robert                   Ruyman Reyes, Codeplay
-Pennycook, John                     Andrew Lumsdaine (Guest)
-Arunachalam, Meena, Intel           John Melonakos (Guest)
-Patty, Spencer, Intel               Reinders, James R, Intel
+Pascuzzi, Vincent, BNL              Petersen, Paul, Intel
+Luszczek, Piotr Rafal, UTK          Stefan Yurkevitch, ArrayFire
+Schneider, Robert, Seimens HC       Ruyman Reyes, Codeplay
+Pennycook, John, Intel              Andrew Lumsdaine, University of Washington
+Arunachalam, Meena, Intel           John Melonakos, ArrayFire
+Patty, Spencer, Intel               Reinders, James, Intel
 Dolbeau, Romain, SiPearl            Li, Jian Hui, Intel
-Rahman, Md                          Sheng Zha (Guest), AWS MXNET
-Nevin Liber (Guest), Argonne        Alastair Murray, Codeplay
-Paul, Sriraj                        John M (ArrayFire)
-Anzt, Hartwig (SCC)                 Andrew Richards, Codeplay
-Shabunin, Maksim                    Ronan Keryell (Xilinx) (Guest)
-Ike, Atsushi/池 敦, Fujitsu         Erik Lindahl (Guest)
+Rahman, Md, Intel                   Sheng Zha, AWS MXNET
+Nevin Liber, Argonne                Alastair Murray, Codeplay
+Paul, Sriraj, Intel                 Andrew Richards, Codeplay
+Anzt, Hartwig, KIT                  Ronan Keryell, Xilinx
+Shabunin, Maksim, Intel             Erik Lindahl, Stockholm University
 =================================   ===============================
 
 
