@@ -1,0 +1,147 @@
+=============================================
+oneIPL Technical Advisory Board Meeting Notes
+=============================================
+
+2021-12-16
+==========
+
+Slides:
+
+* `oneIPL TAB #1`_
+
+Attendees:
+
+* Svetlana Podogova (Intel)
+* Victor Getmanskiy (Intel)
+* Mark Rabotnikov (Philips)
+* SunkShik Baik (Samsung Medison)
+* Tim van der Horst (Philips)
+* Robert Schneider (Siemens Healthineers)
+* Sergey Ivanov (Intel)
+* Maksim Shabunin (Intel)
+* Sohrab Amirghodsi (Adobe)
+* Valentin Kubarev  (Intel)
+* Dmitriy Budnikov  (Intel)
+
+Agenda:
+
+* Welcoming the oneIPL TAB participants
+* Programming model of oneIPL
+* Execution model of oneIPL
+* Image processing pipelines
+* Image data abstraction in oneIPL
+* Memory model in oneIPL
+* Closing words and next plans on oneIPL TAB
+
+
+oneIPL specification walk-through:
+
+* The latest version of oneIPL Spec is published on `oneIPL Spec
+  page`_.
+
+* oneAPI Image Processing Library (oneIPL) consists of several domains,
+  which includes Basic functionality, Color conversion operations, Filtering,
+  Geometry related functionality and potentially can be extended to 3D
+  operations. Current version of specification covers the most important parts
+  of domains and might be extended in future versions.
+
+* The oneIPL programming language is SYCL 2020 based on C++17
+  oneIPL primitives include class data abstractions and functional API
+
+* ipl::image class specifies image data, layout and supported data types,
+  which are defined at compile-time. Each algorithm in the specification
+  contains the layout and data types support matrix. This matrix describes
+  generic layouts as channel count – rows (1,3,4 channels), and generic
+  data types.
+
+* Generic formats are usually supported for multiple devices. Some data
+  types are device specific.
+
+* oneIPL APIs follows SYCL xPU ideology. Each API is able to execute on the
+  range of the devices, if device is supporting required features. oneIPL
+  algorithm shall not substitute unsupported type by the different supported
+  type if it impacts the result. If the type is not supported on the device,
+  the error is fired. SYCL has such checks in kernels as runtime exception.
+  oneIPL can perform such check before, since queue provides information on
+  device features, and spec specifies error conditions.
+
+* Execution mode is asynchronous. Algorithms submitted to sycl::queue and
+  returns the control flow. Execution is scheduled by runtime taking into
+  account the dependencies vector. For arguments having type ipl::image
+  dependencies are handled automatically (example slide 12).
+
+* Example with splitting pipeline. Two functions taking single input and
+  multiple outputs can be executed in parallel, since calls are asynchronous.
+
+* More complex pipeline with watermarking (slide 14) – user-provided kernels
+  like calculating overlay and blending. Some stages can produce output
+  required to host, so shared memory allocator shall be specified in this case.
+  If the image is pure device all intermediate output shall have device
+  allocator.
+
+* oneIPL Image Abstraction. Image can be potentially implemented over host,
+  shared, device and special texture memory. From implementation perspective
+  first three can be done via USM (SYCL2020), texture can be implemented
+  via sycl::image.
+
+* Memory model. oneapi::ipl::image class is basic data abstraction for image
+  data. oneIPL provides single abstraction over different memory types.
+  oneIPL supports different types of memory – device, host, shared and special
+  GPU texture (image) memory.
+
+* See more details on `oneIPL Architecture page`_
+
+
+oneIPL specification open discussion:
+
+* Robert Schneider, Siemens Healthineers: Should all API be used by HW
+  accelerated types?
+  Victor Getmanskiy, Intel: HW accelerated types are currently very limited
+  by SYCL standard images – only 4-channel images of limited data type are
+  supported. We are trying to extend image support to wider amount of
+  format-type combination in next SYCL standard. So the wider HW-accelerated
+  support would be possible in that case.
+
+* Robert Schneider, Siemens Healthineers: Are there query for HW feature like
+  format/type?
+  Victor Getmanskiy, Intel: Good question, we also see a gap here and consider
+  such extension to current SYCL images in future standards. Currently we can
+  query only if image/FP64/FP16 are supported or not.
+
+* Sergey Ivanov, OpenCV, Intel: You've said, the SYCL queue carries device
+  context - does all the objects need to belong to the same context?
+  Victor Getmanskiy, Intel: Yes, and specification recommends for each function
+  to have a runtime checks that queue and image objects belong to same context.
+  Checks can be disabled in implementation to avoid performance overhead.
+  sycl::queue and data pointer on slide 12 are specified in the image
+  constructor so implementation can determine, if the pointer and queue are
+  related to the same device.
+
+* Tim van der Horst, Philips: If the checks for the supported data types are
+  done before kernel, are they done in each call?
+  Victor Getmanskiy, Intel: Implementation can be done in a way to allow to
+  disable the checks to avoid performance overhead. In this case single initial
+  check is required in user Application.
+
+* Robert Schneider, Siemens Healthineers: Can the ipl::image be constructed
+  over sycl::image?
+  Victor Getmanskiy, Intel: Currently sycl::image 2020 is not supported by any
+  compiler, and SYCL image specification is being improved, but in future based
+  on improved image specification such construction can be possible.
+
+* Sohrab Amirghodsi, Adobe: What is shared memory?
+  Victor Getmanskiy, Intel: It is memory which implicitly copy from host to
+  device and back. Device and host memory shall be explicitly copied.
+
+
+Next plans on oneIPL TAB:
+
+* The next technical meeting for oneIPL TAB is planned for February 3rd (ww6).
+  The invitation for the meeting will be sent in the mid of January.
+
+* Next topic for the discussion is `oneIPL Image data abstraction`_.
+
+.. _`oneIPL Image data abstraction`: https://spec.oneapi.io/oneipl/latest/image/index-image.html
+.. _`oneIPL Architecture page`: https://spec.oneapi.io/oneipl/latest/architecture/index-architecture.html
+.. _`oneIPL Spec page`: https://spec.oneapi.io/oneipl/latest/index.html
+.. _`oneIPL TAB #1`: ../presentations/2021-12-16_Slides.pdf
