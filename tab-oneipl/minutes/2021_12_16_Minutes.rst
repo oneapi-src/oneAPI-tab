@@ -14,7 +14,7 @@ Attendees:
 * Svetlana Podogova (Intel)
 * Victor Getmanskiy (Intel)
 * Mark Rabotnikov (Philips)
-* SunkShik Baik (Samsung Medison)
+* SungShik Baik (Samsung Medison)
 * Tim van der Horst (Philips)
 * Robert Schneider (Siemens Healthineers)
 * Sergey Ivanov (Intel)
