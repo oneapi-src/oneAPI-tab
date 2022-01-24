@@ -1,8 +1,8 @@
-==============================================================
-oneAPI Technical Advisory Board Meeting (TAB-AI) Meeting Notes
-==============================================================
+================================================================
+oneAPI Technical Advisory Board Meeting (combined) Meeting Notes
+================================================================
 
-2021-11-10
+2021-12-14
 ==========
 
 Agenda
@@ -49,10 +49,6 @@ Paul, Sriraj, Intel                 Andrew Richards, Codeplay
 Anzt, Hartwig, KIT                  Ronan Keryell, Xilinx
 Shabunin, Maksim, Intel             Erik Lindahl, Stockholm University
 =================================   ===============================
-
-
-2021-12-14
-==========
 
 Slides_
 
