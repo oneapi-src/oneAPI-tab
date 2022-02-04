@@ -55,7 +55,7 @@ Open question discussion:
 
 * **Ashish Uthama, Mathworks**: For CPU and GPU comparison we see this
   difference and can tolerate +-1 pixel variation. For the floating point it
-  depends on the pipeline depth: how many calculations you have. 
+  depends on the pipeline depth: how many calculations you have.
 
   Requirement: it should be ok for the whole pipeline, no other special
   expectations. But it is important to have reproducibility - to have the same
@@ -73,9 +73,9 @@ Open question discussion:
 * **Tim van der Horst, Philips**: the same, we also do pixel wise comparison.
 
 * **Robert Schneider, Siemens Healthineers**: Accuracy not necessarily need to
-  be the same across CPU and GPU, but it should not be too great difference, 
-  should not add artifacts or noises. 
-  
+  be the same across CPU and GPU, but it should not be too great difference,
+  should not add artifacts or noises.
+
   +-1 is ok, but also there should not be big difference according to visual
   feeling, and AI algorithms should not be messed by this difference.
 
@@ -86,7 +86,7 @@ oneIPL specification walk-through:
 * The latest version of oneIPL Spec is published on `oneIPL Spec page`_.
 
 * Current provisional spec version is 0.5, the spec 0.6 is in progress.
-  
+
 * The main difference between spec ver 0.5 and ver 0.6 is the following:
    * ipl::formats replaced by ipl::layouts
    * Image constructors are changed to remove dependency on implementation
@@ -110,7 +110,7 @@ oneIPL specification walk-through:
 
 * The list of supported formats was reduced in SYCL 2020.
   Q: Is there any feedback on this change?
-  
+
   **Robert Schneider, Siemens Healthineers**: grayscale images are very
   important and the texture images are also blocking.
 
@@ -121,13 +121,15 @@ oneIPL specification walk-through:
 
 * One of the important changes in oneIPL Spec v0.6 is changing from Formats to
   Layouts.
-  Reasons: 
+  Reasons:
+
    * Layout is a part of compile-time dispatch and defines algorithm
-   in kernel, multiple formats are mapped to single layout:
-   channel4 layout -> rgba/bgra/argb/abgr/cmyk/… formats
+     in kernel, multiple formats are mapped to single layout:
+     channel4 layout -> rgba/bgra/argb/abgr/cmyk/… formats
+
    * Align to industry standard approach (OpenCV, python libraries,
-   Intel® Integrated Performance Primitives/NVIDIA Performance Primitives.
-   
+     Intel® Integrated Performance Primitives/NVIDIA Performance Primitives.
+
 * Significantly affected functions: Color conversions, which requires specific
   color format.
 
@@ -142,7 +144,7 @@ oneIPL specification walk-through:
 * oneapi::ipl::image class is basic data abstraction for image data in oneIPL.
   oneIPL provides single abstraction over different memory types: host, device,
   shared and special GPU images (textures).
-  
+
 * The ipl::image class is reviewed, API are discussed:
   **Robert Schneider, Siemens Healthineers**: What is returned by
   get_pointer() function?
@@ -162,7 +164,7 @@ oneIPL specification walk-through:
 * **Agreed for all TAB members to take offline review** of slide 14 of
   `oneIPL TAB #2`_ presentation and provide the suggestion for the more
   general API ideas and the function naming.
-  
+
 * The different image constructors are discussed.
 
 * The example of custom kernel with the USM usage is discussed.
