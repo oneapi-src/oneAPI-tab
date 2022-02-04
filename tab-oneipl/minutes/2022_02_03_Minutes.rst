@@ -1,0 +1,185 @@
+=============================================
+oneIPL Technical Advisory Board Meeting Notes
+=============================================
+
+2022-02-03
+==========
+
+Slides:
+
+* `oneIPL TAB #2`_
+
+Attendees:
+
+* Svetlana Podogova (Intel)
+* Victor Getmanskiy (Intel)
+* Mark Rabotnikov (Philips)
+* Ashish Uthama (Mathworks)
+* Tim van der Horst (Philips)
+* Robert Schneider (Siemens Healthineers)
+* Sergey Ivanov (Intel, OpenCV/G-API)
+* Maksim Shabunin (Intel, OpenCV)
+* Sohrab Amirghodsi (Adobe)
+* Valentin Kubarev  (Intel)
+* Aleksandr Duev  (Intel)
+* Dmitriy Budnikov  (Intel)
+* Alison L Richards (Intel)
+
+Agenda:
+
+* Introduction and Open questions discussion
+* Hardware-accelerated images and data formats
+* oneIPL image data abstraction
+* oneIPL image interoperability with USM
+* Closing words and next plans on oneIPL TAB
+
+Open question discussion:
+
+* Problem statement: Accuracy `across devices is different`_ due to CPU and
+  GPU devices support different IEEE754 compliance, the standard libraries has
+  no claims on correct rounding and the order of operations impacts the result
+  since the algorithms has different flows on different devices.
+
+* oneIPL suppose to control the accuracy of computations withing supported
+  computation datatype – ComputeT, which is a template parameter of the
+  functions. By default, it is float. Double (if it is supported by device)
+  could be more precise but slow, and half might be faster but with
+  low accuracy.
+
+* To discuss:
+   * Are there any specific expectations from image processing perspective?
+   * How important is the accuracy for different use-cases?
+   * Are there any criteria on the results similarity across devices?
+   * Are there any image similarity metrics not related to accuracy, which
+     required to be fulfilled like PSNR?
+
+* **Ashish Uthama, Mathworks**: For CPU and GPU comparison we see this
+  difference and can tolerate +-1 pixel variation. For the floating point it
+  depends on the pipeline depth: how many calculations you have. 
+
+  Requirement: it should be ok for the whole pipeline, no other special
+  expectations. But it is important to have reproducibility - to have the same
+  result on the same device. Across different devices difference in pixels
+  is ok.
+
+  Another thing is that was observed by Mathworks is different run-to-run
+  results while using threading – it is important to have similar run-to-run
+  results.
+
+  Mathworks use pixel-wise comparison, and sometimes they use structural
+  similarity metrics for regression tests.
+  Ashish Uthama shared the link for `structural similarity article`_.
+
+* **Tim van der Horst, Philips**: the same, we also do pixel wise comparison.
+
+* **Robert Schneider, Siemens Healthineers**: Accuracy not necessarily need to
+  be the same across CPU and GPU, but it should not be too great difference, 
+  should not add artifacts or noises. 
+  
+  +-1 is ok, but also there should not be big difference according to visual
+  feeling, and AI algorithms should not be messed by this difference.
+
+
+
+oneIPL specification walk-through:
+
+* The latest version of oneIPL Spec is published on `oneIPL Spec page`_.
+
+* Current provisional spec version is 0.5, the spec 0.6 is in progress.
+  
+* The main difference between spec ver 0.5 and ver 0.6 is the following:
+   * ipl::formats replaced by ipl::layouts
+   * Image constructors are changed to remove dependency on implementation
+   * Default image allocator will be USM
+   * Methods to image auxiliary classes moved to image API
+   * Switched to generic template parameters
+   * Gaussian filter with separated sigma for x and y axis
+   * Normalize without sycl::buffer in spec
+
+* sycl::image supported formats list was reduced.
+  Mostly only the C4 ipl::image formats are mapped to hardware-accelerated
+  images.
+
+* Currently there is no support for SYCL 2020 images in compilers, so
+  hardware images are used only inside implementation and there is no option
+  to have any public API working with SYCL images in spec.
+
+* SYCL image still is incomplete. SYCL 2020 image still has no implementation
+  in compilers. So public API has no option to use sycl::image, the option is
+  only the implementation and image(texture) memory access.
+
+* The list of supported formats was reduced in SYCL 2020.
+  Q: Is there any feedback on this change?
+  
+  **Robert Schneider, Siemens Healthineers**: grayscale images are very
+  important and the texture images are also blocking.
+
+  **Ashish Uthama, Mathworks**: agree.
+
+  **Tim van der Horst, Philips**: agree, grayscale image format is very
+  important for medical.
+
+* One of the important changes in oneIPL Spec v0.6 is changing from Formats to
+  Layouts.
+  Reasons: 
+   * Layout is a part of compile-time dispatch and defines algorithm
+   in kernel, multiple formats are mapped to single layout:
+   channel4 layout -> rgba/bgra/argb/abgr/cmyk/… formats
+   * Align to industry standard approach (OpenCV, python libraries,
+   Intel® Integrated Performance Primitives/NVIDIA Performance Primitives.
+   
+* Significantly affected functions: Color conversions, which requires specific
+  color format.
+
+* **Ashish Uthama, Mathworks**: Does the scope of oneIPL supported formats
+  include 3D data or only 2D?
+  **Victor Getmanskiy, Intel**: The only 2D formats are included right now,
+  but it would be extended in future to cover 3D also
+  (Reference: slide 5 in `oneIPL TAB #1 presentation`_ )
+
+* Basic terminology is discussed (Region of Interest, pitch, width, length)
+
+* oneapi::ipl::image class is basic data abstraction for image data in oneIPL.
+  oneIPL provides single abstraction over different memory types: host, device,
+  shared and special GPU images (textures).
+  
+* The ipl::image class is reviewed, API are discussed:
+  **Robert Schneider, Siemens Healthineers**: What is returned by
+  get_pointer() function?
+  **Victor Getmanskiy, Intel**: this is the pointer to the full image
+  **Robert Schneider, Siemens Healthineers**: and what if the hardware
+  texture is used?
+  **Victor Getmanskiy, Intel**: this is very important question. It can be
+  extended as soon as the texture images are added to the SYCL standard with
+  capability to return device memory. But now it is hard to introduce it in the
+  spec, since it is not allowed in SYCL standard.
+  **Robert Schneider, Siemens Healthineers**: It would be good to make API
+  more forward looking, more general to take into account future potential
+  extension. For example, introduce some structure / class / handler for it.
+  **Ashish Uthama, Mathworks**: we may use more specific naming for this
+  function, something like get_USM_pointer().
+
+* **Agreed for all TAB members to take offline review** of slide 14 of
+  `oneIPL TAB #2`_ presentation and provide the suggestion for the more
+  general API ideas and the function naming.
+  
+* The different image constructors are discussed.
+
+* The example of custom kernel with the USM usage is discussed.
+
+* See more details on `oneIPL Image Data Abstraction page`_
+
+
+Next plans on oneIPL TAB:
+
+* The next technical meeting for oneIPL TAB is planned for February 27th (ww8)
+
+* Next topic for the discussion is Memory Allocation and oneIPL Library
+  design details.
+
+.. _`oneIPL Image Data Abstraction page`: https://spec.oneapi.io/oneipl/latest/image/index-image.html
+.. _`oneIPL Spec page`: https://spec.oneapi.io/oneipl/latest/index.html
+.. _`oneIPL TAB #2`: ../presentations/2022-02-03_Slides.pdf
+.. _`structural similarity article`: https://www.mathworks.com/help/images/ref/ssim.html
+.. _`across devices is different`: https://developer.download.nvidia.com/assets/cuda/files/NVIDIA-CUDA-Floating-Point.pdf
+.. _`oneIPL TAB #1 presentation`: ../presentations/2021-12-16_Slides.pdf
