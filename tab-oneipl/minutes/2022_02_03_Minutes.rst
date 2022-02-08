@@ -40,7 +40,7 @@ Open question discussion:
   no claims on correct rounding and the order of operations impacts the result
   since the algorithms has different flows on different devices.
 
-* oneIPL suppose to control the accuracy of computations withing supported
+* oneIPL suppose to control the precision of computations withing supported
   computation datatype – ComputeT, which is a template parameter of the
   functions. By default, it is float. Double (if it is supported by device)
   could be more precise but slow, and half might be faster but with
