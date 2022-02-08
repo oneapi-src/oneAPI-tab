@@ -119,6 +119,12 @@ oneIPL specification walk-through:
   **Tim van der Horst, Philips**: agree, grayscale image format is very
   important for medical.
 
+  **Mark Rabotnikov, Philips** (offline feedback): Support of gray-scale
+  images: all medical scanners (like CT, MR, PET, etc.) create gray-scale
+  images, usually 16-bit, but can be also 8-bit. In addition, gray-scale
+  32-bit floating point images are widely used during processing, including
+  AI, etc. So in my view it is very important to fully support such images.
+
 * One of the important changes in oneIPL Spec v0.6 is changing from Formats to
   Layouts.
   Reasons:
@@ -160,6 +166,10 @@ oneIPL specification walk-through:
   extension. For example, introduce some structure / class / handler for it.
   **Ashish Uthama, Mathworks**: we may use more specific naming for this
   function, something like get_USM_pointer().
+  **Mark Rabotnikov, Philips** (offline feedback): Regarding the naming of the
+  methods in image class: in my view there is some inconsistency in naming with
+  respect to ROI. For example, I think it would be clearer to change
+  get_width/get_height to get_roi_width/get_roi_height.
 
 * **Agreed for all TAB members to take offline review** of slide 14 of
   `oneIPL TAB #2`_ presentation and provide the suggestion for the more
