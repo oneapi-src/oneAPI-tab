@@ -27,7 +27,7 @@ Upcoming Topics
 * James Reinders (Intel)
 * Alison Richards (Intel)
 * Romain Dolbeau (SiPearl)
-* Ronan Keryell (Xilinx)
+* Ronan Keryell (AMD)
 * Ruyman Reyes (Codeplay)
 * Roland Schulz (Intel)
 * Gergana Slavova (Intel)
