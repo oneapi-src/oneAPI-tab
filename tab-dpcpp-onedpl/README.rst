@@ -9,6 +9,77 @@ Upcoming Topics
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
 
+2022-02-23
+==========
+
+* Robert Cohn (Intel)
+* Christian Trott (Sandia National Laboratory)
+* Aksel Simon Alpay (Heidelberg University)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest)
+* James Brodman (Intel)
+* John Melonakos (ArrayFire)
+* Michael Kinsner (Intel)
+* Nevin Liber (Argonne National Laboratory)
+* Geoff Lowney (Intel)
+* Greg Lueck (Intel)
+* John Pennycook (Intel)
+* Pablo Reble (Intel)
+* James Reinders (Intel)
+* Alison Richards (Intel)
+* Romain Dolbeau (SiPearl)
+* Ronan Keryell (Xilinx)
+* Ruyman Reyes (Codeplay)
+* Roland Schulz (Intel)
+* Gergana Slavova (Intel)
+* Timmie Smith (Intel)
+* Stefan Yurkevitch (ArrayFire)
+* Xinmin Tian (Intel)
+* Vasanth Tovinkere (Intel)
+* Umar Arshad (ArrayFire)
+
+Opens
+-----
+
+* Speed of upstreaming sycl to llvm
+
+  * Discuss at next meeting
+  * Bottleneck is reviewing
+
+* Difficulty of using C++ from SYCL. Trivial copyable and other requirements
+
+* In this year, more non-intel presentations on SYCL and related
+  technologies
+
+
+DPC++ vs SYCL: James Reinders
+-----------------------------
+
+* DPC++ is an open source project to implement SYCL in LLVM
+* Intel has not consistently said this, emphasizing DPC++ over SYCL
+* Early heasitance was about lack of maturity of SYCL 1.2, but SYCL
+  2020 is much more complete.
+* Redoing messaging to emphasize SYCL
+
+  * marketing materials
+  * documentation
+  * DPC++ book will have SYCL logo, ensure examples work with other
+    compilers
+
+* If you find issues, send them to James
+* Discussion
+
+  * industry-wide standards have innovation problem
+
+    * SYCL is still early enough to move fast
+    * Want to know that hardware features will be exposed right away,
+      and not wait for standardization.
+    * SYCL has vendor extensions, issue will be the time for vendor
+      extension to be part of standard
+    * Comparison to OpenMP, which is slow
+
+      * Tools and processes are better for collaboration now
+      * openmp slowness comes from discussion
+
 2021-10-27
 ==========
 
