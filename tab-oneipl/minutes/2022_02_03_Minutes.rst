@@ -152,28 +152,59 @@ oneIPL specification walk-through:
   shared and special GPU images (textures).
 
 * The ipl::image class is reviewed, API are discussed:
+
   **Robert Schneider, Siemens Healthineers**: What is returned by
   get_pointer() function?
+
   **Victor Getmanskiy, Intel**: this is the pointer to the full image
+
   **Robert Schneider, Siemens Healthineers**: and what if the hardware
   texture is used?
+
   **Victor Getmanskiy, Intel**: this is very important question. It can be
   extended as soon as the texture images are added to the SYCL standard with
   capability to return device memory. But now it is hard to introduce it in the
   spec, since it is not allowed in SYCL standard.
+
   **Robert Schneider, Siemens Healthineers**: It would be good to make API
   more forward looking, more general to take into account future potential
   extension. For example, introduce some structure / class / handler for it.
+
   **Ashish Uthama, Mathworks**: we may use more specific naming for this
   function, something like get_USM_pointer().
-  **Mark Rabotnikov, Philips** (offline feedback): Regarding the naming of the
-  methods in image class: in my view there is some inconsistency in naming with
-  respect to ROI. For example, I think it would be clearer to change
-  get_width/get_height to get_roi_width/get_roi_height.
 
 * **Agreed for all TAB members to take offline review** of slide 14 of
   `oneIPL TAB #2`_ presentation and provide the suggestion for the more
   general API ideas and the function naming.
+
+
+* **Mark Rabotnikov, Philips** (offline feedback): Regarding the naming of the
+  methods in image class: in my view there is some inconsistency in naming with
+  respect to ROI. For example, I think it would be clearer to change
+  get_width/get_height to get_roi_width/get_roi_height.
+
+* **Sergey Ivanov, OpenCV/G-API** (offline feedback): I believe, the is_roi(),
+  get_roi_rect(), get_full_image(), get_roi(), get_width(), get_height(),
+  get_full_width() and get_full_height() functions are redundant in image class
+  This can be represented by 3 methods only:
+
+   * const roi_rect& get_rect() const;
+
+   * auto original() const ->image;
+
+   * auto apply_roi(const roi_rect& roi_rect) const ->image;
+
+  Then, there will be the following:
+   * object.is_roi() -> object.get_rect() == object.original().get_rect()
+   * object.get_full_width() -> object.original().get_rect().width()
+   * object.get_full_height() -> object.original().get_rect().height()
+   * object.get_width() -> object.get_rect().width()
+   * object.get_height() -> object.get_rect().height()
+
+  Also, I suppose, that get_pointer() should be part of USM template
+  specialization only, instead it is possible to introduce:
+
+   * auto get_handle() -> cl::sycl::handle
 
 * The different image constructors are discussed.
 
@@ -184,7 +215,7 @@ oneIPL specification walk-through:
 
 Next plans on oneIPL TAB:
 
-* The next technical meeting for oneIPL TAB is planned for February 27th (ww8)
+* The next technical meeting for oneIPL TAB is planned for February 17th (ww8)
 
 * Next topic for the discussion is Memory Allocation and oneIPL Library
   design details.

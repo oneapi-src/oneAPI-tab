@@ -1,0 +1,187 @@
+=============================================
+oneIPL Technical Advisory Board Meeting Notes
+=============================================
+
+2022-02-17
+==========
+
+Slides:
+
+* `oneIPL TAB #3`_
+
+Attendees:
+
+* Svetlana Podogova (Intel)
+* Victor Getmanskiy (Intel)
+* Mark Rabotnikov (Philips)
+* Ashish Uthama (Mathworks)
+* Robert Schneider (Siemens Healthineers)
+* Sergey Ivanov (Intel, OpenCV/G-API)
+* Maksim Shabunin (Intel, OpenCV)
+* Valentin Kubarev  (Intel)
+* Dmitriy Budnikov  (Intel)
+
+
+Agenda:
+
+* Introduction and Results of previous discussion of oneIPL API
+* oneIPL Memory allocation and temporary images
+* oneIPL Domains
+* oneIPL Error handling mechanism
+* Closing words and next plans on oneIPL TAB
+
+Introduction and Results of previous discussion of oneIPL API:
+
+* Current provisional spec version is 0.5, the spec 0.6 is in progress and will
+  be published soon.
+
+* The main differences between spec ver 0.5 and ver 0.6 are the following:
+   * ipl::formats replaced by ipl::layouts
+   * Image constructors are changed to remove dependency on implementation
+   * Default image allocator will be USM
+   * Methods to image auxiliary classes moved to image API
+   * Switched to generic template parameters
+   * Gaussian filter with separated sigma for x and y axis
+   * Normalize without sycl::buffer in spec
+
+* On the previous meeting, the discussion about oneIPL API was started.
+  TAB members agreed to take offline review of slide 14 of `oneIPL TAB #2`_
+  presentation and to provide the suggestion for the more general API ideas
+  and the function naming.
+
+  The offline feedback was collected and processed (see offline feedbacks in
+  `oneIPL TAB #2 minutes`_). The following changes were applied to the
+  class image for the oneIPL Specification ver 0.6:
+  the get_pointer() is replaced by general get_access(args) function, which is
+  common for USM and Image (Texture) access abstraction.
+
+  "unspecified" return type of this API is not language-related, but a
+  spec-related placeholder for the return type, as per SYCL specification.
+  It can be defined differently for particular class specialization in the
+  implementation.
+
+  The minimal API approach is applied for Image class per oneIPL TAB feedbacks:
+  get_rect(), get_roi() and get_origin() functions are left to get access to
+  the necessary part of image, and the size accessors are now moved to the
+  roi_rect struct (see slide 7 of `oneIPL TAB #3`_ for the details).
+
+* **Mark Rabotnikov, Philips**: Why do we need get_origin()? Is not it the same
+  as image itself?
+
+  **Victor Getmanskiy, Intel**: yes, it may be needed in user kernels to use
+  neighbor pixels to process borders for example.
+  It is common case for Filters, when you need to access the pixels outside the
+  processing area. Also, it may be used to create a different ROI on the same
+  origin.
+
+
+oneIPL Memory Model:
+
+* oneIPL spec supports different type of memory assigned via AllocatorT or
+  provided via pointer by user to image constructor: host USM, device USM,
+  shared USM and Image (texture) memory.
+
+  USM allocator has a major difference from std::allocator. Allocator cannot be
+  constructed without context, so device context is required. It complicates
+  the APIs, since allocator has no default constructor.
+
+* Victor Getmanskiy presented the different ways of memory allocation on host
+  and device and different types of access and control (see slide 9 for
+  details)
+
+* **Ashish Uthama, Mathworks**: What happens at the point of access?
+  Is the copy operation performed?
+
+  **Victor Getmanskiy, Intel**: It depends on the allocation and access types:
+   * If you have device allocation and memory assess on device -> no copy is
+     performed.
+   * If you have shared allocator and access for read -> no copy as well, but
+     for the write access copy to host would happen after kernel is finished.
+   * In image_allocator_t case the memory will be allocated on both host
+     and device and access is possible only to write or to read, but not both.
+     In case of read no copy to host happen, in case of write copy to host
+     would happen after kernel is finished.
+
+* **Ashish Uthama, Mathworks**: Actually is this SYCL limitation? It is not so
+  clear: if you have reading only, you do not know if it do the copy or not.
+  I prefer the explicit copy operation, so I am wondering if this is
+  restriction of SYCL?
+
+  **Victor Getmanskiy, Intel**: For the USM it is possible to implement
+  explicit copy, for Image it is not controlled (SYCL limitation). You still
+  can explicitly copy USM memory and create image with device_allocator_t over
+  memory without copy.
+
+  For Images (Textures) creating an object over device memory is currently not
+  possible because of SYCL limitations, the construction from host pointer is
+  only available. But we are working on it as well.
+
+* **Ashish Uthama, Mathworks**: I have a question about device context and
+  different data allocators usage. For example, If I have integration to a 3rd
+  party library, and some data is allocated, is it possible to get the same
+  context?
+
+**Victor Getmanskiy, Intel**: This is not done in the library, but there is
+  technical possibility to obtain the context, for example CUDA backends in
+  oneMKL open-source are capable to work over context of different devices like
+  NVIDIA. I think, in this case memory type will be device and mapping over
+  such memory with proper queue would create image over memory without extra
+  copy operation.
+
+* In spec ver 0.5 default allocator was implementation-defined.
+  For compatibility, in spec ver 0.6 the default allocator is selected as
+  shared USM.
+
+
+oneIPL Domains:
+
+* On the slide 15, the domains in blue are currently described in the oneIPL
+  Specification, yellow color is to be considered in the future versions of
+  spec.
+
+* Color conversion domain includes conversion functions for the main formats,
+  the YUV422 and YUV444 to rgb are considered as a possible future extension.
+
+* The Color conversions Domain API's are presented.
+
+* The Filtering Domain in oneIPL spec ver 0.6 includes Sobel filter with the
+  fixed 3x3 kernel size and Gaussian filter. Possible future extension of
+  oneIPL spec is considered to include Bilateral, Sobel, Filter Box and Filter
+  Median.
+
+* The Transformation Domain includes resize functions with bilinear, bicubic,
+  lanczos and supersampling interpolation types and also mirroring. Future
+  extensions are: the Nearest neighbor Resize and Warp Affine bilinear
+  functions.
+
+* **Ashish Uthama, Mathworks**: It makes a lot of sense to take into account
+  what are the most useful operations for AI domain. Resize is the major for
+  sure, but there are some basic operations for Deep Learning and Neural
+  Network operations for training. Augmentation, inference, normalize – need
+  to take a look on this domain needs for further Specification extensions.
+
+* There are several directions of future oneIPL Spec extensions were presented,
+  the feedback and suggestions for the most important steps are appreciated.
+
+oneIPL Error Handling mechanism:
+
+* The oneIPL Error Handling mechanism relies on the mechanism of C++
+  exceptions. The oneIPL additionally has a requirement to implement
+  compile-time checks which can be based on template parameters.
+
+* Sync and async exception handling flows were presented. Exception types and
+  examples from oneIPL spec were reviewed.
+
+
+Next plans on oneIPL TAB:
+
+* The next technical meeting for oneIPL TAB is planned for March 3rd (ww10)
+
+* Next topic for the discussion is oneIPL Functions overview.
+
+* After covering the main topics the oneIPL TAB will have meetings once per
+  4 weeks.
+
+.. _`oneIPL TAB #3`: ../presentations/2022-02-17_Slides.pdf
+.. _`oneIPL TAB #2`: ../presentations/2022-02-03_Slides.pdf
+.. _`oneIPL TAB #2 minutes`: 2022_02_17_Minutes.rst
