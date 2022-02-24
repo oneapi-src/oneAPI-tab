@@ -149,12 +149,25 @@ oneIPL Domains:
   oneIPL spec is considered to include Bilateral, Sobel, Filter Box and Filter
   Median.
 
+* **Mark Rabotnikov, Philips** (slide 20): What is crop in this context?
+
+**Victor Getmanskiy, Intel**: this controls if the operation takes into account
+  the pixels from the origin while processing the ROI.
+  If you turn the crop ON -> the pixels outside the ROI are not accessible.
+
+**Mark Rabotnikov, Philips**: Is it needed for borders only?
+
+**Victor Getmanskiy, Intel**: It affects on how the borders are processed,
+  but also you can optimize the implementation and accelerate the processing
+  with this option. E.g. for big images the cropped ROI can be put into faster
+  memory providing 2D data locality.
+
 * The Transformation Domain includes resize functions with bilinear, bicubic,
   lanczos and supersampling interpolation types and also mirroring. Future
   extensions are: the Nearest neighbor Resize and Warp Affine bilinear
   functions.
 
-* **Ashish Uthama, Mathworks**: It makes a lot of sense to take into account
+* **Mark Rabotnikov, Philips**: It makes a lot of sense to take into account
   what are the most useful operations for AI domain. Resize is the major for
   sure, but there are some basic operations for Deep Learning and Neural
   Network operations for training. Augmentation, inference, normalize – need
@@ -184,4 +197,4 @@ Next plans on oneIPL TAB:
 
 .. _`oneIPL TAB #3`: ../presentations/2022-02-17_Slides.pdf
 .. _`oneIPL TAB #2`: ../presentations/2022-02-03_Slides.pdf
-.. _`oneIPL TAB #2 minutes`: 2022_02_17_Minutes.rst
+.. _`oneIPL TAB #2 minutes`: 2022_02_03_Minutes.rst
