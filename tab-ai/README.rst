@@ -2,6 +2,99 @@
 oneAPI Technical Advisory Board Meeting (TAB-AI) Meeting Notes
 ==============================================================
 
+2022-3-8
+==========
+
+Agenda
+------
+
+================================================================  ===============================  =============
+Interfacing oneAPI and Python – Diptorup Deb, Intel
+Metagraph Project – Stan Seibert, Anaconda
+
+================================================================  ===============================  =============
+
+Attendees
+---------
+
+=================================   ===============================
+Radionov, Alexander, Intel
+Pavlyk, Oleksandr, Intel
+Richards, Alison L, Intel
+Deb, Diptorup, Intel
+Ruyman Reyes, Codeplay
+Brodman, James, Intel
+Cave, Vincent, Intel
+Mehdi Goli, Codeplay
+Romain Dolbeau, SiPearl
+Tamir, Guy, Intel
+Gabb, Henry A, Intel
+Stan Seibert, Anaconda
+Davanlou, Ramtin, Accenture
+Penporn Koanantakool, Google
+Andrew Richards, Codeplay
+Cheng H. Lee, Anaconda
+Nalawadi, Rajeev K, Intel
+Li, Jian Hui, Intel
+Andrew Chen, Vastai Tech 
+Arunachalam, Meena, Intel
+Voss, Michael J, Intel
+Khanna, Rahul, Intel
+
+=================================   ===============================
+
+Meeting Minutes:
+
+
+
+Interfacing oneAPI and Python:
+
+Q:  Why did you not use Buffers?  
+A:  While it is technically possible, different Python classes would need to be created for every supported buffer data type as the buffer and accessor type definitions require the type of the underlying elements. We can get around the issue by using “untyped” buffers, but that brings its own challenges as partitioning of buffers can lead to loss of precision and incorrect results.
+
+Q:  Using SPIR V – and using SYCL as the API, is that easier for interoperability.  Why not use Open Cl?  Or go straight down to Level Zero of oneAPI?
+A:  We envision a DPC++ program manager like layer in Numba that will allow us to go from the same high-level Python code to possibly different types of IRs (SPIR V, NVPTX) and then build interoperability kernels that can be launched using a SYCL runtime. Targeting OpenCL or Level Zero restricts us to devices that support Level Zero. The design may change later as the system evolves.
+
+Q:  Using MLIR as well – but you have SPIR V at the bottom?  Using MLIR and SPIR V at the bottom?  Code level?
+A:  The MLIR GPU and SPIR V dialects offer greater flexibility to us than Numba’s current pipeline. We want to move away from using the llvm-spirv translator and hope that the GPU dialect grows into support other types of devices not just GPUs.
+
+Q:  Codeplay has done work on MLIR.  Would like to connect SYCL dialect and want to focus on top half of the box (SPIR V – GPU- Slide12)
+A:  For the Python work we want to primarily focus on the Python to Optimized loops pipeline. If the community takes over the SPIR-V and GPU (and possibly a SYCL dialect), our work for the Python compiler will be greatly benefit.
+
+Q:  What does it mean to make python code look more like SYCL?
+A:  Do as a community effort – Anaconda may have responses – will need to involve the NVIDIA engineers who work on Numba?  
+
+Q:  SYCL Dialect in the future?  Do we have a timeline for that?
+A:  SYCL dialect doesn’t exist right now. I am not aware of any timeline, or if anyone is working on it.
+
+Q:  Runtime – how much overhead is there from the Python layer?
+A:   Library call – oneMKL interface layer – there is not much overhead – did not observe – better than 90%; for the compiler, also we have been evaluating the code we generate through NUMBA DPEX – 75-80% of the execution time as compared to DPC++
+
+Metagraph
+
+Q:  Graph Neural Net – is it flexible enough for a graph?
+https://blog.tensorflow.org/2021/11/introducing-tensorflow-gnn.html
+
+Q:  Big fan of Graph BLAS  - what is happening with that?  With MLIR? 
+A:  Reimplement a bunch of things that will need to throw away.  When added sparse output, that unblocked it.    Assuming regular math rules – have an internal design that they are translating and upstreaming into MLIR.  Will be possible to do this.  Sparse compiler making with a simi ring - https://dl.acm.org/doi/abs/10.1145/3485505
+
+Can make graph sparse possible – can specify which element can be an identity – won’t take 
+
+Q:  Which plugins – should they be written in python only or C++?
+A:  Need a thin layer of Python object or wrapper to hand around – then python function wrapper.  Whatever is happening lower (layers) can be – C or C++ - just need enough python code to manipulate from the python interpreter
+
+Q:  Part of an internal structure of a “type” – capability but hasn’t pushed on the type system.  
+A:  Type system must be granular enough so they know what the backend can handle for any layout.
+
+Q:  Is that an oneAPI backend for all devices?  Graph BLAS on other architectures?
+A:  No catchall solution for graphics (for all devices).  Have a solution for people to plug in backends – but people have to implement
+
+
+
+==============================================================
+oneAPI Technical Advisory Board Meeting (TAB-AI) Meeting Notes
+==============================================================
+
 2021-11-10
 ==========
 
