@@ -8,46 +8,39 @@ oneAPI Technical Advisory Board Meeting (TAB-AI) Meeting Notes
 Agenda
 ------
 
-================================================================  ===============================  =============
-Interfacing oneAPI and Python – Diptorup Deb, Intel
-Metagraph Project – Stan Seibert, Anaconda
-
-================================================================  ===============================  =============
+================================================================  ===============================
+Interfacing oneAPI and Python                                     Diptorup Deb, Intel
+Metagraph Project                                                 Stan Seibert, Anaconda
+================================================================  ===============================
 
 Attendees
 ---------
 
 =================================   ===============================
-Radionov, Alexander, Intel
-Pavlyk, Oleksandr, Intel
-Richards, Alison L, Intel
-Deb, Diptorup, Intel
-Ruyman Reyes, Codeplay
-Brodman, James, Intel
-Cave, Vincent, Intel
-Mehdi Goli, Codeplay
-Romain Dolbeau, SiPearl
-Tamir, Guy, Intel
-Gabb, Henry A, Intel
-Stan Seibert, Anaconda
-Davanlou, Ramtin, Accenture
-Penporn Koanantakool, Google
-Andrew Richards, Codeplay
-Cheng H. Lee, Anaconda
-Nalawadi, Rajeev K, Intel
-Li, Jian Hui, Intel
-Andrew Chen, Vastai Tech 
-Arunachalam, Meena, Intel
-Voss, Michael J, Intel
-Khanna, Rahul, Intel
-
+Radionov, Alexander, Intel          Khanna, Rahul, Intel
+Pavlyk, Oleksandr, Intel            Voss, Michael J, Intel
+Richards, Alison L, Intel           Arunachalam, Meena, Intel
+Deb, Diptorup, Intel                Andrew Chen, Vastai Tech 
+Ruyman Reyes, Codeplay              Li, Jian Hui, Intel
+Brodman, James, Intel               Nalawadi, Rajeev K, Intel
+Cave, Vincent, Intel                Cheng H. Lee, Anaconda
+Mehdi Goli, Codeplay                Andrew Richards, Codeplay
+Romain Dolbeau, SiPearl             Penporn Koanantakool, Google
+Tamir, Guy, Intel                   Davanlou, Ramtin, Accenture
+Gabb, Henry A, Intel                Stan Seibert, Anaconda
 =================================   ===============================
 
-Meeting Minutes:
+Slides
+------
 
+`Intro <presentations/oneAPI%20AI%20TAB%20intro%20March%208%202022.pdf>`__
 
+`Interfacing oneAPI and Python <presentations/Data-Parallel-Essentials-For-Python-oneAPI-TAB.pdf>`__
 
-Interfacing oneAPI and Python:
+`Metagraph <presentations/2022_03_Metagraph_v1.pdf>`__
+
+Interfacing oneAPI and Python
+-----------------------------
 
 Q:  Why did you not use Buffers?  
 A:  While it is technically possible, different Python classes would need to be created for every supported buffer data type as the buffer and accessor type definitions require the type of the underlying elements. We can get around the issue by using “untyped” buffers, but that brings its own challenges as partitioning of buffers can lead to loss of precision and incorrect results.
@@ -71,6 +64,7 @@ Q:  Runtime – how much overhead is there from the Python layer?
 A:   Library call – oneMKL interface layer – there is not much overhead – did not observe – better than 90%; for the compiler, also we have been evaluating the code we generate through NUMBA DPEX – 75-80% of the execution time as compared to DPC++
 
 Metagraph
+---------
 
 Q:  Graph Neural Net – is it flexible enough for a graph?
 https://blog.tensorflow.org/2021/11/introducing-tensorflow-gnn.html
@@ -88,12 +82,6 @@ A:  Type system must be granular enough so they know what the backend can handle
 
 Q:  Is that an oneAPI backend for all devices?  Graph BLAS on other architectures?
 A:  No catchall solution for graphics (for all devices).  Have a solution for people to plug in backends – but people have to implement
-
-
-
-==============================================================
-oneAPI Technical Advisory Board Meeting (TAB-AI) Meeting Notes
-==============================================================
 
 2021-11-10
 ==========
