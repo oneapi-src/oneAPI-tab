@@ -59,7 +59,7 @@ hipSYCL: Aksel Simon Alpay (Heidelberg University)
 * how do you handle overhead of providing the out of order semantics
   on cuda?
 
-    * handled in runtime layer on top of queue
+  * handled in runtime layer on top of queue
 
 * hipsycl implementation
 
