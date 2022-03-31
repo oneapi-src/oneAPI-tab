@@ -21,3 +21,5 @@ Meeting notes:
 | `June 16, 2021 <minutes/2021_06_16_Minutes.rst>`__
 | `July 14, 2021 <minutes/2021_07_14_Minutes.rst>`__
 | `October 6, 2021 <minutes/2021_10_06_Minutes.rst>`__
+| `December 14, 2021 <../cross-tab/README.rst>`__
+| `March 23, 2022 <minutes/2022_03_23_Minutes.rst>`__

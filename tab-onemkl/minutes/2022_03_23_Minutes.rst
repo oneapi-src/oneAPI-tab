@@ -1,0 +1,152 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2022-03-23
+==========
+
+Materials:
+
+* `Update on DPC++ APIs for oneMKL Data Fitting <../presentations/2022-03-23_Slides.pdf>`__
+
+Attendees:
+
+* Hartwig Anzt (KIT)
+* Terry Cojean (KIT)
+* Romain Dolbeau (SiPearl)
+* Pavel Dyakov (Intel)
+* Alina Elizarova (Intel)
+* Andrey Fedorov (Intel)
+* Mehdi Goli (Codeplay)
+* Harshitha Gunalan (Intel)
+* Louise Huot (Intel)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Piotr Luszczek (UTK)
+* Vincent Pascuzzi (BNL)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+* Nikita Semin (Intel)
+* George Silva (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Update on DPC++ APIs for oneMKL Data Fitting - Andrey Fedorov and Nikita Semin
+* Wrap-up and next steps
+
+New member introduction:
+
+* Terry Cojean - During his PhD that he got in 2018, he worked with Intel MKL using BLAS and LAPACK functionalities, using runtime systems. After getting his PhD, he now works with Hartwig Anzt, developing the math library Ginkgo that allows to interface with different GPU technologies (Nvidia, Intel, etc.) via cuSparse, Intel oneMKL, and so forth. This includes sparse matrix-matrix multiplications, random number generators, and dot and norm from dense BLAS. He has experience in library and interface design.
+
+Updates from last meeting:
+
+* oneMKL TAB meetings will be held every two months.
+* In the oneMKL Interfaces open source project, LAPACK domain is now supported on Nvidia GPUs via cuSolver.
+* The Intel oneMKL 2022.0 product was released, with the Intel oneMKL 2022.1 release coming soon.
+* oneAPI Image Processing Library (oneIPL) provisional specification was released and oneIPL TAB meetings have commenced.
+* A Level Zero TAB will be starting soon; please let us know if you would be interested in joining.
+
+DPC++ APIs for oneMKL Data Fitting:
+
+* We introduced Data Fitting at a previous oneMKL TAB meeting. Now we are going to update what changes have been made and answer some questions from the previous meeting. What we are discussing now is part of the upcoming Intel oneMKL 2022.1 release. There is also a pull request for the oneMKL specification; please feel free to provide feedback there.
+
+What Data Fitting Is:
+
+* Data Fitting is a set of functions to perform interpolation and integration. Terminology is given on the picture. On the x-axis, there is a partition, where we split the interval into sub-intervals of partition points. There are also function values as an input. The small red points on the x-axis are interpolation sites; they are points we need to calculate function values for. Red points on the curve are interpolation results. We can operate over multiple functions; we can interpolate over multiple functions using the same partition points. Interpolation is mostly based on splines (linear, quadratic, cubic).
+
+* We currently have two data layouts: row major and column major. Row major means we place all function values for partition points for the first function, then all function values for each partition point for the second function; each horizontal line is a function. For column major, we place function values for all functions for first partition point, then for second partition point, and so forth.
+
+* We want to ask you about a data layout named "first coordinate". This means we have independent memory for each set of functions. On previous slide, the function values are placed in same memory. Here, we have one memory for function values for all partition points for first function, then one memory for second function, and so forth.
+* Does it make sense to add this layout to the oneMKL specification? Do you have use cases where this would be useful?
+
+  * No known use cases.
+
+* Is an example of this leaving out the functions you don't have? Why are the boxes misaligned in the graphic?
+
+  * This would be pointing to the first value for each function. The graphic is just illustrating that memory may be non-contiguous.
+
+Updates from previous oneMKL TAB meeting:
+
+* Why do we need to have a separate construct function and not have the constructor do the work?
+
+  * We want to let the user control when the computations are performed. Plus, we can't return sycl::event from the constructor, but we need it.
+
+* Is it possible to mix precision types?
+
+  * We only allow same floating-point type for partitions and function values and coefficients.
+
+* Is it necessary to store the queue in the spline object?
+
+  * Yes because we need the context of execution inside the spline.
+
+* Why doesn't the spline own its own coefficients?
+
+  * This was a difficult question. The coefficients may live longer than the spline. We consider our splines as kind of view.
+
+* Do you have any actual use case where the coefficients outlive the spline?
+
+  * We don't want to prohibit this. If the spline will own the coefficients, users may want to save it to some file, so we will need to provide extra functionality to save splines. Also the question can be asked not only about coefficients but also for function values. We may not want to lose function values for some reason.
+
+  * No disagreement, but still no concrete use case. It's fine to manage the coefficients of the spline outside of the spline, but from the point of view for ease of use, the oneMKL TAB recommends packing the coefficients in the spline.
+
+  * Though there could be cases, like having precomputed spline coefficients in a file, or doing an iterative procedure, where it helps for the user to own the memory for the functions.
+
+* What we are proposing as a pull request for the oneMKL specification (and that are part of Intel oneMKL 2022.1): only USM APIs, supporting 2 types of splines, 3 types of partitions, 2 function value layouts, and 5 boundary conditions.
+
+  * Nothing important noted as missing.
+
+* After some investigation, we changed our original APIs. Let's look at the spline class and interpolate free function.
+
+Spline interface:
+
+* There's a common spline class with 3 template parameters: floating point type, spline type (which order), and dimensions.
+* Currently support only 1D splines, but this allows further expansion.
+* Based on previous oneMKL TAB meeting feedback, we decided to get rid of different data handlers.
+* We faced the problem where we have many parameters and need to handle them somehow. We decided to move certain parameters out of the constructor and left only part of them there.
+* There are 2 constructors in spline class, one taking a queue, one taking device and context. Other parameters for constructors are quantity of functions to compute splines for, and if the coefficients were already computed.
+* We don't want to perform deep copy, so we removed copy/move constructors and assignment operators.
+* We have some set functions, usually first parameter is the data, and the other is a hint about the storage.
+* We also have some functions that simplify spline usage: is_initialized, to tell if all values are set; get_required_coeffs_size, returns expected size for coefficients array; and a construct function that forms the spline construction by computing coefficients and returning sycl::event to user. Some splines require additional functions, like cubic splines need internal and boundary conditions set.
+
+Interpolate function:
+
+* 4 overloads, only showing 2 on slide.
+* This is templated by an interpolant - we didn't call it spline because we may have non-spline-based interpolation in future. We can use it with splines of different types now.
+* Interpolant is first parameter, then array of where we want to perform interpolation, then size of array, and where we want to store interpolation results. There is an indicator that shows the library which derivatives should be computed -  each bit in this parameter indicates a certain derivative. Finally dependencies and hints for result storage and sites.
+* The other example overload takes a queue - this function will make computations associated with the input queue, not the queue that is associated with the interpolant. This may be needed if, for example, users want to perform interpolation with different queues where each queue corresponds to a certain subdevice but not the whole device, but using the same coefficients and other interpolation sites.
+* We also have an overload without computing derivatives.
+
+* Are the two hint parameters at the end independent of the interpolant?
+
+  * Interpolant has its own hints for coefficients and function values; those hints are fully independent.
+
+Example:
+
+* Functionality is in experimental namespace.
+* User will fill initial data, then construct spline where the certain spline type is passed as template parameter.
+* Here we construct a spline without precomputed coefficients.
+* After constructing the spline, we set some data such as partitions, coefficients, functions.
+* Then we call construct function to compute coefficients.
+* After that, the user will need to prepare data for interpolation results.
+* Then call interpolate function to get functional values. Example is without derivatives.
+
+* The example uses malloc_shared, which means both host and device can access. Does it also work with malloc_device?
+
+  * Yes.
+
+* We're adding DPC++ data fitting interfaces to the oneMKL specification: pull request `#413 <https://github.com/oneapi-src/oneAPI-spec/pull/413>`__. Feedback is welcome!
+
+* Interfaces are also implemented in the upcoming Intel oneMKL 2022.1 release, so you can try it and may have more questions after that.
+* If you know someone who may be interested in spline interpolation functionality, please let us know.
+
+Wrap-up:
+
+* Any timeline for when the FFT domain will be available in the open source oneMKL interfaces project?
+
+  * Currently targeting the second half of 2022.
+
+* What is the process for deprecating v1.0 of the specification?
+
+  * We'll get back to you on this.
