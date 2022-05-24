@@ -30,5 +30,6 @@ Meeting notes:
 * `oneMKL <tab-onemkl>`__
 * `AI <tab-ai>`__
 * `oneIPL <tab-oneipl>`__
+* `Level Zero <tab-level-zero>`__
 
 .. _ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL):
