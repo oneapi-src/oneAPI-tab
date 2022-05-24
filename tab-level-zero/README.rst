@@ -45,8 +45,8 @@ Interfacing oneAPI and Python
 Q: Why did you not use Buffers?
 
 A: While it is technically possible, different Python classes would
-   need to be created for every supported buffer data type as the
-   buffer and accessor type definitions require the type of the
-   underlying elements. We can get around the issue by using “untyped”
-   buffers, but that brings its own challenges as partitioning of
-   buffers can lead to loss of precision and incorrect results.
+need to be created for every supported buffer data type as the buffer
+and accessor type definitions require the type of the underlying
+elements. We can get around the issue by using “untyped” buffers, but
+that brings its own challenges as partitioning of buffers can lead to
+loss of precision and incorrect results.
