@@ -13,6 +13,114 @@ Upcoming Topics
 ==========
 
 * Robert Cohn (Intel)
+
+Opens
+-----
+
+hipSYCL: Aksel Simon Alpay (Heidelberg University)
+--------------------------------------------------
+
+* multi-backend
+
+  * nvida, amd gpu, intel gpu, CPU
+
+* extensions
+
+  * async buffers
+  * lightweight accessors
+  * heirarchical programming model
+  * low-latency interop
+  * concurrent use of same buffer
+  * interop between buffers and usm pointers
+  * embed native CUDA or HIP
+
+* oneMKL
+
+  * upstream BLAS support for use with hipsycl
+  * rocRand support
+  * competitive with dpc++, CUDA, rocblas
+  * Q: Why is it slower than cublas for small problems, that is the
+    problems size we commonly see?
+
+    * issues in run-time. we are working on it
+
+* oneAPI and hipSYCL
+
+  * many components work, oneMKL, Level zero
+  * opportunities to test with different compilers
+
+    * ``sycl:: queue q1;`` should not work for <CL/sycl.hpp> header file
+
+* how do you handle dependencies expressed with accessors? e.g. with
+  out of order queue
+
+  * runtime caches until flush, build taskgraph, backend decides
+
+* how do you handle overhead of providing the out of order semantics
+  on cuda?
+
+  * handled in runtime layer on top of queue
+
+* hipsycl implementation
+
+  * library-only
+  * single source, multiple pass
+  * and combinations
+
+* sscp: single source single pass
+
+  * single source, multi pass
+
+* library-only for host
+
+  * advantage: pure c++, portable, behaves like regular C++
+    application for debugging/profiling
+  * specification bugs do not work/work well with library-only
+
+    * may need to write code differently for performance
+
+* sscp: single source single pass
+
+  * nvc++ uses this design
+  * cannot use macro's to distringuish host/device code
+  * fast compile time
+
+* library-only for device
+
+  * only limitation compared to library-only host is 1.2.1
+    hierarchical parallelism
+
+* NVC++ support: sscp
+
+  * can use this to write SYCL programs for nvidia
+  * provide functionality to specialize based on host/device without
+    relying on macro
+  * but single compilation pass nvc++ is not faster than multi-pass clang
+
+* issues with barrier for CPU
+
+  * barrier in middle of workgroup difficult in library-only
+  * with compiler you can split and vector loops
+
+  * scoped parallelism instead of ndrange
+
+    * separate code before/after barrier
+
+  * add compiler support, but retain library advantage
+
+* Q: If you are adding compiler pass anyway, can you use that to
+  resolve other SYCL issues?
+
+  * we could go full-blown compiler, but it does not resolve spec
+    issues which allows library-only.
+  * we still offer library-only, and believe there is value, there are
+    ways to resolve spec issues.
+
+
+2022-02-23
+==========
+
+* Robert Cohn (Intel)
 * Christian Trott (Sandia National Laboratory)
 * Aksel Simon Alpay (Heidelberg University)
 * Andrew Lumsdaine (University of Washington, Pacific Northwest)
