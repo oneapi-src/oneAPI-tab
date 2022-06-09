@@ -74,14 +74,22 @@ Intro about Level Zero TAB & Roadmap
 
 .. notes for the topic
 
-Q: Why did you not use Buffers?
-
-A: While it is technically possible, different Python classes would
-need to be created for every supported buffer data type as the buffer
-and accessor type definitions require the type of the underlying
-elements. We can get around the issue by using “untyped” buffers, but
-that brings its own challenges as partitioning of buffers can lead to
-loss of precision and incorrect results.
+- There is contribution guideline on the Github.
+- What is the right cadence, frequency?  What kind of interest level?
+  Any feedback?  oneAPI is trying to solve a difficult problem.
+- LevelZero spec has been shared from beta 1.0
+- Does oneAPI need a Unified Runtime?  We might want to partition?  We
+  could simplify it as a hardware device layer.  Device Abstraction
+  should be required.
+- What is the primitive function that we have not been covering so far
+  to support your fav language?
+- Do we need special support for the CPU?  CPU device driver or
+  resource management?  Leverage common components…memory structure
+  for heterogeneous compute platforms.  Proposing Unified Runtime API.
+  It's a fairly radical sw infra…relatively major change to our sw
+  structure.  Revolutionary change should be required.  Need a smooth
+  transition to discuss and agree the directions at TAB and other
+  places.
 
 
 Level Zero Specification & How to Participate
@@ -89,48 +97,68 @@ Level Zero Specification & How to Participate
 
 `Slides <presentations/22ww24_LevelZeroSpec_TAB.pptx>`__
 
-* Call to action
-
-  * Contribute to specification
-
-    * github issues
-    * contribute changes
-
-  * help us evolve level zero
-
-    * what are the new features
-
-  * topics for future TAB meetings
-
-Q: What is relationship between spec and implementation?
-
-   Spec without implementation led to errors that are hard to fix. Now
-   we wait for implementation before finalization. Prove out a feature
-   as an extension, even if inclusion in spec is the goal.
+- Spec.1.4 has been published in May
+- Starting with Level Zero spec. v1.5.
+- Scripts generate spec and headers from API spec and programming
+  guide; covering YAML, headers, implementation to make sure codes are
+  compiled, and API spec.  Programming guides are validated by script.
+- Trying to ensure backward compatibility: minor version increment,
+  major version increment
+- Next steps: release spec dev framework, post spec issues from
+  internal repo, organize candidate spec update for spec v1.5.
+- Pls contribute to Level Zero spec, help us evolve Level Zero, and
+  propose new feature required. What Level Zero topics should be
+  covered in future TAB meeting?
+- What's the relationship between Implementation and spec?  Spec
+  without implementation led to errors that are hard to fix. Now we
+  wait for implementation before finalization. Prove out a feature as
+  an extension, even if inclusion in spec is the goal.
 
 Discussion Topic:  Separation of Sysman from core Level Zero APIs
 -----------------------------------------------------------------
 
-* sysman (system management) APIs are tightly coupled to core
-* Problem
+`Slides <presentations/22ww24_Sysman_TAB.pptx>`__
 
-  * need way to enable sysman without an environment variable
-  * application need sysman properties, don't want to replicate sysman
-    in core api
-  * some application don't need sysman without core APIs
+- Currently LZ Sysman is tightly coupled to LZ Core APIs, a problem is
+  that it's unclear who should enable Sysman, and how and when.
+- Proposal from Ben: Add a zeslnit() for initializing sysman,
+  independent of zelnit(), add query functions for sysman driver and
+  device support, add function to get sysman handle from coreAPI
+  handle, consider enumerating sysman separately from core APIs.
+- Questions from Ben: right direction?  How important is backward
+  compatibility?  Do we need to separate privileged sysman form
+  unprivileged sysman?  How to handle ZES-ENABLE_SYSMAN_LOW_POWER?  Do
+  we need to decouple other tools as well (e.g. debugging)?
+- Servesh - how will we separate Sysman from the Core?  We'd enable
+  decouple…but answer is it all depends.
+- Peng Tu - will it make easier for a developer to enable Level Zero
+  in that way?  Currently most SYCL users don't use Sysman, so we
+  still need more feedback.
+- Brice Videau (from Argonne) - Agree.  this is only way…decoupling is
+  a good idea.
+- Juan (from Manchester) - Running different version should be ok?
+  Implementation details.  Interchanging devices.
+- Why do we need to initialize Sysman?  We want the architecture to be
+  able to initialize separately.  You need a specific dependency.  The
+  right flow is to check the dependency and initialize Sysman.  It's
+  more like requirement.
+- Servesh: It seems like the target is for accelerators…future is
+  device sitting in CPU and other devices probably.  Have you thought
+  about supporting the demand for those?  We'll make sure that ver 2.0
+  would be refactoring some functionality to cover such heterogeneous
+  platform support requirement.  Specs will be evolved but when?  Not
+  this year…but next few years.  Need to be more flexible for
+  supporting heterogeneous environment.  What's the philosophy behind
+  Level Zero?  Level Zero needs to be visible so developers can
+  flexibly define another abstraction layer higher as needed while
+  emulating devices.  We'll need to clean up the challenge going
+  forward.
+- Brice Videau: What's driving Level Zero ver 2.0?  Runtime is doing
+  poor job for enabling Level Zero in general.  Need to cover some
+  functionality to make it implemented effciently, but has not seen it
+  on Level Zero.  Rebuilding OPEN CL---some members don't like the
+  idea.  TAB is a goold place to tackle the issue.
 
-* proposals
-
-  * separate initialization APIs
-  * separate drivers
-  * make sysman support optional in API
-
-* discussion topics
-
-  * does the proposal solve the problem?
-  * is backwards compatible required?
-  * do we need to separate privileged/unprivileged sysman
-  * do other tools need to be decoupled?
 
 Q: How much separation would this mean for the implementation?
 
