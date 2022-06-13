@@ -34,7 +34,7 @@ Attendees
 
    * - Robert Cohn, Intel
      - Alastair Murray, Codeplay
-     - Jaime Arteaga Molina
+     - Jaime Arteaga Molina, Intel
    * - Ben Ashbaugh, Intel
      - Benie, Codeplay
      - Brice Goglin
