@@ -23,3 +23,4 @@ Meeting notes:
 | `October 6, 2021 <minutes/2021_10_06_Minutes.rst>`__
 | `December 14, 2021 <../cross-tab/README.rst>`__
 | `March 23, 2022 <minutes/2022_03_23_Minutes.rst>`__
+| `June 8, 2022 <minutes/2022_06_08_Minutes.rst>`__

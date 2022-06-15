@@ -1,0 +1,145 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2022-06-08
+==========
+
+Materials:
+
+* `Update on the oneMKL interfaces open source project <../presentations/2022-06-08_Slides.pdf>`__
+
+Attendees:
+
+* Terry Cojean (KIT)
+* Marius Cornea (Intel)
+* Mehdi Goli (Codeplay)
+* Harshitha Gunalan (Intel)
+* Mark Hoemmen (Nvidia)
+* Louise Huot (Intel)
+* Sarah Knepper (Intel)
+* Nevin Liber (ANL)
+* Ye Luo (ANL)
+* Piotr Luszczek (UTK)
+* Mesut Meterelliyoz (Intel)
+* Spencer Patty (Intel)
+* Pat Quillen (MathWorks)
+* George Silva (Intel)
+* Shane Story (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Update on the oneMKL interfaces open source project - Mesut Meterelliyoz
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* Clarification about deprecation. We do not deprecate the specification, but we can deprecate an API in a specification.
+
+Update on the oneMKL open-source interfaces project:
+
+* Two years ago Maria Kraynyuk gave an overview of oneMKL interfaces.
+* oneMKL is part of the oneAPI initiative. Purpose is to achieve best possible performance on different hardware using the same source code.
+* This started with CPUs and GPUs; it is possible to extend to other accelerators like FPGAs, but this is not yet done.
+* We started with support for Intel and Nvidia GPUs; support has been extended to AMD GPUs.
+
+2 usage models for dispatching:
+
+* Run-time dispatch: Sample code queries two devices; one for CPU, one for GPU, and creates a queue for each device. There are two calls to gemm; the first will run on the cpu device, the second on the gpu device.
+* What happens in the background: we have a dispatcher library called libonemkl; when you link an application with this dispatcher library, it looks at the device info in the queue and selects and loads the third-party library based on that info. The purpose of the backend is to convert the DPC++ runtime objects from the application to third-party library specific objects. Let's say we are using cuBLAS backend: from the GPU queue it will understand NVIDIA GPU and pick the cuBLAS backend branch, and then make the cuBLAS GEMM call, and then run on the NVIDIA GPU hardware.
+* Run-time dispatch supports only dynamic linking.
+
+* Compile-time dispatch: The difference here is that the application uses a templated backend selector API. The user specifies what backend to use. Similar example as before, creating two selectors (one for cpu, one for gpu), and these selectors are used in the gemm call.
+* The difference in the compilation is that the user needs to know which library to link to. When you compile oneMKL interfaces, you'll select which library.
+* Compile-time dispatch supports both static and dynamic linking.
+
+* The compilation flag -fsycl can be problematic. Is it possible to avoid needing -fsycl, though the user would still need to specify a sycl library?
+
+  * The -fsycl is needed for the linkage with the sycl library as well. It is not only for compiling the kernels.
+
+oneMKL interfaces - What is new?
+
+* Slide 8 summarizes what has been added over the past two years. Previously we only had BLAS domain; we've added support for random number generator (RNG) and LAPACK. Other domains are in the pipeline.
+* We've added support for new hardware: AMD GPUs.
+* We've added support for new backends. For BLAS, we added support for NETLIB backend on CPU. We added support for cuRAND and rocRAND for RNG, rocBLAS for BLAS, and cuSOLVER for LAPACK.
+* We added support for new compiler: hipSYCL. This was done by Heidelberg University.
+* We made some changes in codebase to align with SYCL2020 specification; codebase is now compatible with SYCL2020 specification.
+* Earlier we had only functional tests for all APIs. There was a request to show some examples for using oneMKL interfaces project. We added examples for all domains, showing how to use compile time and run-time dispatch for each example.
+* We had an issue about performance between native cuBLAS and the cuBLAS backend. This was due to creating a context every time an API was called. Once the context was cached, this closed the gap and should see performance on par between these two now.
+* On the BLAS domain, we've been adding new APIs to the oneMKL spec, and since the oneMKL interfaces project is an implementation of the oneMKL spec, we added these new APIs to the oneMKL interfaces project, including tests. So right now, the BLAS domain should be following the oneMKL spec directly.
+* We've been getting more usage, with users reporting issues and improvements, so we're continually working on fixing bugs and documentation updates of this project.
+
+* Is there a timeline for sparse domain to be supported?
+
+  * Hopefully next year.
+
+Support matrix by compiler:
+
+* We split support by compiler to show which domain is covered by which compiler.
+* In the open source project, we support 3 compilers:
+
+  * DPC++ - can be downloaded from the oneAPI base toolkit (see links on bottom right)
+  * LLVM compiler - can get from Github
+  * hipSYCL compiler - can get from Github
+
+* Intel oneMKL is tested and shipped with the DPC++ library, so for Intel GPU only the DPC++ compiler is supported.
+* We are working actively to add AMD rocBLAS backend using LLVM's experimental support for AMD. A pull request is in progress. Once the BLAS domain is in good shape, we'll extend to other domains.
+* On Windows, LLVM only supports CPU devices so far.
+* The focus of the rest of the presentation is hipSYCL. Currently there is support for BLAS and RNG domains on AMD GPUs.
+* While the name hipSYCL may make you think it works only for AMD hardware, it also supports NVIDIA GPUs. There are open pull requests to enable cuBLAS and cuRAND libraries with the hipSYCL compiler.
+
+hipSYCL overview:
+
+* There are four major compilers for SYCL:
+
+  * DPC++, either Intel's or llvm version.
+  * triSYCL from Xilinx
+  * ComputeCpp from Codeplay
+  * hipSYCL, shown in gray boxes
+
+* hipSYCL is open source and was started by Aksel Alpay as a hobby project.
+* The difference between hipSYCL and other implementations is that other implementations started from OpenCL. hipSYCL doesn't use OpenCL at all; it either uses OpenMP, CUDA, or ROCm directly, depending on hardware.
+* The reason they started working on this is because not all hardware vendors had adopted SYCL yet, so hipSYCL helps to close that gap.
+* hipSYCL enables running SYCL code to utilize vendor-optimized libraries as well as vendor debug and performance tuning tools, to optimize your SYCL code. In the background, you'll be using vendor-optimized libraries.
+
+Why did we start working with hipSYCL?
+
+* Intel has 22 oneAPI Center of Excellence (CoE) programs; this includes national labs and universities around the globe. The purpose of the CoE with Heidelberg University is to bring oneAPI components to AMD hardware by leveraging hipSYCL. This is the first and only attempt to implement oneAPI with a compiler independent of DPC++. This demonstrates the purpose of oneAPI - to be an open source initiative.
+* Programming model: hipSYCL should support key SYCL2020 features and compile oneAPI code that achieves performance within 80% of CUDA/ROCm performance.
+* hipSYCL should run oneAPI libraries. This is where oneMKL comes into the picture. Using oneMKL interfaces as a proof point that you can use oneMKL interfaces to run with hipSYCL.
+* Last milestone - hipSYCL should be able to support the low-level API Level-Zero, so it eventually can be used for oneMKL GPUs.
+
+Collaboration on oneMKL interfaces for hipSYCL
+
+* Today you can build oneMKL interfaces with hipSYCL  on AMD or (soon) NVIDIA GPUs.
+* Performance comparison table shown on the right hand side of slide 12.
+* Plots for 3 APIs: GEMM, GEMV, and AXPY - one API for each BLAS level. GEMM is compute bound, while GEMV and AXPY are memory bound. So you can compare performance for both compute and memory bound problems.
+* The dark bars are from rocBLAS native calls. The gray bars are from oneMKL interfaces. The plots show that there are basically no performance differences calling via these different interfaces. So the goal to achieve best performance on different hardware is achieved.
+* Future work is NVIDIA GPU support (in progress) and LAPACK domain support with hipSYCL. Later goal is to add Intel GPU support with hipSYCL through Level-Zero.
+
+* Why do you explicitly need Level-Zero?
+
+  * If you are using Intel GPUs today, you would use the Intel DPC++ compiler and Level-Zero (the POR backend for DPC++).
+  * Once hipSYCL supports Intel GPUs, you would still need Level-Zero for this.
+  * If a different GPU is targeted (AMD or NVIDIA), then Level-Zero would not be needed.
+  * For a user to call the oneMKL interfaces in an application, no direct call to Level-Zero would be needed, regardless of the targeted backend/GPU.
+
+* In the charts, sometimes the black bar is lower than the gray bar, even for medium range of sizes. The gemv for size 1000, in particular, shows a really low rocBLAS time (high performance). Why is this?
+
+  * The performance charts were generated by the hipSYCL team, so we don't have insights into this. It's possible there was some instability in the runs.
+
+* For the LLVM compiler support for AMD GPUs, was this also done by the hipSYCL team or someone else?
+
+  * This is being done by Intel. The LLVM hip backend support is experimental. We have plans to add it to the oneMKL interfaces, but we may need to wait until the compiler gets more mature in case things break.
+
+* Is hipSYCL a compiler or a header-only library?
+
+  * hipSYCL is a SYCL compiler; it provides a multi-backend implementation of SYCL for CPUs and GPUs.
+
+* Any hope to get AMD more involved?
+
+  * We are always happy to have contributions!
+
+* For a future meeting topic, Mark Hoemmen would be interested in presenting on the proposal for C++ standard linear algebra algorithms (P1673).
