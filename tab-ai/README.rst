@@ -16,24 +16,18 @@ oneDNN Graph API     Jian Hui Li, Intel
 Attendees
 ---------
 
-==============================
-Robert Cohn, Intel
-Mourad Gouciem, Intel
-Guolian Li, 
-Rahul Khanna, Intel
-Cheol Kim, Intel
-Jian Hui Li Intel
-Penporn Koanantakool, Google
-Stephano, RISC-V
-Henry Gabb, Intel
-Tong Gu, Intel
-Mehdi Goli, Codeplay
-Jason Wang
-Andrew Chen, Vastai Tech 
-Tamir Guy, Intel
-Rajeev Nalawadi, Intel
-Ramtin Davanlou, Accenture
-==============================
+==============================  ==============================
+Robert Cohn, Intel              Ramtin Davanlou, Accenture
+Mourad Gouciem, Intel           Rajeev Nalawadi, Intel
+Guolian Li,                     Tamir Guy, Intel
+Rahul Khanna, Intel             Andrew Chen, Vastai Tech 
+Cheol Kim, Intel                Jason Wang
+Jian Hui Li Intel               Mehdi Goli, Codeplay
+Penporn Koanantakool, Google    Tong Gu, Intel
+Stephano, RISC-V                Henry Gabb, Intel
+==============================  ==============================
+
+
 
 Slides
 ------
