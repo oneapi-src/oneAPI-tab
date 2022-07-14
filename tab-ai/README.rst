@@ -2,8 +2,141 @@
 oneAPI Technical Advisory Board Meeting (TAB-AI) Meeting Notes
 ==============================================================
 
-2022-3-8
+2022-07-14
 ==========
+
+Agenda
+------
+
+===================  ===============================
+oneDNN v2.0          Mourad Gouciem, Intel
+oneDNN Graph API     Jian Hui Li, Intel
+===================  ===============================
+
+Attendees
+---------
+
+==============================
+Robert Cohn, Intel
+Mourad Gouciem, Intel
+Guolian Li, 
+Rahul Khanna, Intel
+Cheol Kim, Intel
+Jian Hui Li Intel
+Penporn Koanantakool, Google
+Stephano, RISC-V
+Henry Gabb, Intel
+Tong Gu, Intel
+Mehdi Goli, Codeplay
+Jason Wang
+Andrew Chen, Vastai Tech 
+Tamir Guy, Intel
+Rajeev Nalawadi, Intel
+Ramtin Davanlou, Accenture
+==============================
+
+Slides
+------
+
+`oneDNN <presentations/oneDNN-2022-07-14.pdf>`__
+
+oneDNN v2.0
+-----------
+
+* Intro
+
+  * Improved support for int8 quantization
+  * Better runtime dimension support
+
+* Quantization
+
+  * Per tensor quantization to allow asymmetric, dynamic quantization
+
+* Relaxed math mode
+
+  * allow low precision without changing code
+  * user sets minimal datatype, control
+
+* API stability for developers
+
+  * descriptors are transparent
+  * exposes implementation n API
+  * extensions break compatibility
+
+* Making runtime dimensions support more practical
+
+  * current spec has runtime dimensions
+  * scratchpad allocated at creation time before dimensions are known
+  * user provides allocator. Allocated at runtime
+
+* Misc
+
+Q: How does allocator know which device, numa node to use?
+A: Allocator called by thread executing on numa node, pass in device
+
+oneDNN Graph API
+----------------
+
+* oneDNN Graph API
+
+  * Currently oneDNN supports primitives API, will add graph API for future.
+  * Graph API allows HW backend to max performance.
+  * Same integration for multiple AI HW: CPU, GPU, and accelerators.
+  * More flexible/productive way to add fusions compared to strict
+    library API
+  * In pytorch 1.2 release
+  * In upcoming oneDNN 3.0 product release, oneDNN 2.0 spec release
+
+* Relationship between primitive and Graph APIs
+
+  * 6 graph api classes: tensor, logical tensor, op, graph, partition, compiled partition.
+  * share stream/engine with rest of onednn
+    
+* Framework integration
+
+  * before graph api
+    
+    * Framework integration needs to pattern match for oneDNN primitives
+    * Each fused op needs to register to framework runtime and extend pattern matcher
+
+  * with graph api
+
+    * There is no need for differentiate which op etc. and no need to
+      modify framework for new fusion.
+
+* Has larger scope for better efficiency
+
+  * Fusion avoid loading from memory
+  * Can change representation/types inside fused ops
+
+Q: Can graph be executed on multiple stream/engine
+A: Graph bound to a single stream
+
+Q: What happens when oneDNN graph cannot support compilation
+A: Framework integration responsible for executing
+
+Q: How does this interact with framework graph rewrites?
+A: Expect that target independent rewrites are performed before oneDNN
+   graph. Difficult when framework performance fusions.
+
+Q: What happens when using CPU + nvidia GPU together? Can't use oneDNN
+   for graph that will be executed on GPU. Need cost model to decide
+   what to send to oneDNN graph
+A: Do per-device partition
+
+Future topics
+-------------
+
+Suggestions for future from TAB members:
+
+Plans for Habana synapse API?
+
+Comparison of GPU vs CPU. Facilitating migration between CPU & GPU. What is well suited.
+
+Accenture open source reference kits for AI, using oneAPI components.
+
+2022-3-8
+========
 
 Agenda
 ------
