@@ -9,6 +9,128 @@ Upcoming Topics
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
 
+2022-07-27
+==========
+
+* Robert Cohn (Intel)
+* Aksel Simon Alpay (Heidelberg University)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest)
+* Antonio J. Peña (Barcelona Supercomputing Center)
+* James Brodman (Intel)
+* John Melonakos (ArrayFire)
+* Ronan Keryell (AMD)
+* Michael Kinsner (Intel)
+* Leping
+* Nevin Liber (Argonne National Laboratory)
+* Geoff Lowney (Intel)
+* Lukas Sommer (Codeplay)
+* Mehdi Goli (Codeplay)
+* Pablo Reble (Intel)
+* Gergana Slavova (Intel)
+* Xinmin Tian (Intel)
+* Christian Trott (Sandia National Laboratory)
+* Umar Arshad (ArrayFire)
+* Victor Lomuller (Codeplay)
+* Victor Perez
+
+Opens
+-----
+
+* None
+
+User-Driven Online Kernel Fusion for SYCL
+-----------------------------------------
+
+Victor Lomuller
+
+* `Slides <presentations/oneAPI-TAB-20220727-Kernel-Fusion.pdf>`__
+
+* Why Fusion?
+
+  * short-running kernels
+  * manual fusion is too much work, not composable, error prone,
+    domain-specific
+  * extend sycl api for user-driven, automatic
+
+* Extension requirements
+
+  * fused kernel must be equivalent
+  * improves performance
+  * minimal changes in code bases
+  * sycl runtime makes final decision
+
+* Extension
+
+  * queue methods
+
+    * start_fusion
+    * cancel_fusion
+    * complete_fusion
+
+  * some properties
+
+* Use
+
+  * start, submit, submit, complete
+  * fused everything between start/complete
+  * promote local, private for work group/work item
+  * Questions about what is legal for local/private
+
+* Implementation in computecpp
+
+* Evaluation
+
+  * sycl dnn
+
+* Porting to dpc++
+
+  * step 1, intel cpu/gpu
+  * step 2, amd/nvidia gpu
+
+* future work
+
+  * dpc++ support
+  * single internalize property
+  * support fusing different nd ranges
+  * explore fusing more arithmetic heavy networks
+
+* Q/A
+
+  * Discussion on interfaces
+
+    * start/stop separates fusion from place where function is called
+
+      * Can lead to errors when programmer not aware it is part of a fusion
+
+        * what about mpi/host calls, explicit copies, host operations, ...
+        * requires compiles analysis, debugging tools to find problems
+
+      * fusion object would be more explicit
+      * liked using queue object because you could call libraries and
+        have it fused
+      * cuda has default device/etc, which is also dangerous
+
+  * Do you intercept copies on other queues?
+
+  * Is there a way to enable fusion and then launch kernel that you do
+    not want fused?
+
+    * No, but you could add to another queue
+
+  * How do you handle device limitations, for example limited
+    arguments.
+
+    * fall back to running kernels unfused
+
+  * How would you do static compilation? Coulbe c++ type/hint, and at
+    runtime it would check if already compiled. Could do AOT, use
+    MLIR.
+
+  * Is allocation performed when temp buffer is created?
+
+    * yes. You may not use it, but it will be allocated.
+
+
 2022-02-23
 ==========
 
