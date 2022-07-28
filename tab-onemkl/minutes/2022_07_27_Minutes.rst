@@ -1,0 +1,85 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2022-07-27
+==========
+
+Materials:
+
+* `Overview of matrix transposition and copy routines <../presentations/2022-07-27_Slides.pdf>`__
+
+Attendees:
+
+* Andrew Barker (Intel)
+* Terry Cojean (KIT)
+* Mehdi Goli (Codeplay)
+* Harshitha Gunalan (Intel)
+* Louise Huot (Intel)
+* Cheol Kim (Intel)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Nevin Liber (ANL)
+* Piotr Luszczek (UTK)
+* George Silva (Intel)
+* Shane Story (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Overview of matrix transposition and copy routines - Andrew Barker
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* Planning an extra oneMKL TAB meeting on August 24.
+
+Overview and motivation:
+
+* Main motivation is that matrix transposition is something applications do a lot but isn't explicitly supported in standard BLAS.
+* There are routines in the Intel oneMKL product to do out-of place scaling and transposition, in-place scaling and transposition, and matrix addition/scaling, called omatcopy, imatcopy, and omatadd, respectively.
+* Similar functionality in NVIDIA cuBLAS and AMD rocBLAS is called geam. The geam function is the only API in cuBLAS and rocBLAS; they do some of the other combinations by having the same pointer to A and C or B and C. The documentation in Intel oneMKL prohibits that, which is why it has different APIs.
+* op(A) may be transpose, non-transpose, or a conjugate transpose for complex arithmetic.
+
+Vendor library interfaces and support:
+
+* The omatadd function from the Intel oneMKL product is most similar to geam from NVIDIA cuBLAS/AMD rocBLAS. In-place transposition isn't supported by NVIDIA cuBLAS/AMD rocBLAS, but it is by imatcopy in Intel oneMKL. C += beta B^T, for example, is supported only in NVIDIA cuBLAS.
+
+Comparison of omatadd and cublasSgeam APIs:
+
+* Very similar list of parameters.
+
+The basic question we have for the oneMKL TAB is which direction to go:
+
+* One option is to use {i,o}matcopy/omatadd APIs. An advantage of this is that users of Intel oneMKL CPU functions would have an easy on-ramp; this would also be a quick implementation in oneMKL open source interfaces with Intel oneMKL backend.
+* Another option is to use the geam APIs, which would be an easy on-ramp for existing NVIDIA cuBLAS/AMD rocBLAS GPU users.
+
+Would this cover device-to-host and host-to-device copies?
+
+* On GPU for graphics, there are pitch copies, like cudaMemcpy2D. The data is not really matrix data but texture data.
+* MAGMA uses some of this additional functionality. For example, in LU, you may look for the pivots on the CPU but then apply the pivots on the GPU. This requires copying the data between the device and host and back, and often with a transpose because you need the matrix panel in different forms (e.g., transpose the data on the device to do pivoting).
+* MAGMA has routines that do device-to-host and host-to-device copying, with optional transpose in between.
+* The SYCL 2020 specification for images covers such host-device copies for images. However, they only support half and float - not double (because images generally aren't stored in double precision). For HPC, double precision is often needed.
+* Currently only on-device copying is being considered.
+
+What batched interfaces are supported?
+
+* The Intel oneMKL product supports both group and strided batch omatcopy and imatcopy. Only strided batch is currently supported for omatadd.
+
+The example use cases and APIs are only on-device copies.
+
+* They can be either SYCL buffers or USM pointers, but they all have to be device accessible.
+* The on-device copy is useful; it can occur with similarity transformations.
+* If oneMKL specification is not planning to support host-to-device copying, that could be handled on the user side.
+
+Is there a preference between {i,o}matcopy/omatadd and geam for function names?
+
+* That would depend on the user base.
+* Since users may be coming from rocBLAS and cuBLAS, the natural match would be geam.
+* Right now, the draft implementation uses the {i,o}matcopy/omatadd APIs.
+* No strong preference for one over the other.
+
+Is double precision planned to be supported for images in a future SYCL version?
+
+* Not currently. However, SYCL buffers can be used to copy data between host and device, and then a SYCL kernel can be written to do the transposition.
