@@ -2,6 +2,211 @@
 Level Zero Technical Advisory Board Meeting Meeting Notes
 =========================================================
 
+2022-8-18
+=========
+
+Agenda
+------
+
+.. list-table::
+
+  * - Topic
+    - Presenter
+  * - What is in Level Zero v1.5?
+    - Jaime Arteaga Molina
+  * - Unified Runtime
+    - Zack Waters
+
+Attendees
+---------
+
+.. list-table::
+
+   * - Ben Ashbaugh, Intel
+     - Alastair Murray, Codeplay
+     - Jaime Arteaga, Intel
+   * - Kenneth Benzie (Benie), Codeplay
+     - Brice Goglin
+     - Arlin Davis, Intel
+   * - Ravi Ganapathi, Intel
+     - Gordon Brown, Codeplay
+     - Kevin Harms, Argonne
+   * - Hugh Delaney, Codeplay
+     - Jack Kirk, Codeplay
+     - Jeff Scheel, RISC-V International
+   * - Juan Fumero, Univ. of Manchester
+     - Ronan Keryell, AMD Xilinx
+     - Cheol Kim, Intel
+   * - Greg Lueck, Intel
+     - Sergey Maslov, Intel
+     - Mehdi Goli, Codeplay
+   * - Steena Monteiro, Intel
+     - Servesh Muralidharan, Argonne
+     - Nicolas Miller, Codeplay
+   * - Paolo Gorlani, Codeplay
+     - Paulius Velesko
+     - Paul Petersen, Intel
+   * - Romain Dolbeau, SiPearl
+     - Tadej Giglaric,
+     - Xinmin Tian, Intel
+   * - Tim Besard, Julia Computing
+     - Peng Tu, Intel
+     - Victor Lumuller, Codeplay
+   * - Brice Videau, Argonne
+     - Michael Voss, Intel
+     - Zack Waters, Intel
+   * - Brandon Yates, Intel
+     - Ravindra Babu Ganapathi, Intel
+     - Russell Mcguire, Intel
+
+
+Level Zero v1.5
+---------------
+
+`Slides <presentations/Level-Zero-Spec-v1.5.pptx>`__
+
+* Reviewing Public Issues for Level Zero v1.5
+* Top issue: #7, improving the interaction of sysman and the core
+  APIs, remove environment variable.
+
+  * Servesh: Is there a way in the API to determine what can and
+    cannot be done?  Basically, can we define what you can and cannot
+    do as an unprivileged user?
+
+    * Jaime: Is this an implementation detail?
+    * Zack: We should define a return value for insufficient permissions.
+    * Jaime: We already have this return value.
+    * Servesh: Usage model is that you need to perform a series of
+      calls and want to know if they will succeed.
+    * Suggest filing an issue for discussion.
+
+  * Also: #11, Device and metric timestamp synchronization.
+  * Remainder are documentation updates:
+
+    * #6, Add IPC support for host allocations.
+
+      * Jaime: Note, this doesn't include support for shared
+        allocations, only adds support for host allocations.
+
+    * #8, Clarify that a context created against a root device
+      automatically includes all of its sub-devices.
+
+      * Purely documentation, driver is already behaving this way.
+
+    * #9, Allowing IPC events with timestamp events.
+
+      * Can't think of a reason to disallow this.
+
+  * Jaime: Are there any other must-fix issues for v1.5?
+  * Brice: It would be easiest to add a GitHub milestone for these
+    issues, for tracking.
+  * There are a few other issues that have come in recently, but they
+    may not make v1.5:
+
+    * #12, deprecated power limits APIs.
+    * #5, consider extending event states beyond 2?
+    * #13, callback when Level Zero frees memory.
+
+      * Peng: Good direction to make this more general.  Another
+        request is to indicate when Level Zero is finished with a
+        command list.
+
+  * All the issues have been posted on the Level Zero GitHub; we’d
+    appreciate for your feedback and input.
+  * Timeline:
+
+    * Targeting a release candidate in September.
+    * Targeting release in October.
+
+  * Github spec source walkthrough (Zack).
+  * Ronan: As a general question, are you looking at all at embedded
+    or safety critical applications?  Note that things like callbacks
+    are forbidden in safety critical contexts.
+
+    * Zack: Many features are optional since not all devices support
+      every feature, so perhaps an embedded device might not support
+      callbacks.
+
+  * Brice: How do you plan to handle removal of experimental
+    extensions or promotion of experimental extensions to standard
+    extensions or core features?  Specifically looking at symbols in
+    the loader and entries in the DDI table.
+
+    * Brandon: We can't remove anything from the dispatch tables, need
+      to maintain backwards compatibility.
+    * Jaime: At least, we need to keep the symbols until the next
+      major version.
+    * Zack: We do allow experimental extensions to change things like
+      the function signature.  Does this cause a problem for the
+      loader?
+    * Brice: Yes, it could.
+    * Zack: Maybe we need to do something differently for experimental
+      extensions then.
+
+Unified Runtime
+---------------
+
+* Walked through the posted Unified Runtime ver.0.5 specification.
+* Reviewed the overview and objective: Intro - Unified Runtime API for
+  interface for Parallel Language Runtimes such as Julia etc.  Unified
+  Runtime API enumerates Open CL, ROCm, CUDA, and others through the
+  API.  Runtime is extensible - new support platform with platforms;
+  new functionalities, some features that CUDA and Open CL provide.
+  We have ability for platform extensions with Unified Runtime API.
+  Extension interfaces provide native access to the platforms - Open
+  CL, CL objects, etc.  We want the Runtime easier to be used.
+* Fundamentals - overview of API designs; repo will be coming soon;
+  working on it with Legal.  Naming convention: zer for now, other
+  conventions in the future.
+* Multithreading and concurrency; overall ABI - backward compatibility
+  requirement stated on the spec.
+* Programming guide - API documentations that state structures,
+  descriptions, etc.  Platforms represent a collection of physical
+  devices in the system accessed by the same driver.
+* Queue and Enqueue: how to take the kernels and launch the device; A
+  queue object represents a logic input stream to a device
+* Native driver access - a set of APIs provide accessors for native
+  handles.  We can leverage a platform extensions to convert the
+  native handle to a driver handle. Given a zer_program_handle_t
+* Brice: Somebody copy-pasted OpenCL.  Why not just use OpenCL?  Each
+  of the APIs is basically the exact equivalent of OpenCL.
+
+  * Zack: Want to evolve more towards Level Zero.  Started with what
+    we have for SYCL.
+  * Servesh: Maybe a different question.  What is the added value
+    vs. calling Level Zero or OpenCL?
+  * Brice: The added value is bring back everything that was stripped
+    from OpenCL in Level Zero.
+
+* Kevin Harms: Suggest updating the top-level document to add an
+  application.  Would the expectation be that an application only
+  calls through the parallel language runtime?  Or could it (would
+  it?) directly interface with the unified runtime?
+
+  * Paul: We expect that most applications will call through a
+    parallel language runtime, but it is a layered architecture and
+    applications can call into the lower levels if desired.
+  * Jeff (RISC-V): Availability is key.
+  * Jeff: The advantage is less for existing applications that are
+    already programming towards the lower-level layers, and more for
+    the next application that can take advantage of hardware that they
+    may not otherwise.
+
+* Kevin: Will the Intel OpenMP adopt the Unified Runtime API?
+
+  * Paul: Yes, especially for accelerator offload.  The OpenMP
+    libtarget API would target the unified runtime rather than Level
+    Zero.
+
+* Gordon: Is there a long-term goal to improve interoperability if
+  SYCL and OpenMP both layer on the unified runtime?
+
+  * aul: Yes.  Provides an opportunity to share the same abstractions.
+
+* Juan Fumero: Is the input always SPIR-V?  How will this work for
+  CUDA?  Could it be PTX IL instead?
+
+
 2022-6-9
 ========
 
@@ -11,7 +216,7 @@ Agenda
 .. list-table::
 
   * - Topic
-    - Title
+    - Presenter
     - Time
   * - `Intro about Level Zero TAB & Roadmap`_
     - Paul Petersen, Intel
