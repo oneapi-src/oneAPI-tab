@@ -63,7 +63,7 @@ Attendees
 Level Zero v1.5
 ---------------
 
-`Slides <presentations/Level-Zero-Spec-v1.5.pptx>`__
+`Slides <presentations/Level-Zero-Spec-v1.5.pdf>`__
 
 * Reviewing Public Issues for Level Zero v1.5
 * Top issue: #7, improving the interaction of sysman and the core
@@ -275,7 +275,7 @@ Attendees
 Intro about Level Zero TAB & Roadmap
 ------------------------------------
 
-`Slides <presentations/l0-tab-intro.pptx>`__
+`Slides <presentations/l0-tab-intro.pdf>`__
 
 .. notes for the topic
 
@@ -300,7 +300,7 @@ Intro about Level Zero TAB & Roadmap
 Level Zero Specification & How to Participate
 ---------------------------------------------
 
-`Slides <presentations/22ww24_LevelZeroSpec_TAB.pptx>`__
+`Slides <presentations/22ww24_LevelZeroSpec_TAB.pdf>`__
 
 - Spec.1.4 has been published in May
 - Starting with Level Zero spec. v1.5.
@@ -322,7 +322,7 @@ Level Zero Specification & How to Participate
 Discussion Topic:  Separation of Sysman from core Level Zero APIs
 -----------------------------------------------------------------
 
-`Slides <presentations/22ww24_Sysman_TAB.pptx>`__
+`Slides <presentations/22ww24_Sysman_TAB.pdfx>`__
 
 - Currently LZ Sysman is tightly coupled to LZ Core APIs, a problem is
   that it's unclear who should enable Sysman, and how and when.
