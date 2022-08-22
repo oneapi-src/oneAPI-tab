@@ -322,7 +322,7 @@ Level Zero Specification & How to Participate
 Discussion Topic:  Separation of Sysman from core Level Zero APIs
 -----------------------------------------------------------------
 
-`Slides <presentations/22ww24_Sysman_TAB.pdfx>`__
+`Slides <presentations/22ww24_Sysman_TAB.pdf>`__
 
 - Currently LZ Sysman is tightly coupled to LZ Core APIs, a problem is
   that it's unclear who should enable Sysman, and how and when.
