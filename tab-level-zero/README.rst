@@ -43,12 +43,6 @@ Attendees:
 - Cheol Kim, Intel
 - Tim Besard, Julia Computing
 
-oneAPI community direction sharing:
-•	Rod gave a heads-up on new open-governance oneAPI community that will be structured with steering committee and working group.  It will be announced by end of Sep.
-•	oneAPI Initiative will be evolved into this new community where the participants will propose to change the specs, etc.  
-•	Will continue to work with existing TAB members in working groups.
-•	Appreciate any feedback from the TAB members.  More details will be communicated accordingly.
-
 Unified Runtime Direction Discussion
 •	Problem statement: all-to-all connection between language runtimes and driver backends.
 •	Pros and Cons for each approach:
