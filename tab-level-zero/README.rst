@@ -2,6 +2,101 @@
 Level Zero Technical Advisory Board Meeting Meeting Notes
 =========================================================
 
+2022-9-15
+=========
+
+Agenda
+------
+•	oneAPI community direction sharing (Rod Burns, Codeplay)
+•	Unified Runtime direction discussion (Mike Voss, Intel)
+•	Wrap-up
+
+Attendees:
+---------
+- Ben Ashbaugh, Intel
+- Jaime Arteaga Molina, Intel
+- Kenneth Benzie (Benie), Codeplay
+- Ronan Keryell, Xilinx Labs
+- Maria Garzaran, Intel
+- Xinmin Tian, Intel
+- Mike Voss, Intel
+- Rod Burns, Codeplay
+- Juan Fumero, Univ. of Manchester
+- Paul Petersen, Intel
+- Neil Spruit, Intel
+- Jianxin Xiong, Intel
+- Alison Richards, Intel
+- Jatin Chaudhary, Codeplay
+- Gordon Brown, Codeplay
+- Sergey Maslov, Intel
+- Servesh Muralidharan, Argonne
+- Brice Videau, Argonne
+- Jack Frankland, Codeplay
+- Alex Wells, Intel
+- Gregory Lueck, Intel
+- Alexia Ingerson, Intel
+- Paulius Velesko, Argonne
+- Pekka Jaaskelainen, Intel
+- Romain Dolbeau, SiPearl
+- Brandon Yates, Intel
+- Kevin Harms, Argonne
+- Cheol Kim, Intel
+- Tim Besard, Julia Computing
+
+oneAPI community direction sharing:
+•	Rod gave a heads-up on new open-governance oneAPI community that will be structured with steering committee and working group.  It will be announced by end of Sep.
+•	oneAPI Initiative will be evolved into this new community where the participants will propose to change the specs, etc.  
+•	Will continue to work with existing TAB members in working groups.
+•	Appreciate any feedback from the TAB members.  More details will be communicated accordingly.
+
+Unified Runtime Direction Discussion
+•	Problem statement: all-to-all connection between language runtimes and driver backends.
+•	Pros and Cons for each approach:
+     o	Unified Runtime as an Independent API
+          -	Can more quickly and flexibly evolve
+          -	Existing oneAPI SYCL plugins can easily be moved from PI to UR
+          -	Can ignore features not needed by oneAPI apps and middleware
+          -	There is no existing community, cannot leverage mature spec.
+          -	Likely perceived as not as open
+     o	Unified Runtime as OpenCL 3.0 Subset plus Extensions
+          -	Perceived as more open, many OpenCL drivers that we can leverage
+          -	Can leverage existing community and spec. as well as directly leverage existing OpenCL drivers
+          -	Will likely need differential spec and fork of CTS
+          -	Would bring in potentially unnecessary features
+          -	Process might be longer as the community is not small.  OpenCL3.0 – need to evolve the standard in its community
+          -	Difficult to build on top of native APIs such as CUDA in a way that is conformant with OpenCL to specification
+     o	Brice:
+          -	Lack of interop and access to native backends is not a real issue but a simple extension to write.  There would be no problem starting as a vendor             extension and then moving through the process.  Would also benefit other layered implementations such as those from POCL or layering over Vulkan,               Metal, …
+          -	Looking at the current draft of the Unified Runtime, pretty much the entire OpenCL spec is already there.
+          -	Some implementations may not be conformant?  Defer to POCL.  But even if it's not conformant on all devices may not be a show-stopper, doesn't need             to be a goal.  Non-conformance can be measured by the CTS suite so we will know what is and is not conformant.
+          -	Real question: Do you need to evolve the OpenCL specification in a significant way?  If so, this would be good feedback into the OpenCL working                 group.  Already being discussed for other layering.
+     o	Paul:
+          -	We can’t just focus on functionality, but also need to think about performance with application with native backend – a goal is not to lose the                 overhead through a Unified Runtime.
+          -	Mike: Do we have differences in the execution model between e.g. OpenCL and CUDA?  Examples: events.
+          -	Pekka: Echoed a lot of what Brice said.  OpenCL implementation would involve exposing OpenCL layer to upper layer; categorizing the extension as               OpenCL 3.0 mandatory to support upper layer.  OpenCL performance test should be required as well.
+     o	Ronan: 
+          -	Do we have a problem of supporting all of the features we want through OpenCL?  What about e.g. USM?
+          -	Pekka: This is why we have extensions.  Ideally we are at least functional via standard features and only need extensions to go faster, but we may             need required extensions at least for now.
+          -	Ronan: You should give this presentation at the Khronos OpenCL f2f!  Good feedback to the OpenCL community.
+          -	Pekka said that it’d be a truly open standard approach...agreed with Ronan.
+     o	Gordon:
+          -	Many differences can be resolved with extensions, but not all.  Sometimes there are design choice difference vs. omissions.  Example: Images,                   Contexts, Events
+          -	CUDA has a different way to map the images (1 to 1 mapping if you will) and handle events…quite different execution models.  Might cause some                   performance issue.
+     o	Benie:
+          -	If there is an application that has a lot of CUDA code already and wants to move to oneAPI you really want a way to migrate to oneAPI that enables             reusing a lot of the existing CUDA code.  This implies that you do not want to build upon the native NVIDIA OpenCL driver, which does not layer on             top of CUDA (that we know of).
+     o	Juan Fumero:
+          -	How does Level Zero fit into this?
+          -	Answer: Level Zero will still exist.
+          -	Concern: Not only for native applications, also for managed runtime applications: python, java, julia, etc.  Need OpenCL to catch up with function             pointers, unified memory, etc.  Would be good to enumerate which extensions are needed to close gaps.
+          -	Brice: Not sure what the concern is?  The OpenCL language to describe kernels, or the runtime APIs?  We still need more discussion around the                   concern.
+          -	Juan What about the functionality that OpenCL offers?  Things like garbage collection.  Level Zero solves some of the problems.
+     o	Kevin Harms:
+          -	Rather than looking at pros and cons, it might be better to go back to original goal/objective.  Outline/objective should be clear.  OpenCL 3.0 is             a good fit or not…then we should discuss why and why not.  Would be good to be back to basic.  Not going to argue for one vs. the other, more                   trying to outline a decision process.
+     o	Wrap-up:
+          -	Agreed to looking for the opportunity to communicate with Khronos OpenCL WG and making sure to have a better idea on what we should do.
+          -	Agreed to discuss more on the Unified Runtime direction at the next TAB meeting.
+
+
 2022-8-18
 =========
 
