@@ -9,6 +9,102 @@ Upcoming Topics
 * Function pointers revisited
 * [2nd half 2021] oneDPL C++ standard library support
 
+2022-09-28
+==========
+
+* Robert Cohn (Intel)
+* Alastair Murray
+* Aksel Simon Alpay (Heidelberg University)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest)
+* Ben Tracy
+* Christian Trott (Sandia National Laboratory)
+* Ewan Crawford
+* Michael Kinsner (Intel)
+* Geoff Lowney (Intel)
+* Mehdi Goli (Codeplay)
+* John Melonakos (ArrayFire)
+* John Pennycook (Intel)
+* Pablo Reble (Intel)
+* Rod Burns (Codeplay)
+* Roland Schulz (Intel)
+* Gergana Slavova (Intel)
+* Timmie Smith (Intel)
+* Mike Voss (Intel)
+
+Opens
+-----
+
+* Community Forum. Rod Burns
+
+  * Could it include openacc and other things, or just sycl?
+
+    * That is possible.
+
+  * Looking for feedback on what would make it useful. Will be
+    reaching out to invidividuals.
+
+  * How does it fit with Khronos?
+
+    * Separate from Khronos. SYCL is still managed by Khronos, but
+      other parts like math libraries.
+
+  * What would the language working group be if it is not sycl?
+
+    * Need to understand it.
+    * Language specification would take years. Are you building on top
+      of standard sycl or extensions?
+    * We are seeing problems now with dpcpp extensions that are not in
+      other implementations.
+    * Option 1
+
+      * oneapi model. close to sycl, but not sycl
+      * no extensions to sycl.
+
+  * What is the mandate/scope? Must work everywhere? What about
+    hardware differences? Kokkos makes everything works everywhere,
+    and tries to take advantage of hardware where possible.
+
+  * What if Intel develops new features and wants to expose it?
+
+  * Will there be specifications before implementations?
+
+Sycl Graphs
+-----------
+
+* Break submit into 2 parts: definition & execution
+* Reduction in overhead
+* Explicit API vs Record & Replay
+* Resolving differences between intel/codeplay proposals
+* Explicit API
+
+  * Q & A
+  * Issues with edges
+
+    * You can create invalid graphs. Why not inline with
+      senders/receivers? Prevents you from creating invalid graphs.
+    * You can always build that on top of node/edge.
+
+  * sycl queue already builds a task graph, why a different API?
+
+    * limitations in what can be expressed. Follow up with examples.
+
+* Record & replay
+
+  * node is a command-group submission, edge is dependency
+  * Whole graph update
+
+    * Update graph with buffers
+
+  * Q & A
+
+    * Do you error out if someone waits on queue during record.
+    * What is lifetime management of buffer objects created during record?
+
+      * Graph extends lifetime of buffer
+
+    * Compared to cuda, like having object that can be queried
+
+
 2022-07-27
 ==========
 
