@@ -1,0 +1,142 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2022-09-21
+==========
+
+Materials:
+
+* `Device APIs for BLAS <../presentations/2022-09-21_Slides.pdf>`__
+
+Attendees:
+
+* Hartwig Anzt (UTK, KIT)
+* Rod Burns (Codeplay)
+* Peter Caday (Intel)
+* Terry Cojean (KIT)
+* Harshitha Gunalan (Intel)
+* Louise Huot (Intel)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Ye Luo (ANL)
+* Piotr Luszczek (UTK)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Device APIs for BLAS - Peter Caday
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* Some new and upcoming support in the open source oneMKL interfaces.
+
+oneAPI open governance model:
+
+* Rod Burns from Codeplay has been working quite closely with SYCL community for the last few years, engaging and supporting people. oneMKL TAB members may have seen from recent email that his new job is to lead oneAPI initiative toward a more open approach: more contributions from outside of Intel, more vibrant discussions on specification and open source projects.
+
+* Slide 4 gives a summary of changes that are or are not happening.
+* Previously community can give feedback on specification elements, now moving to community driving the spec and where it is free to become a member (previously it was more of an invite-only group).
+* No major changes for open source; the open source repositories are actively taking contributions.
+* We would like to make it easier for people to make their own contributions - feedback here is appreciated.
+* Open governance - chairperson is Rod Burns to start - people sit on committees to make contributions. The TABs were invite only, but the Working Group will be more open to anyone.
+* We want to start having more open discussion channels for people to communicate outside these meetings.
+* Slide 5 gives the proposed structure at the moment. Rod needs to understand who should be in other positions. Robert Cohn from Intel will continue working as specification editor.
+* Nothing is changing in the short term, but in longer term we want to have a more open process for working groups, who would update spec, organize regular meetings.
+* We wanted to give you a heads up before the announcement is made. We are keen to get performance input, feedback, how we can put things together for the benefit of everyone.
+
+Is there a total size in mind for the different groups?
+
+* Not yet. One of the things we need to do is define how groups are going to work on different things. Different groups are doing different things, so we need a structure in place to allow these different things (looking at spec, technical discussion).
+* We still need to work out the voting, so we don't expect to be voting on anything totally soon.
+* The concern from the oneMKL TAB is that how the rules are formed, for instance if half the people are required to vote, may impact this structure.
+* We will be publishing an initial governance document that outlines an initial proposal for how some of these things would work. We can start off with a set of governance and see how that works.
+
+Device-side APIs for BLAS:
+
+* This is a complicated topic. There are lots of requests from different quarters: users who want to call BLAS not from host-side but from their own DPC++ kernels. They may want to do a GEMM or AXPY from their own kernels and have them all fused together.
+* The current model is all host-side driven, where there is no fine-grained interleaving of BLAS kernels with other code.
+* Common BLAS routines are listed, but please provide input on any others that may be helpful.
+
+4 major issues:
+
+* Execution scope: is it just the calling item, or is it a cooperative operation? Unless problem is very small, you typically want multiple work-items working together.
+* Data storage: how to store these matrices and vectors? In standard BLAS, they are stored in memory with pointers. Here, we are talking about potentially very small routines (e.g., 4x7 matrix-vector multiplication), where the cost of moving data to memory and back can be very expensive, so we need to think carefully where they are stored. It could be in registers or local memory to avoid having to go out.
+* Performance portability: want functional portability as a basic starting point, but it should not be too difficult for users to write a kernel that works well on multiple platforms with perhaps some small tweaks.
+* C++ standardization: want to be aligned with P1673 efforts.
+
+Do you have more details about P1673 alignment?
+
+* The scope is not to implement a full P1673 implementation on the device. This would be selective routines, and we would want to only allow a certain subset of layouts, for instance. There are potentially some places where P1673 doesn't have enough flexibility for what's needed for performance.
+
+Execution and Data:
+
+* From the user's perspective, which work-items are involved depends on how much work there is to do. You don't want to run out of registers, and you also need vectorization. So generally you want subgroup or larger, so it maps onto a standard SIMD implementation of BLAS.
+* You can go further and have a whole workgroup working together. Workgroup provides coherency in terms of NUMA-hierarchy of a device and allows shared memory.
+* Finally, you could have a global scope where all work items participate. This is a pretty important use case, especially in deep learning and machine learning, where someone wants to do a gemm-like operation with post-processing (e.g., fusing element-wise operations like ReLU after the gemm).
+* Data storage, where the matrices and vectors live, is linked to the execution scope.
+* If the execution scope is small, data can be kept in private memory (registers).
+* Workgroup and smaller can do local memory.
+* For global execution scope, you need to use global memory pointers.
+
+SYCL 2.2 introduces things like nested in-order parallelism. Will you take that in account?
+
+* We hadn't thought about nested parallelism but will take the AR to look at that.
+
+API Examples:
+
+* Some examples of what APIs might look like are shown; this is just a proposal, so modifications you'd like to suggest are appreciated. We are putting aside question of data storage for now, and assuming we have some such abstractions.
+* A per-work-item API (simplest case, no cooperation among work items): may look like standard BLAS in terms of naming ("gemm"). Since we need to extract our matrices/vectors regardless of where they live, assume we have some types that hold the matrices including the layout and sizes. Thinking of these as mdspans (hopefully in C++23), then all that info would be encoded in the mdspan. Given that, the only parameters left are the alpha/beta scaling parameters.
+* Looking to the future, what that would look like in P1673: pretty similar, but more illustrative names ("matrix_product"). For P1673, we have an execution policy - this would be how we could specify the execution scope of the operation. Here we just used sequenced_policy as a marker that from the point of view of the work item, this is a sequential operation with no other items involved.
+* All APIs are designed to be synchronous.
+
+In terms of these two API proposals we have here, any feedback on whether it makes sense to do one or both of the APIs is welcome.
+
+* The oneMKL TAB recommends to pursue P1673-style APIs for per-work-item, to avoid mixing metaphors from different sources.
+* There is also some interest in providing a BLAS-like naming scheme as well.
+
+Subgroup/Workgroup cooperative APIs:
+
+* For BLAS-like APIs, the pattern in SYCL is to have a Group parameter added for operations in which the whole group is involved cooperatively. So just tack on to the beginning of the parameter list the Group G, so it has all the info needed to do a successful cooperative operation.
+* In P1673, the execution policy is the available customization point. The P1673 API will work, but it's stretching the meaning of an execution policy a bit. We still need SYCL objects (subgroup or group), so the Policy would need to be a wrapper around them.
+* Whatever parallelism or vectorization is happening in the Policy is happening in the implementation. But here it's different - all of the work items have already been spawned, and all are calling the same routine with a policy saying we're all in this together and will cooperate.
+
+There are people from Nvidia on P1673 as well. Any discussion about running GEMM on GPU or what they envision for long-term support on their product?
+
+* cuBLAS did have device-side BLAS support for some time, but believe it was discontinued in cuBLAS 10 or so. It's possible that the API wasn't designed in such a way to provide high performance for a large number of use cases.
+* The tensor library CUTLASS is at global scope.
+
+Global cooperative APIs:
+
+* All work-items are involved.
+* The APIs are not much different from previous slide. For BLAS-like, there's no Group. There's an nd_item that tells the implementation which work-item this is.
+* For P1673, we'd have a corresponding policy for this.
+* We have one additional requirement: what size of nd_range the user should use for their dispatch. The application is someone wants to do a gemm or other BLAS operation with some customization of their own thrown in. Our job is to provide the core gemm operation, but for performance reasons, we want to ensure we have the right number of work-items involved. The user wouldn't know this, so we would provide a query for a recommended nd_range for a particular problem size. gemm_optimal_range is just a placeholder name for this.
+* For the query, matrices don't have to exist, but we need info about transpose/layout/sizes. Based on that, we can recommend the optimal nd_range - this is a hint for performance. The APIs must always be functionally correct, regardless of the nd_range, but performance could be bad if the user chooses badly.
+
+Why is the nd_range query needed?
+
+* Suppose the user is preparing to launch a kernel (device-side API) where they are doing a global cooperative gemm of size 200x300x400. There is a bit of a complicated interaction because each side (user and oneMKL) has information the other doesn't have, and we need to communicate for good performance.
+
+Data Storage:
+
+* 2 options here: in-memory matrices/vectors and in-register matrices/vectors.
+* In-memory would have non-owning semantics, like we'd expect from a BLAS-like API.
+* Natural candidate is mdspan. The goal is not to support any mdspan, but to define an allowed subset of mdspan inputs, for certain element types, layouts, extents.
+* The default accessor would work fine. We might need or want a sycl::multi_ptr based accessor so we can do something differently if data is in local memory versus global memory. If we get a decorated pointer with the address space along with it, we can make the queries and dispatch appropriately.
+* In-register data storage is the tricky one. An optimal implementation really depends on the architecture.
+* We also need to consider joint storage for sub-groups. Unless the matrix is very small, we want to vectorize over rows/columns of the output matrix. We can only do that efficiently if data is set up to allow that vectorization. We would need sub-group joint storage, which means that the matrix object we're writing is mapping to some collection of vector registers.
+* A scalar will be widened to a vector quantity at compile time.
+* Ideally we would use the owning variant of mdspan, known as mdarray, for that purpose. Things need to be fixed size for registers. There is no way of making a C++ container that splits its data across different work-items - can't get a pointer to index across other work-items' data.
+* As an alternative, could have dedicated types for in-register matrices and vectors. The restriction that allows us to implement these more efficiently is that they don't allow pointer/iterator access to data. We'd also allow the definition of the matrix type to depend on the device it's being compiled for. The actual definition that's chosen, if we're tricky, can be chosen after the device is known.
+* Also could have a joint_matrix type that encapsulates a matrix and is shared by all work-items of a subgroup. Logically speaking, all see the same data, all have access to the same matrix. It looks like a normal matrix in vector registers.
+
+Was there a specific request for in-register support?
+
+* No specific request, but the kind of use cases we get requests for would require this to avoid high performance penalty. On the CPU, it might not be a big issue, but on the GPU we incur a lot of overhead if we have to move things out of registers and back in. If the output of the GEMM call is then being post-processed by the user, in-register support would be useful.
+
+We will continue discussing at another meeting.
