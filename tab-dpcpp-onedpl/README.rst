@@ -3,7 +3,7 @@ oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
 ======================================================================
 
 Potential Topics
-===============
+================
 
 * Error handling
 * Function pointers revisited
@@ -37,14 +37,16 @@ Potential Topics
 oneAPI open governance: Rod Burns
 ---------------------------------
 
-* `Slides <presentations/oneapi%20community%20forum%20governance%20Sept%202022.pdf>`__
+* `Governance slides`_
 
-* What’s the change? oneAPI is shifting to open governance, 
-  establishing a steering committee. Rod Burns from Codeplay to lead the 
-  Steering Committee.
-  
-  * Looking for feedback on what would changes will make this new forum
-    more useful. Will be reaching out to individuals.
+.. _`Governance slides`: presentations/oneapi%20community%20forum%20governance%20Sept%202022.pdf
+
+* What’s the change? oneAPI is shifting to open governance,
+  establishing a steering committee. Rod Burns from Codeplay to lead
+  the Steering Committee.
+
+  * Looking for feedback on what would changes will make this new
+    forum more useful. Will be reaching out to individuals.
 
 * Could it include OpenACC and other things, or just SYCL?
 
@@ -53,81 +55,92 @@ oneAPI open governance: Rod Burns
 * How does it fit with Khronos?
 
   * Separate from Khronos. SYCL is still managed by Khronos.
-  * Recommend not to separate the SYCL ecosystem from Khronos – agreed.
-    Basically need to work out how the oneAPI forum works in relation to 
-    the DPC++ implementation of SYCL and the Khronos forum.
+  * Recommend not to separate the SYCL ecosystem from Khronos –
+    agreed.  Basically need to work out how the oneAPI forum works in
+    relation to the DPC++ implementation of SYCL and the Khronos
+    forum.
   * Khronos does not manage anything beyond the language while this
-    forum will encompass libraries and other domain-specific interfaces.
+    forum will encompass libraries and other domain-specific
+    interfaces.
 
-* What would the language working group be if it is not sycl? Do we need it?
+* What would the language working group be if it is not sycl? Do we
+  need it?
 
-  * Need to define the working model – the working group should define it
-  * Language specification would take years. Need to decide: are we building 
-    on top of SYCL or as an extension of SYCL. For example, some SYCL 2020 
-    features do not work for the broader use cases (e.g. client codes) because 
-    they were not considered in the initial proposals that got accepted.
+  * Need to define the working model – the working group should define
+    it
+  * Language specification would take years. Need to decide: are we
+    building on top of SYCL or as an extension of SYCL. For example,
+    some SYCL 2020 features do not work for the broader use cases
+    (e.g. client codes) because they were not considered in the
+    initial proposals that got accepted.
   * Comes down to 2 options:
 
-    * Option 1: oneAPI programming model is close to SYCL but not exactly SYCL
-    * Option 2: Nothing in oneAPI will require extensions that are not standardized
-    
-  * What about the other working groups (e.g. math libs)?
-  
-    * Majority of libs are dispatch libs or cover small subset of SYCL so do not 
-      expect to introduce non-compatible extensions.
-    * Exception is oneDPL today. But long-term goal for oneDPL is to be fully 
-      SYCL 2020 compliant – team is working towards it.
+    * Option 1: oneAPI programming model is close to SYCL but not
+      exactly SYCL
+    * Option 2: Nothing in oneAPI will require extensions that are not
+      standardized
 
-* What is the mandate/scope? Must work everywhere? What about
-  hardware differences?
-  
-  * Kokkos makes everything works everywhere,
-    and tries to take advantage of hardware where possible.
-  * OpenMP excludes certain HW-specific features from the main standard – those 
-    will be enabled through vendor-specific optimizations
-  * For the oneAPI forum, want it to work everywhere. Extensions should allow for 
-    specific HW. Ultimately, we want processor vendors to adopt these interfaces & 
-    open-source implementations.
+  * What about the other working groups (e.g. math libs)?
+
+    * Majority of libs are dispatch libs or cover small subset of SYCL
+      so do not expect to introduce non-compatible extensions.
+    * Exception is oneDPL today. But long-term goal for oneDPL is to
+      be fully SYCL 2020 compliant – team is working towards it.
+
+* What is the mandate/scope? Must work everywhere? What about hardware
+  differences?
+
+  * Kokkos makes everything works everywhere, and tries to take
+    advantage of hardware where possible.
+  * OpenMP excludes certain HW-specific features from the main
+    standard – those will be enabled through vendor-specific
+    optimizations
+  * For the oneAPI forum, want it to work everywhere. Extensions
+    should allow for specific HW. Ultimately, we want processor
+    vendors to adopt these interfaces & open-source implementations.
 
 * What if Intel develops new features and wants to expose it?
 
-  * In that case, Intel will propose an extension to oneAPI and implement it 
-    ahead of spec in the oneAPI products
-    
+  * In that case, Intel will propose an extension to oneAPI and
+    implement it ahead of spec in the oneAPI products
+
 * Will there be implementations before specification is defined?
 
-  * For example, OpenMP 5.0 defined the spec first with no implementations 
-    and now subsequent versions are fixing bugs because of it
-  * For Intel, we've decided not to release spec without implementation for the 
-    various oneAPI elements. Seems like that’s the direction of both Kokkos and Khronos.
-  * For the MPI forum, it alternates between spec meetings & implementations developed 
-    in between, which has worked well
-  * Ultimately, working groups will have to decide but extremely likely we’ll have to do 
-    implementations as spec is developed.
+  * For example, OpenMP 5.0 defined the spec first with no
+    implementations and now subsequent versions are fixing bugs
+    because of it
+  * For Intel, we've decided not to release spec without
+    implementation for the various oneAPI elements. Seems like that’s
+    the direction of both Kokkos and Khronos.
+  * For the MPI forum, it alternates between spec meetings &
+    implementations developed in between, which has worked well
+  * Ultimately, working groups will have to decide but extremely
+    likely we’ll have to do implementations as spec is developed.
 
     * The TAB was supportive of this direction
 
-* Rod will look to setup a smaller group discussion to gather more feedback offline
+* Rod will look to setup a smaller group discussion to gather more
+  feedback offline
 
 SYCL Graph Extensions: Ewan Crawford & Pablo Reble
 ---------------------------------------------------
 
 * `Slides <presentations/2022-09-28-TAB-SYCL-Graph.pdf>`__
-* What is it? Reusable task graph to reduce host overhead, 
+* What is it? Reusable task graph to reduce host overhead,
   good for small repetitive kernels
-  
+
   * Break submit into 2 parts: definition & execution
   * Reduction in overhead - even in simple examples (1Dheat),
     GPU is kept busy
-  
+
 * 2 modes: Explicit API vs Record & Replay
 
-  * Spec for both is public: 
+  * Spec for both is public:
     `Explicit API PR <https://github.com/intel/llvm/pull/5626>`__
     and
     `Record & Play PR <https://github.com/codeplaysoftware/standards-proposals/pull/135>`__
   * Both approaches are compatible in a single extension
-  
+
 * Explicit API
 
   * Issues with edges
@@ -146,15 +159,15 @@ SYCL Graph Extensions: Ewan Crawford & Pablo Reble
   * Node is a command-group submission, edge is dependency
   * Whole graph update - update graph with buffers
   * Do you error out if someone waits on queue during record? No.
-  
+
     * TAB recommends some notification or timer
-    
+
   * Graph extends the lifetime of buffer objects created during record
-  * Compared to CUDA, like having object that can be queried. It's the 
+  * Compared to CUDA, like having object that can be queried. It's the
     safer choice.
 
 * Want to move towards having a single vendor extension that supports
-  both functionalities. Will work on resolving differences between Intel and 
+  both functionalities. Will work on resolving differences between Intel and
   Codeplay implementations.
 
 
