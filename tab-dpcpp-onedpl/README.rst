@@ -33,9 +33,10 @@ Potential Topics
 * Tom Deakin (University of Bristol)
 * Vasanth Tovinkere (Intel)
 
-Towards Alignment of Parallelism in SYCL & C++:Identifying and Closing
-the Gaps, John Pennycook
-------------------------
+Towards Alignment of Parallelism in SYCL & C++:Identifying and Closing the Gaps
+-------------------------------------------------------------------------------
+
+John Pennycook
 
 * `Slides <presentations/2022-10-26-TAB-parallelism.pdf>`__
 * Proposal for SYCL bug fixes and clarifications about concurrency:
