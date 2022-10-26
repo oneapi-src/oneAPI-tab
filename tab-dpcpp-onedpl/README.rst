@@ -9,6 +9,150 @@ Potential Topics
 * Function pointers revisited
 * oneDPL C++ standard library support
 
+2022-10-26
+==========
+
+* Robert Cohn (Intel)
+* Aksel Simon Alpay (Heidelberg University)
+* Andrew Lumsdaine (University of Washington, Pacific Northwest)
+* Antonio J. Peña (Barcelona Supercomputing Center)
+* Benjamin Brock (Intel)
+* James Brodman (Intel)
+* Gordon Brown (Codeplay)
+* Michael Kinsner (Intel)
+* Alexey Kukanov (Intel)
+* Geoff Lowney (Intel)
+* John Melonakos (Intel)
+* Nevin Liber (Argonne National Laboratory)
+* John Pennycook (Intel)
+* Pablo Reble (Intel)
+* James Reinders (Intel)
+* Romain Dobleau (SiPearl)
+* Timmie Smith (Intel)
+* Xinmin Tian (Intel)
+* Tom Deakin (University of Bristol)
+* Vasanth Tovinkere (Intel)
+
+Towards Alignment of Parallelism in SYCL & C++:Identifying and Closing
+the Gaps, John Pennycook
+------------------------
+
+* `Slides <presentations/2022-10-26-TAB-parallelism.pdf>`__
+* Proposal for SYCL bug fixes and clarifications about concurrency:
+  `PR300 <https://github.com/KhronosGroup/SYCL-Docs/pull/300>`__
+
+* Expressing concurrency/parallelism requirements in ISO C++
+
+  * threads and async
+  * execution policies
+  * p2300 schedulerss
+
+* Expressing requirements in SYCL
+
+  * parallel_for(sycl::rank, ...)
+
+    * all work items have weakly parallel forward progress guarantees
+
+  * parallel_for(sycl::nd_range, ...)
+
+    * above, with barriers
+
+  * no way to ask for stronger guarantees
+
+* Use cases: global synch via atomics
+
+  * arrive and wait
+
+    * barrier, 1 workers, barrier
+    * assumes
+
+      * non-leader does not starve leader
+
+* use case, sub-group specialization
+
+  * sync within sub-group of work-group
+
+* Towards an extension, hierarchy
+
+  * Host: host progress guarantee
+  * work-group: work-group progress guarantee
+  * sub-group
+  * work-item
+  * each thread blocks with forward progress delegation on its children
+
+* OpenCL 1.x
+
+  * at least one makes progress
+  * no guarantee for individuals, strengthen an invidivual, but not permanent
+
+* OpenCL 2.x
+
+  * sub-group are concurrent instead of weakly parallel
+  * at least one work item per subgroup must make progress
+
+* Backends
+
+  * precise mapping is device-specific
+  * eager vs lazy submission
+  * cooperative kernels
+  * mapping of hardware threads
+
+* Extension sketch
+
+  * Questions
+
+    * Guaranteees within a scope
+    * for all
+    * forward progress requirements of a specific kernel
+
+  * run-time queries and compile-time properties
+
+* Querying scoped guarantees
+
+  * runtime: device.get_info
+  * compile-time: launch kernel differently or fail to launch
+  * today it will fail if you need something that cannot be provided
+
+* Q & A
+
+  * Does number of subgroups/workgroups affect the query?
+
+    * Device queries return strongest requirement
+    * when there is a limit on number
+
+      * programmer attaches requirements to property
+      * exisiting queries e.g. largest number of workitems will
+        reflect requirement
+
+  * what about cooperative launch?
+
+    * programmer expresses need for barrier
+    * triggers cooperative launch
+
+  * lockstep (e.g. vector) seems stronger than weakly parallel
+
+    * providing a stronger guarantee cannot break
+    * programmer cannot assume lockstep
+    * people do assume lockstep, needs to be considered
+
+  * how will async be integrated with sycl queue & submit?
+
+    * tie forward progress to async semantics
+    * question about how it would affect offload
+    * events vs futures
+
+  * observability of parallelism vs weakly parallel
+
+    * important question on definition, Can I acquire a lock without
+      deadlock?
+
+
+
+
+
+
+
+
 2022-09-28
 ==========
 
