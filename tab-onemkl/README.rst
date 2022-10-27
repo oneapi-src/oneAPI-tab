@@ -26,3 +26,4 @@ Meeting notes:
 | `June 8, 2022 <minutes/2022_06_08_Minutes.rst>`__
 | `July 27, 2022 <minutes/2022_07_27_Minutes.rst>`__
 | `September 21, 2022 <minutes/2022_09_21_Minutes.rst>`__
+| `October 5, 2022 <minutes/2022_10_05_Minutes.rst>`__
