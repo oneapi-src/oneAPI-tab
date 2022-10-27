@@ -1,0 +1,111 @@
+=============================================
+oneMKL Technical Advisory Board Meeting Notes
+=============================================
+
+2022-10-05
+==========
+
+Materials:
+
+* `Device APIs for BLAS <../presentations/2022-10-05_Slides.pdf>`__
+
+Attendees:
+
+* Hartwig Anzt (UTK, KIT)
+* Rod Burns (Codeplay)
+* Peter Caday (Intel)
+* Terry Cojean (KIT)
+* Mehdi Goli (Codeplay)
+* Louise Huot (Intel)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Piotr Luszczek (UTK)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Device APIs for BLAS - Peter Caday
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* Additional compiler support for rocBLAS in the open source oneMKL interfaces project.
+* Intel Innovation 2022 content is available on-demand.
+* Intel® oneMKL 2022.2 was released.
+
+Re-cap of device-side APIs:
+
+* We want to add common BLAS routines that can be called from DPC++ kernels instead of from host-side.
+* Last time we talked about big issues that come with that and got some feedback on APIs.
+
+  * Execution scope - how many work-items are involved in the operation, one or multiple working together. Depending on the problem size, we may want anywhere from one work-item to the whole device to work together on a given BLAS call.
+  * Data storage - where we store the matrices and vectors.
+  * Performance portability and how it all relates to C++ standardization.
+
+* We looked at APIs that take matrix or vector objects where we wrap up conventional parameters (leading dimensions, transposes, sizes) into some matrix objects. If we are talking about a small gemm like size 8x8, many platforms without out-of-order execution (like GPUs) can't pay the cost of reading from memory, doing computations, and putting the results back into memory. The back-and-forth trips between memory and registers are too expensive.
+* We want to allow APIs to take both memory-resident and vector-resident matrices.
+
+* If we have matrix objects in memory, then mdspan (which is coming soon to C++) is a natural thing to use. It is also used in the P1673 proposal. It has all the flexibility and customization points we need to represent matrices/vectors in memory with the flexibility we are accustomed to in BLAS, and there is no performance overhead because it is a view of existing memory.
+
+Tackling the In-Register Data Storage:
+
+* This is where we left off. There are a lot of tricky aspects here.
+* The user has these matrix objects in their code and we intend that the compiler puts those into registers. But the optimal layout of data and how it is implemented in C++ is heavily dependent on the architecture.
+* On CPU, the data type may need to have some vector registers for memory, so the matrix object may have __mm512 or __mm256 inside or whatever the appropriate vector type would be.
+* On GPU, we need to consider the implicit widening that happens for most DPC++ backends. If a variable is declared in a standard SYCL kernel, the backend compiler will likely implement that by widening it to a vector register.
+* There are a lot of things to consider in an implementation, with a lot of them being architecture/backend dependent.
+* Ideally, we would like to use mdarray (the owning counterpart of mdspan) - but as it stands, it is not flexible enough to address all our needs. The data container needs to be able to have a pointer to it and iterate through it. If I want to share this matrix object across a whole subgroup, it would be mapping one group of execution to SIMD hardware. If that's how my matrix is being stored, it's not something I can express with C++ containers.
+* All of this drives us to needing to define our own types for this purpose, or we would need some serious upgrades to mdarray.
+
+This is a difficult optimization problem as depending on the architecture, you want to know how many registers you have and how many resources to use.
+
+* This partly goes back to performance portability and the example of a user writing a kernel with some pre- or post-processing attached to GEMM. In a traditional GEMM implementation, each of the threads would be doing a fixed-size tile of the C matrix, slicing in m and n dimensions, keeping the C matrix in registers, accumulating slices of A and B. Because the tile size is intended to be stored in registers, it is architecture dependent. On the user side, if they want to write this code in their kernels, they need to take on these considerations as well. We can offer them APIs to do the GEMM operation themselves, but they still need to consider their tile size.
+* Typical C++ solution: let's make tile size a template parameter for this, and the user would need to select the right tile size for the architectures they care about. We could provide some queries that help them in their tasks.
+* In addition to how much register space you have, another architecture dependent consideration is how to pad a matrix. Suppose you have a 9x7 matrix; how do you want to put that in registers? If the vector registers are 4 elements long, you may want to add 3 elements of padding, to get length 12. But if vectors are 8 elements long, then you may not want to add an extra 7 elements of padding. All of this really depends on vector length.
+
+Does this need to be exposed to the users? While we need to do these optimizations for efficient GEMM, is this something we also want to show the users? Having something all-encompassing would be helpful.
+
+* This is definitely intended for a power-user API. It's for people wanting to put in the work to get extra performance, but we can meet them halfway.
+* There are libraries like CUTLASS where the user is exposed to finer details of the implementation. You can put some work in to get good performance. You're targeting specific optimizations. How much you need to think about this will depend on the level of cooperation you need between work items.
+* The most complicated consideration, where the user needs to do the most work, is in the middle. For small stuff that needs just one work-item, there is not really anything for user to consider. On the other end of the scale, if all work-items are working together, the user is dealing with global memory (only memory storage type common to all work-items), and this looks a lot like regular BLAS calls. Queries can help choose the right number of work-items to launch, and the rest happens under the hood. So users do not need to worry about tile sizes/blocking sizes. But where they do need to worry about that and register space is for the in-between sizes, where they have a sub-group working together. Many users may say it's too complicated for me to get good performance, and that's totally fine. Most users may not want to do that level of cooperation and detail. However, because you need to use those anyway to implement the larger cooperative operations (eventually you will break them down into smaller ones), it sort of comes for free in a sense.
+
+* The oneMKL TAB agrees that it looks like you can create something, but creating a nice-looking solution will take some iterations, at least for the complex cases. They suggest to consider restricting the first version to simple cases or abstracting what oneMKL has.
+* In terms of the oneMKL specification, it makes sense to have an initial version restricted just to in-memory data storage, to avoid all these complications and give time to see if in-register data storage is helpful enough and turns out to be useful in a wide-enough scope.
+
+What is the difference between in-register matrix type and the joint_matrix that SYCL already provides?
+
+* DPC++ now has a joint_matrix type that is aimed at systolic arrays that are in lots of modern hardware for accelerating gemm-like operations: tensor cores, AMX in Intel CPUs, systolic arrays on GPUs. This joint_matrix type is provided as a way to gain access to this hardware. It is a fixed function that does very specific types and sizes. The joint_matrix is intended as a very restricted type that provides access to this hardware. But the matrix types here are considered to be higher-level types, which would work for any element type, and have sizes that aren't tied to hardware sizes. The matrix types also allow unrestricted element access.
+* The name joint_matrix in DPC++ is unfortunate because it's not really a matrix type at all. It's more of an analogue of WMMA types from Nvidia, that correspond to inputs/outputs of matrix acceleration hardware.
+
+Would it be possible to expand the joint_matrix, to be a super-set of that type?
+
+* There was a lot of discussion when we were working on the joint_matrix type as to what its scope should be. Overall direction was as limited scope as possible, for very specific cases, in order to get something out there so users can use matrix acceleration hardware with DPC++. We'll definitely want to consider how these are related.
+
+What in-register types might look like:
+
+* We had designed these in-register types as part of a separate library: LABB (Linear Algebra Building Blocks). These matrix and vector types are easy cross-platform building blocks for writing linear algebra kernels. Basic type here: fixed-size owning matrix, intended to be resident in registers (dependent on compiler); element type (float or double, real or complex, etc.); layout that can be specified or not.
+* The idea here is that unlike the DPC++ joint-matrix, this is a matrix object with the full set of capabilities that you need for most linear algebra kernels, including full subscripting and slicing, allowing arbitrary access to elements - but not pointer access.
+* labb::all is a tagging object (analog of : in Fortran/Matlab) to select a subset of rows or columns. Not important for this discussion, but LABB was designed for ease of use with operator overloading, making it easy to work with these objects in C++, and making the code easier to read. Other common operations (like transpose, broadcasting, row/column-wise reduction, conjugate real/imaginary parts, triangular operations) - would all be supported.
+* The idea is that if you want to allow users to provide matrices in registers, these can be your objects. We are trying to strike a balance between performance and usability. To get good performance when using these objects, you need to consider how data is laid out and get efficient vectorization.
+
+Subgroups and joint_matrix:
+
+* Unless matrices are very small, we want to vectorize across one of the dimensions of the matrix. Typically this means that for a SYCL kernel, we need the whole subgroup involved (SIMD execution). We need the matrix to be shared among all of the work-items in the subgroup.
+* A LABB joint_matrix is like the labb::matrix from last slide, but now is shared among the subgroup. All regular matrix operations are supported. The only new thing is that when you do an assignment or load/store involving a joint_matrix, all of the work-items in the subgroup must be executing that (converged control flow, in other words). Other than that, diverged control flow is allowed (e.g., reading from one work item).
+* If you were thinking of implementing this, there are a lot of complications under the surface. But the API tries to be clean here, and still get good performance.
+
+The oneMKL TAB feels that the API is pretty good and quite usable. What is the implementation cost?
+
+* We have a C++ implementation of a labb::matrix in standard C++ that is 500-1000 lines of code, with most of that making sure all the C++ is worked out.
+* For a vectorized implementation like joint_matrix, that's a bit more complicated, but still easily doable.
+* The implementation of these types, practically speaking, would all be header-based implementations with the compiler expected to completely unroll and inline them.
+
+None of this would be a run-time call. After the header is completely inlined and expanded, it would simply become code inserted inside user's kernel?
+
+* Correct. If I were to compile the kernel for some device and disassemble it, I wouldn't expect to see any subroutine calls.
+
+Summary:
+
+* The main idea here is that these labb types are helpful not only for device-side BLAS APIs, but as a useful thing to have around anyway when you're writing kernels, especially in SYCL where you're used to writing in SIMD fashion and need to think carefully how to express in SPMD model in terms of work-items.
+* This is quite a bit of extra API, and if you just want a device-side BLAS API that takes operands in memory, you don't need to worry about any of this and can just rely on mdspan for matrix/vector types, which makes sense as a starting point for both users and the specification.
