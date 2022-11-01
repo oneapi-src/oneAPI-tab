@@ -1,6 +1,9 @@
 ==============================================================
-oneAPI Technical Advisory Board Meeting (oneMKL) Meeting Notes
+oneAPI Community Forum Math SIG
 ==============================================================
+
+
+To find out how to join the Math SIG get in touch.
 
 Meeting notes:
 ==============

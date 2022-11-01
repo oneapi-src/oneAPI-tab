@@ -10,17 +10,19 @@ oneAPI Community Forum meetings.  The meetings are open and comprised
 of industry experts that help guide the oneAPI specification.  More 
 information on oneAPI can be found at `oneapi.com <https://oneapi.com>`__.
 
-The community is invited to join the conversation by reviewing
-the `oneAPI Specification <https://spec.oneapi.com>`__, as well as the
-notes/slides in this repo. Contributions can be made by joining the 
+The community is invited to join the meetings, review
+the `oneAPI Specification <https://spec.oneapi.com>`__, and read the 
+information in this repo. Contributions can be made by joining the 
 Special Interest Groups (SIGs) or by posting comments or questions as
 GitHub issues. General questions can go to this repo and issues
 specific to parts of the specification can go to the `Specification 
 repo<https://github.com/oneapi-src/oneapi-spec>`__.
 
 To be notified of new meeting notes, become a watcher of this repo. If
-you have a question about the SIGs, email `oneapi@codeplay.com
-<mailto:oneapi@codeplay.com>`__.
+you have a question about how to join the SIGs, email 
+`oneapi@codeplay.com<mailto:oneapi@codeplay.com>`__.
+
+Find out about the `oneAPI Community Forum governance <organization>`__
 
 oneAPI Community Forum Special Interest Groups (SIGs)
 -----------------------------------------------------
@@ -30,7 +32,7 @@ contributions to the oneAPI specification. They also act as a bridge
 between the community and developers working on implementations of 
 the oneAPI specification.
 
-**`Language <tab-dpcpp-onedpl>`__**
+* `Language <tab-dpcpp-onedpl>`__
 This group covers topics related to language implementations that 
 integrate with the oneAPI specification.
 
@@ -59,4 +61,4 @@ Upcoming oneAPI Community Forum Meetings
 | December 15th 2022, 9am US Central Time    | Hardware SIG     | Virtual           |
 +--------------------------------------------+------------------+-------------------+
 
-Find the minutes for prior meetings in the appropriate section of this repository.
+Find the minutes for prior meetings in the appropriate SIG section of this repository.

@@ -1,6 +1,11 @@
-======================================================================
-oneAPI Technical Advisory Board Meeting (DPC++ & oneDPL) Meeting Notes
-======================================================================
+===================================
+oneAPI Community Forum Language SIG
+===================================
+
+The Language SIG hosts discussions and presentations focused on 
+how to integrate a broad range of languages to support oneAPI.
+
+To find out how to join the Language SIG get in touch.
 
 Potential Topics
 ================

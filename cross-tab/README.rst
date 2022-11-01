@@ -1,5 +1,5 @@
 ================================================================
-oneAPI Technical Advisory Board Meeting (combined) Meeting Notes
+oneAPI Community Forum Combined Meeting Notes
 ================================================================
 
 2021-12-14

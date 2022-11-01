@@ -1,6 +1,11 @@
-=========================================================
-Level Zero Technical Advisory Board Meeting Meeting Notes
-=========================================================
+===================================
+oneAPI Community Forum Hardware SIG
+===================================
+
+The Hardware SIG hosts discussions and presentations focused on 
+how to enable a broad range of hardware architectures.
+
+To find out how to join the Hardware SIG get in touch.
 
 2022-9-15
 =========

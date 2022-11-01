@@ -1,6 +1,11 @@
-==============================================================
-oneAPI Technical Advisory Board Meeting (TAB-AI) Meeting Notes
-==============================================================
+===================================
+oneAPI Community Forum AI SIG
+===================================
+
+The AI SIG hosts discussions and presentations focused on 
+AI operations and interfaces.
+
+To find out how to join the AI SIG get in touch.
 
 2022-07-14
 ==========
