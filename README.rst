@@ -16,11 +16,11 @@ information in this repo. Contributions can be made by joining the
 Special Interest Groups (SIGs) or by posting comments or questions as
 GitHub issues. General questions can go to this repo and issues
 specific to parts of the specification can go to the `Specification 
-repo<https://github.com/oneapi-src/oneapi-spec>`__.
+repo <https://github.com/oneapi-src/oneapi-spec>`__.
 
 To be notified of new meeting notes, become a watcher of this repo. If
 you have a question about how to join the SIGs, email 
-`oneapi@codeplay.com<mailto:oneapi@codeplay.com>`__.
+`oneapi@codeplay.com <mailto:oneapi@codeplay.com>`__.
 
 Find out about the `oneAPI Community Forum governance <organization>`__
 
@@ -32,22 +32,20 @@ contributions to the oneAPI specification. They also act as a bridge
 between the community and developers working on implementations of 
 the oneAPI specification.
 
-* `Language <tab-dpcpp-onedpl>`__
-This group covers topics related to language implementations that 
-integrate with the oneAPI specification.
+* `Language <tab-dpcpp-onedpl>`__ - This group covers topics related 
+to language implementations that integrate with the oneAPI specification.
 
-* `Math <tab-onemkl>`__
-This groups covers topics related to math operations. 
+* `Math <tab-onemkl>`__ - This groups covers topics related to math 
+operations. 
 
-* `AI <tab-ai>`__
-This group covers topics related to AI operations.
+* `AI <tab-ai>`__ - This group covers topics related to AI operations.
 
-* `Hardware <tab-level-zero>`__
-This group covers topics related to the integration of hardware 
-and how this is defined in the oneAPI specification.
+* `Hardware <tab-level-zero>`__ - This group covers topics related to 
+the integration of hardware and how this is defined in the oneAPI 
+specification.
 
 Upcoming oneAPI Community Forum Meetings
--------------------------------
+----------------------------------------
 
 +--------------------------------------------+------------------+-------------------+
 | Date                                       | Meeting Type     | Location          |
