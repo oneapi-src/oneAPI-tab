@@ -1,0 +1,63 @@
+==================================
+ oneAPI Community Forum Governance
+==================================
+
+The oneAPI Community Forum aims to bring individuals and 
+organizations together to:
+
+* Define a standards-based, cross-architecture open specification 
+for accelerated computing
+* Foster open-source implementations of the specification
+
+The oneAPI Community Forum intends to use a light weight model 
+of governance to facilitate straightforward collaboration for 
+the oneAPI specification and the open source implementations.
+
+oneAPI Community Forum Policies
+-------------------------------
+
+The policies are documented on this page.
+
+oneAPI Community Forum Structure
+--------------------------------
+
+Diagram
+
+oneAPI Community Forum Steering Committee
+-----------------------------------------
+
+The Steering Committee is led by Rod Burns from Codeplay 
+Software and meets quarterly.
+
+The Steering Committee is responsible for leadership of the 
+forum, including these activities:
+
+* Agreeing and tracking annual goals for the oneAPI Community 
+Forum
+* Agreeing on the formation of new Working Groups and SIGs
+* Reviewing votes from the Working Groups
+* Owning and defining the IP framework for contributions
+* Ratifying new versions of the specification
+* Approving the plans from the Marketing Committee
+
+oneAPI Community Forum Special Interest Groups (SIGs)
+-----------------------------------------------------
+
+The SIGs exist to faciliate technical discussions that are 
+highly relevant to bring positive change to the oneAPI 
+specification and the implementations of these. 
+
+SIG activities include the following:
+
+* Open technical discussions relevant to specific technologies 
+and the oneAPI specification
+* Faciliating presentations and discussion and presentation of  
+proposals for specification changes or updates
+
+oneAPI Community Forum Working Groups
+-------------------------------------
+
+The oneAPI Community Forum Working Groups (WGs) exist to 
+facilitate modifications to the oneAPI specification.
+
+Working Groups will be formed in early 2023.
