@@ -32,17 +32,13 @@ contributions to the oneAPI specification. They also act as a bridge
 between the community and developers working on implementations of 
 the oneAPI specification.
 
-* `Language <tab-dpcpp-onedpl>`__ - This group covers topics related 
-to language implementations that integrate with the oneAPI specification.
+* `Language <tab-dpcpp-onedpl>`__ - This group covers topics related to language implementations that integrate with the oneAPI specification.
 
-* `Math <tab-onemkl>`__ - This groups covers topics related to math 
-operations. 
+* `Math <tab-onemkl>`__ - This groups covers topics related to math operations. 
 
 * `AI <tab-ai>`__ - This group covers topics related to AI operations.
 
-* `Hardware <tab-level-zero>`__ - This group covers topics related to 
-the integration of hardware and how this is defined in the oneAPI 
-specification.
+* `Hardware <tab-level-zero>`__ - This group covers topics related to the integration of hardware and how this is defined in the oneAPI specification.
 
 Upcoming oneAPI Community Forum Meetings
 ----------------------------------------
