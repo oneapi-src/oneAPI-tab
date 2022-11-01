@@ -22,7 +22,8 @@ To be notified of new meeting notes, become a watcher of this repo. If
 you have a question about how to join the SIGs, email 
 `oneapi@codeplay.com <mailto:oneapi@codeplay.com>`__.
 
-Find out about the `oneAPI Community Forum governance <organization>`__
+Find out about the `oneAPI Community Forum governance <organization>`__ 
+to understand the organization and processes.
 
 oneAPI Community Forum Special Interest Groups (SIGs)
 -----------------------------------------------------
