@@ -3,9 +3,16 @@ oneAPI Community Forum AI SIG
 ===================================
 
 The AI SIG hosts discussions and presentations focused on 
-AI operations and interfaces.
+AI operations and interfaces. The oneAPI specification 
+defines the oneDNN interface with building blocks for 
+deep learning applications and frameworks.
+
+The AI SIG is led by Alison Richards.
 
 To find out how to join the AI SIG get in touch.
+
+Meeting Notes
+=============
 
 2022-07-14
 ==========

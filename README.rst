@@ -10,6 +10,8 @@ oneAPI Community Forum meetings.  The meetings are open and comprised
 of industry experts that help guide the oneAPI specification.  More 
 information on oneAPI can be found at `oneapi.com <https://oneapi.com>`__.
 
+The policies and governance processes are also available on this repo.
+
 The community is invited to join the meetings, review
 the `oneAPI Specification <https://spec.oneapi.com>`__, and read the 
 information in this repo. Contributions can be made by joining the 

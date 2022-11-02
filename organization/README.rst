@@ -20,7 +20,9 @@ The policies are documented `on this page. <oneAPI-Policies.rst>`__
 oneAPI Community Forum Structure
 --------------------------------
 
-Diagram
+.. image:: oneAPI-Community-Forum-Structure.png
+  :width: 400
+  :alt: oneAPI Community Forum Structure
 
 oneAPI Community Forum Steering Committee
 -----------------------------------------
