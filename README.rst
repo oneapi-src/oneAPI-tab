@@ -18,7 +18,7 @@ of industry experts that help guide the oneAPI specification.
 The policies and governance processes are also available on this repo.
 
 The community is invited to join the meetings, review
-the `oneAPI Specification <https://spec.oneapi.com>`__, and read the 
+the `oneAPI Specification <https://spec.oneapi.io>`__, and read the 
 information in this repo. Contributions can be made by joining the 
 Special Interest Groups (SIGs) or by posting comments or questions as
 GitHub issues. General questions can go to this repo and issues
