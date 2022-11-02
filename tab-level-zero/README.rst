@@ -10,7 +10,7 @@ covered a new Unified Runtime proposal.
 
 The Hardware SIG is led by Cheol Kim.
 
-To find out how to join the Hardware SIG get in touch.
+To find out how to join the Hardware SIG `get in touch. <https://www.oneapi.io/community/>`__
 
 Meeting Notes
 =============

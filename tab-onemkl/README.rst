@@ -16,7 +16,7 @@ may also be discussed.
 
 The Math SIG is led by Sarah Knepper.
 
-To find out how to join the Math SIG get in touch.
+To find out how to join the Math SIG `get in touch. <https://www.oneapi.io/community/>`__
 
 Meeting notes:
 ==============

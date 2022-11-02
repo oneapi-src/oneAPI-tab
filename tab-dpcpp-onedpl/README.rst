@@ -11,7 +11,7 @@ specifications managed by ISO and Khronos.
 
 The language TAB is led by Gergana Slavova.
 
-To find out how to join the Language SIG get in touch.
+To find out how to join the Language SIG `get in touch. <https://www.oneapi.io/community/>`__
 
 Meeting Notes
 =============

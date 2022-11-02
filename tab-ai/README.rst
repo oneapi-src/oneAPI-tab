@@ -9,7 +9,7 @@ deep learning applications and frameworks.
 
 The AI SIG is led by Alison Richards.
 
-To find out how to join the AI SIG get in touch.
+To find out how to join the AI SIG `get in touch. <https://www.oneapi.io/community/>`__
 
 Meeting Notes
 =============
