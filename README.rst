@@ -9,7 +9,7 @@ The oneAPI Community Forum exists to define a standards-based,
 cross-architecture open specification for accelerated computing and 
 to foster the open-source implementations of the specification.
 
-More information can be found at `oneapi.com <https://oneapi.com>`__.
+More information can be found at `oneapi.com <https://oneapi.io>`__.
 
 This repository hosts notes and presentation materials from the
 oneAPI Community Forum meetings.  The meetings are open and comprised 
