@@ -5,8 +5,7 @@
 The oneAPI Community Forum aims to bring individuals and 
 organizations together to:
 
-* Define a standards-based, cross-architecture open specification 
-for accelerated computing
+* Define a standards-based, cross-architecture open specification for accelerated computing
 * Foster open-source implementations of the specification
 
 The oneAPI Community Forum intends to use a light weight model 
@@ -16,7 +15,7 @@ the oneAPI specification and the open source implementations.
 oneAPI Community Forum Policies
 -------------------------------
 
-The policies are documented on this page.
+The policies are documented `on this page. <oneAPI-Policies.rst>`__
 
 oneAPI Community Forum Structure
 --------------------------------
@@ -32,8 +31,7 @@ Software and meets quarterly.
 The Steering Committee is responsible for leadership of the 
 forum, including these activities:
 
-* Agreeing and tracking annual goals for the oneAPI Community 
-Forum
+* Agreeing and tracking annual goals for the oneAPI Community Forum
 * Agreeing on the formation of new Working Groups and SIGs
 * Reviewing votes from the Working Groups
 * Owning and defining the IP framework for contributions
@@ -49,10 +47,10 @@ specification and the implementations of these.
 
 SIG activities include the following:
 
-* Open technical discussions relevant to specific technologies 
-and the oneAPI specification
-* Faciliating presentations and discussion and presentation of  
-proposals for specification changes or updates
+* Open technical discussions relevant to specific technologies and the oneAPI specification
+* Faciliating presentations and discussion and presentation of proposals for specification changes or updates
+
+New SIGs can be proposed by members of the community.
 
 oneAPI Community Forum Working Groups
 -------------------------------------
@@ -60,4 +58,5 @@ oneAPI Community Forum Working Groups
 The oneAPI Community Forum Working Groups (WGs) exist to 
 facilitate modifications to the oneAPI specification.
 
-Working Groups will be formed in early 2023.
+Working Groups will be formed in early 2023. These can be 
+proposed by members of the oneAPI Community Forum SIGs.
