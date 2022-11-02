@@ -2,14 +2,15 @@
  oneAPI Community Forum Governance
 ==================================
 
-The oneAPI Community Forum aims to bring individuals and 
+The oneAPI Community Forum aims to bring individuals and
 organizations together to:
 
-* Define a standards-based, cross-architecture open specification for accelerated computing
+* Define a standards-based, cross-architecture open specification for
+  accelerated computing
 * Foster open-source implementations of the specification
 
-The oneAPI Community Forum intends to use a light weight model 
-of governance to facilitate straightforward collaboration for 
+The oneAPI Community Forum intends to use a light weight model
+of governance to facilitate straightforward collaboration for
 the oneAPI specification and the open source implementations.
 
 oneAPI Community Forum Policies
@@ -27,10 +28,10 @@ oneAPI Community Forum Structure
 oneAPI Community Forum Steering Committee
 -----------------------------------------
 
-The Steering Committee is led by Rod Burns from Codeplay 
+The Steering Committee is led by Rod Burns from Codeplay
 Software and meets quarterly.
 
-The Steering Committee is responsible for leadership of the 
+The Steering Committee is responsible for leadership of the
 forum, including these activities:
 
 * Agreeing and tracking annual goals for the oneAPI Community Forum
@@ -43,33 +44,35 @@ forum, including these activities:
 oneAPI Community Forum Special Interest Groups (SIGs)
 -----------------------------------------------------
 
-The SIGs exist to faciliate technical discussions that are 
-highly relevant to bring positive change to the oneAPI 
-specification and the implementations of these. 
+The SIGs exist to faciliate technical discussions that are
+highly relevant to bring positive change to the oneAPI
+specification and the implementations of these.
 
 SIG activities include the following:
 
-* Open technical discussions relevant to specific technologies and the oneAPI specification
-* Faciliating presentations and discussion and presentation of proposals for specification changes or updates
+* Open technical discussions relevant to specific technologies and the
+  oneAPI specification
+* Faciliating presentations and discussion and presentation of
+  proposals for specification changes or updates
 
 New SIGs can be proposed by members of the community.
 
 oneAPI Community Forum Working Groups
 -------------------------------------
 
-The oneAPI Community Forum Working Groups (WGs) exist to 
+The oneAPI Community Forum Working Groups (WGs) exist to
 facilitate modifications to the oneAPI specification.
 
-Working Groups will be formed in early 2023. These can be 
+Working Groups will be formed in early 2023. These can be
 proposed by members of the oneAPI Community Forum SIGs.
 
 oneAPI Community Forum Marketing Committee
 ------------------------------------------
 
-The Marketing Committee meetings are open to anyone. The 
-committee owns the definition and execution of the 
-marketing strategy, steers the content on the website, 
-coordinates event activities and coordinates marketing 
+The Marketing Committee meetings are open to anyone. The
+committee owns the definition and execution of the
+marketing strategy, steers the content on the website,
+coordinates event activities and coordinates marketing
 activities between the community.
 
 The Marketing Committee is led by Alison Richards.

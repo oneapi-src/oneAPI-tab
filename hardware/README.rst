@@ -2,10 +2,10 @@
 oneAPI Community Forum Hardware SIG
 ===================================
 
-The Hardware SIG hosts discussions and presentations focused on 
-how to enable a broad range of hardware architectures. The 
-oneAPI specification defines the "Level Zero" interface that 
-defines a hardware interface and recent discussions have also 
+The Hardware SIG hosts discussions and presentations focused on
+how to enable a broad range of hardware architectures. The
+oneAPI specification defines the "Level Zero" interface that
+defines a hardware interface and recent discussions have also
 covered a new Unified Runtime proposal.
 
 The Hardware SIG is led by Cheol Kim.
