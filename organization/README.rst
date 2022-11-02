@@ -62,3 +62,14 @@ facilitate modifications to the oneAPI specification.
 
 Working Groups will be formed in early 2023. These can be 
 proposed by members of the oneAPI Community Forum SIGs.
+
+oneAPI Community Forum Marketing Committee
+------------------------------------------
+
+The Marketing Committee meetings are open to anyone. The 
+committee owns the definition and execution of the 
+marketing strategy, steers the content on the website, 
+coordinates event activities and coordinates marketing 
+activities between the community.
+
+The Marketing Committee is led by Alison Richards.
