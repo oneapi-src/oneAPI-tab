@@ -21,7 +21,7 @@ oneAPI Community Forum Structure
 --------------------------------
 
 .. image:: oneAPI-Community-Forum-Structure.png
-  :width: 400
+  :width: 700
   :alt: oneAPI Community Forum Structure
 
 oneAPI Community Forum Steering Committee
