@@ -15,7 +15,7 @@ the oneAPI specification and the open source implementations.
 oneAPI Community Forum Policies
 -------------------------------
 
-The policies are documented `on this page. <oneAPI-Policies.rst>`__
+The current policies are documented `on this page. <oneAPI-Policies.rst>`__
 
 oneAPI Community Forum Structure
 --------------------------------
