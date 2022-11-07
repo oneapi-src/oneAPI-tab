@@ -13,8 +13,8 @@ More information can be found at oneapi.io_.
 
 This repository hosts notes and presentation materials from the
 oneAPI Community Forum meetings.  The meetings are open and comprised
-of experts from industry, government, and academia that help guide 
-the oneAPI specification.
+of experts from industry, government, and academia that help guide
+ the oneAPI specification.
 
 The policies and governance processes are also available on this repo.
 
