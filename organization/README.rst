@@ -11,7 +11,7 @@ organizations together to:
 
 The oneAPI Community Forum intends to use a light weight model
 of governance to facilitate straightforward collaboration for
-the oneAPI specification and the open source implementations.
+the oneAPI specification and open source implementations.
 
 oneAPI Community Forum Policies
 -------------------------------
