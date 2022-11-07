@@ -1,6 +1,20 @@
-==============================================================
-oneAPI Technical Advisory Board Meeting (TAB-AI) Meeting Notes
-==============================================================
+===================================
+oneAPI Community Forum AI SIG
+===================================
+
+The AI SIG hosts discussions and presentations focused on
+AI operations and interfaces. The oneAPI specification
+defines the oneDNN interface with building blocks for
+deep learning applications and frameworks.
+
+The AI SIG is led by Alison Richards.
+
+To find out how to join the AI SIG `get in touch`_.
+
+.. _`get in touch`: https://www.oneapi.io/community
+
+Meeting Notes
+=============
 
 2022-07-14
 ==========
@@ -20,7 +34,7 @@ Attendees
 Robert Cohn, Intel              Ramtin Davanlou, Accenture
 Mourad Gouciem, Intel           Rajeev Nalawadi, Intel
 Guolian Li,                     Tamir Guy, Intel
-Rahul Khanna, Intel             Andrew Chen, Vastai Tech 
+Rahul Khanna, Intel             Andrew Chen, Vastai Tech
 Cheol Kim, Intel                Jason Wang
 Jian Hui Li Intel               Mehdi Goli, Codeplay
 Penporn Koanantakool, Google    Tong Gu, Intel
@@ -85,11 +99,11 @@ oneDNN Graph API
 
   * 6 graph api classes: tensor, logical tensor, op, graph, partition, compiled partition.
   * share stream/engine with rest of onednn
-    
+
 * Framework integration
 
   * before graph api
-    
+
     * Framework integration needs to pattern match for oneDNN primitives
     * Each fused op needs to register to framework runtime and extend pattern matcher
 
@@ -104,19 +118,22 @@ oneDNN Graph API
   * Can change representation/types inside fused ops
 
 Q: Can graph be executed on multiple stream/engine
-A: Graph bound to a single stream
+
+   Graph bound to a single stream
 
 Q: What happens when oneDNN graph cannot support compilation
 A: Framework integration responsible for executing
 
 Q: How does this interact with framework graph rewrites?
-A: Expect that target independent rewrites are performed before oneDNN
+
+   Expect that target independent rewrites are performed before oneDNN
    graph. Difficult when framework performance fusions.
 
 Q: What happens when using CPU + nvidia GPU together? Can't use oneDNN
    for graph that will be executed on GPU. Need cost model to decide
    what to send to oneDNN graph
-A: Do per-device partition
+
+   Do per-device partition
 
 Future topics
 -------------
@@ -125,7 +142,8 @@ Suggestions for future from TAB members:
 
 Plans for Habana synapse API?
 
-Comparison of GPU vs CPU. Facilitating migration between CPU & GPU. What is well suited.
+Comparison of GPU vs CPU. Facilitating migration between CPU &
+GPU. What is well suited.
 
 Accenture open source reference kits for AI, using oneAPI components.
 
@@ -147,7 +165,7 @@ Attendees
 Radionov, Alexander, Intel          Khanna, Rahul, Intel
 Pavlyk, Oleksandr, Intel            Voss, Michael J, Intel
 Richards, Alison L, Intel           Arunachalam, Meena, Intel
-Deb, Diptorup, Intel                Andrew Chen, Vastai Tech 
+Deb, Diptorup, Intel                Andrew Chen, Vastai Tech
 Ruyman Reyes, Codeplay              Li, Jian Hui, Intel
 Brodman, James, Intel               Nalawadi, Rajeev K, Intel
 Cave, Vincent, Intel                Cheng H. Lee, Anaconda
@@ -169,46 +187,96 @@ Slides
 Interfacing oneAPI and Python
 -----------------------------
 
-Q:  Why did you not use Buffers?  
-A:  While it is technically possible, different Python classes would need to be created for every supported buffer data type as the buffer and accessor type definitions require the type of the underlying elements. We can get around the issue by using “untyped” buffers, but that brings its own challenges as partitioning of buffers can lead to loss of precision and incorrect results.
+Q: Why did you not use Buffers?
 
-Q:  Using SPIR V – and using SYCL as the API, is that easier for interoperability.  Why not use Open Cl?  Or go straight down to Level Zero of oneAPI?
-A:  We envision a DPC++ program manager like layer in Numba that will allow us to go from the same high-level Python code to possibly different types of IRs (SPIR V, NVPTX) and then build interoperability kernels that can be launched using a SYCL runtime. Targeting OpenCL or Level Zero restricts us to devices that support Level Zero. The design may change later as the system evolves.
+   While it is technically possible, different Python classes would
+   need to be created for every supported buffer data type as the
+   buffer and accessor type definitions require the type of the
+   underlying elements. We can get around the issue by using “untyped”
+   buffers, but that brings its own challenges as partitioning of
+   buffers can lead to loss of precision and incorrect results.
 
-Q:  Using MLIR as well – but you have SPIR V at the bottom?  Using MLIR and SPIR V at the bottom?  Code level?
-A:  The MLIR GPU and SPIR V dialects offer greater flexibility to us than Numba’s current pipeline. We want to move away from using the llvm-spirv translator and hope that the GPU dialect grows into support other types of devices not just GPUs.
+Q: Using SPIR V – and using SYCL as the API, is that easier for
+   interoperability.  Why not use Open Cl?  Or go straight down to
+   Level Zero of oneAPI?
 
-Q:  Codeplay has done work on MLIR.  Would like to connect SYCL dialect and want to focus on top half of the box (SPIR V – GPU- Slide12)
-A:  For the Python work we want to primarily focus on the Python to Optimized loops pipeline. If the community takes over the SPIR-V and GPU (and possibly a SYCL dialect), our work for the Python compiler will be greatly benefit.
+   We envision a DPC++ program manager like layer in Numba that will
+   allow us to go from the same high-level Python code to possibly
+   different types of IRs (SPIR V, NVPTX) and then build
+   interoperability kernels that can be launched using a SYCL
+   runtime. Targeting OpenCL or Level Zero restricts us to devices
+   that support Level Zero. The design may change later as the system
+   evolves.
 
-Q:  What does it mean to make python code look more like SYCL?
-A:  Do as a community effort – Anaconda may have responses – will need to involve the NVIDIA engineers who work on Numba?  
+Q: Using MLIR as well – but you have SPIR V at the bottom?  Using MLIR and SPIR V at the bottom?  Code level?
 
-Q:  SYCL Dialect in the future?  Do we have a timeline for that?
-A:  SYCL dialect doesn’t exist right now. I am not aware of any timeline, or if anyone is working on it.
+   The MLIR GPU and SPIR V dialects offer greater flexibility to us
+   than Numba’s current pipeline. We want to move away from using the
+   llvm-spirv translator and hope that the GPU dialect grows into
+   support other types of devices not just GPUs.
 
-Q:  Runtime – how much overhead is there from the Python layer?
-A:   Library call – oneMKL interface layer – there is not much overhead – did not observe – better than 90%; for the compiler, also we have been evaluating the code we generate through NUMBA DPEX – 75-80% of the execution time as compared to DPC++
+Q: Codeplay has done work on MLIR.  Would like to connect SYCL dialect and want to focus on top half of the box (SPIR V – GPU- Slide12)
+
+   For the Python work we want to primarily focus on the Python to
+   Optimized loops pipeline. If the community takes over the SPIR-V
+   and GPU (and possibly a SYCL dialect), our work for the Python
+   compiler will be greatly benefit.
+
+Q: What does it mean to make python code look more like SYCL?
+
+   Do as a community effort – Anaconda may have responses – will need
+   to involve the NVIDIA engineers who work on Numba?
+
+Q: SYCL Dialect in the future?  Do we have a timeline for that?
+
+   SYCL dialect doesn’t exist right now. I am not aware of any
+   timeline, or if anyone is working on it.
+
+Q: Runtime – how much overhead is there from the Python layer?
+
+   Library call – oneMKL interface layer – there is not much overhead
+   – did not observe – better than 90%; for the compiler, also we have
+   been evaluating the code we generate through NUMBA DPEX – 75-80% of
+   the execution time as compared to DPC++
 
 Metagraph
 ---------
 
-Q:  Graph Neural Net – is it flexible enough for a graph?
-https://blog.tensorflow.org/2021/11/introducing-tensorflow-gnn.html
+Q: Graph Neural Net – is it flexible enough for a graph?
 
-Q:  Big fan of Graph BLAS  - what is happening with that?  With MLIR? 
-A:  Reimplement a bunch of things that will need to throw away.  When added sparse output, that unblocked it.    Assuming regular math rules – have an internal design that they are translating and upstreaming into MLIR.  Will be possible to do this.  Sparse compiler making with a simi ring - https://dl.acm.org/doi/abs/10.1145/3485505
+   https://blog.tensorflow.org/2021/11/introducing-tensorflow-gnn.html
 
-Can make graph sparse possible – can specify which element can be an identity – won’t take 
+Q: Big fan of Graph BLAS  - what is happening with that?  With MLIR?
 
-Q:  Which plugins – should they be written in python only or C++?
-A:  Need a thin layer of Python object or wrapper to hand around – then python function wrapper.  Whatever is happening lower (layers) can be – C or C++ - just need enough python code to manipulate from the python interpreter
+   Reimplement a bunch of things that will need to throw away.  When
+   added sparse output, that unblocked it.  Assuming regular math
+   rules – have an internal design that they are translating and
+   upstreaming into MLIR.  Will be possible to do this.  Sparse
+   compiler making with a simi ring -
+   https://dl.acm.org/doi/abs/10.1145/3485505
 
-Q:  Part of an internal structure of a “type” – capability but hasn’t pushed on the type system.  
-A:  Type system must be granular enough so they know what the backend can handle for any layout.
+   Can make graph sparse possible – can specify which element can be
+   an identity – won’t take
 
-Q:  Is that an oneAPI backend for all devices?  Graph BLAS on other architectures?
-A:  No catchall solution for graphics (for all devices).  Have a solution for people to plug in backends – but people have to implement
+Q: Which plugins – should they be written in python only or C++?
+
+   Need a thin layer of Python object or wrapper to hand around – then
+   python function wrapper.  Whatever is happening lower (layers) can
+   be – C or C++ - just need enough python code to manipulate from the
+   python interpreter
+
+Q: Part of an internal structure of a “type” – capability but hasn’t
+   pushed on the type system.
+
+   Type system must be granular enough so they know what the backend
+   can handle for any layout.
+
+Q: Is that an oneAPI backend for all devices?  Graph BLAS on other
+   architectures?
+
+   No catchall solution for graphics (for all devices).  Have a
+   solution for people to plug in backends – but people have to
+   implement
 
 2021-11-10
 ==========
@@ -220,7 +288,7 @@ Agenda
 Overview of oneAPI and SYCL: how all the pieces fit together      Andrew Richards, Codeplay        5 min
 Mapping AI software to SYCL and oneAPI: ONNX, Eigen, TensorFlow   Mehdi Goli, Codeplay             20 min
 Mapping SYCL to accelerator hardware, using RISC-V as an example  Alastair Murray, Codeplay        20 min
-Experience of using SYCL and oneAPI with National Labs            Gordon Brown, Codeplay           15 min    
+Experience of using SYCL and oneAPI with National Labs            Gordon Brown, Codeplay           15 min
 Opens / Topics                                                    All                              30 min
 ================================================================  ===============================  =============
 
@@ -544,7 +612,8 @@ oneDNN Graph API – Jian Hui Li : `Slides <presentations/oneDNNGraph-oneAPIAITA
   Registering a custom op to oneDNN Graph is in the future plan but
   not defined yet.
 
-* Any integration plans to integrate with MLIR?  Is this orthogonal to MLIR or a higher level integration?
+* Any integration plans to integrate with MLIR?  Is this orthogonal to
+  MLIR or a higher level integration?
 
   Yes.  MLIR is multi-level IR, and oneDNN Graph op is at the same
   level as high level MLIR dialect. We intercept at high level MLIR

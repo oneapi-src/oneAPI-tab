@@ -4,8 +4,8 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
     - name: Install prerequisites
       run: |
         python -m pip install --quiet --upgrade pip
