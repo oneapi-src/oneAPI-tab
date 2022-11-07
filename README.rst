@@ -13,7 +13,8 @@ More information can be found at oneapi.io_.
 
 This repository hosts notes and presentation materials from the
 oneAPI Community Forum meetings.  The meetings are open and comprised
-of industry experts that help guide the oneAPI specification.
+of experts from industry, government, and academia that help guide 
+the oneAPI specification.
 
 The policies and governance processes are also available on this repo.
 
@@ -28,7 +29,7 @@ To be notified of new meeting notes, become a watcher of this repo. If
 you have a question about how to join the SIGs, email
 `oneapi@codeplay.com`_.
 
-Find out about the `oneAPI Community Forum governance`_ to understand
+Read about the `oneAPI Community Forum governance`_ to understand
 the organization and processes.
 
 .. _oneapi.io: https://oneapi.io

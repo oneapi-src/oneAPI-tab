@@ -37,7 +37,7 @@ forum, including these activities:
 * Agreeing and tracking annual goals for the oneAPI Community Forum
 * Agreeing on the formation of new Working Groups and SIGs
 * Reviewing votes from the Working Groups
-* Owning and defining the IP framework for contributions
+* Owning and defining the intellectual property framework for contributions
 * Ratifying new versions of the specification
 * Approving the plans from the Marketing Committee
 
@@ -46,14 +46,13 @@ oneAPI Community Forum Special Interest Groups (SIGs)
 
 The SIGs exist to faciliate technical discussions that are
 highly relevant to bring positive change to the oneAPI
-specification and the implementations of these.
+specification and the implementations of its elements.
 
 SIG activities include the following:
 
 * Open technical discussions relevant to specific technologies and the
   oneAPI specification
-* Faciliating presentations and discussion and presentation of
-  proposals for specification changes or updates
+* Facilitating discussion and presentation of proposals
 
 New SIGs can be proposed by members of the community.
 
