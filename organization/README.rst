@@ -37,7 +37,8 @@ forum, including these activities:
 * Agreeing and tracking annual goals for the oneAPI Community Forum
 * Agreeing on the formation of new Working Groups and SIGs
 * Reviewing votes from the Working Groups
-* Owning and defining the intellectual property framework for contributions
+* Owning and defining the intellectual property framework for 
+  contributions
 * Ratifying new versions of the specification
 * Approving the plans from the Marketing Committee
 
