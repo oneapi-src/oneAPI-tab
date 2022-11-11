@@ -76,10 +76,6 @@ Upcoming oneAPI Community Forum Meetings
    * - November 14th 2022, 5:30pm US Central Time
      - SC22 Meetup
      - Fairmont Dallas
-     - Contact_
-   * - November 23rd 2022, 10am US Central Time
-     - Math SIG
-     - Virtual
      - `RSVP Form`_
    * - December 14th 2022, 9am US Central Time
      - Annual Meeting
