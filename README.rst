@@ -87,3 +87,26 @@ Upcoming oneAPI Community Forum Meetings
 
 Find the minutes for prior meetings in the appropriate SIG section of
 this repository.
+
+Publishing Meeting Notes from Google Docs
+-----------------------------------------
+
+To ensure access for all, we mirror meeting notes from Google Docs in
+GitHub as a PDF. Here is the procedure.
+
+Edit the meeting notes in Google Docs. If you want to publish a
+presentation, upload a PDF to GitHub. For example, here is the
+directory that contains presentations for the cross-tab:
+presentations_. Select *Add file*, then *Upload files*. After the file
+is uploaded, click on its name to view and then copy the URL from your
+browser to the google doc.
+
+When meeting notes are complete, publish them to GitHub as a PDF. Go
+to `mirror workflow`_, and select *Run workflow* and then *Run
+workflow*. When you see the green check, it is published. Look at
+`mirroring yaml`_ to get the URL. For example, see `Cross-tab PDF`_.
+
+.. _presentations: https://github.com/oneapi-src/oneAPI-tab/tree/main/cross-tab/presentations
+.. _`mirror workflow`: https://github.com/oneapi-src/oneAPI-tab/actions/workflows/mirror-google-docs.yaml
+.. _`mirroring yaml`: .github/workflows/mirror-google-docs.yaml
+.. _`Cross-tab PDF`: https://oneapi-src.github.io/oneAPI-tab/meeting-notes/cross-tab.pdf
