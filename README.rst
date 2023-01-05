@@ -101,10 +101,12 @@ presentations_. Select *Add file*, then *Upload files*. After the file
 is uploaded, click on its name to view and then copy the URL from your
 browser to the google doc.
 
-When meeting notes are complete, publish them to GitHub as a PDF. Go
-to `mirror workflow`_, and select *Run workflow* and then *Run
-workflow*. When you see the green check, it is published. Look at
-`mirroring yaml`_ to get the URL. For example, see `Cross-tab PDF`_.
+When meeting notes are complete, publish them to GitHub as a
+PDF. Mirroring is triggered automatically once a day. If you do not
+want to wait, go to `mirror workflow`_, and select *Run workflow* and
+then *Run workflow*. When you see the green check, it is
+published. Look at `mirroring yaml`_ to get the URL. For example, see
+`Cross-tab PDF`_.
 
 .. _presentations: https://github.com/oneapi-src/oneAPI-tab/tree/main/cross-tab/presentations
 .. _`mirror workflow`: https://github.com/oneapi-src/oneAPI-tab/actions/workflows/mirror-google-docs.yaml
