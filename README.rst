@@ -69,16 +69,16 @@ Upcoming oneAPI Community Forum Meetings
      - Meeting Type
      - Location
      - How to join
-   * - November 3rd 2022, 9am US Central Time
-     - Hardware SIG
+   * - 21 February 2023, 10am US Central Time
+     - Language SIG
      - Virtual
      - Contact_
-   * - November 14th 2022, 5:30pm US Central Time
-     - SC22 Meetup
-     - Fairmont Dallas
-     - `RSVP Form`_
-   * - December 14th 2022, 9am US Central Time
-     - Annual Meeting
+   * - 1 March 2023, 10am US Central Time
+     - Hardware SIG
+	 - Virtual
+     - Contact_
+   * - 8 March 2023, 11am US Central Time
+     - Math SIG
      - Virtual
      - Contact_
 
