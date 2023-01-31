@@ -75,7 +75,7 @@ Upcoming oneAPI Community Forum Meetings
      - Contact_
    * - 1 March 2023, 10am US Central Time
      - Hardware SIG
-	 - Virtual
+     - Virtual
      - Contact_
    * - 8 March 2023, 11am US Central Time
      - Math SIG
