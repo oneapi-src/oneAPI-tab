@@ -15,6 +15,127 @@ To find out how to join the Hardware SIG `get in touch. <https://www.oneapi.io/c
 Meeting Notes
 =============
 
+2022-11-3
+=========
+
+Agenda
+------
+
+* oneAPI Community Forum, Rod Burns
+* Unfified Runtime Update, Ben Ashbaugh
+
+Attendees
+---------
+
+.. list-table::
+
+   * - Robert Cohn, Intel
+     - Alastair Murray, Codeplay
+     - Jaime Arteaga Molina, Intel
+   * - Ben Ashbaugh, Intel
+     - Benie
+     - Brice Goglin
+   * - Will Damon, Intel
+     - Jeff Scheel, RISC-V International
+     - Juan Fumero, Univ. of Manchester
+   * - Cheol Kim, Intel
+     - Russell Mcguire, Intel
+     - Servesh Muralidharan, Argonne
+   * - Rod Burns, Codeplay
+     - Romain Dolbeau, SiPearl
+     - Ronan Keryell, Xilinx Labs
+   * - Brice Videau, Argonne
+     - Zack Waters, Intel
+     -
+
+oneAPI Coummunity Forum
+-----------------------
+
+* TABs changing to SIGs
+
+  * separates technical discussion from formal spec work
+  * working groups formed to develop spec
+  * SIGs influence specifications and implementations
+
+* Q&A
+
+  Q: How does community feedback flow into SIGs? Show arrows where
+  feeback flows.
+
+Unfified Runtime Update
+-----------------------
+
+* Recap
+
+  * Problem: Duplication of functionality between language runtimes
+  * Proposal: Unified runtime, usable by multiple language runtimes
+    and sits of multiple device APIs
+  * Feedback: Why not build on opencl 3.0
+
+* Goals of Unified Runtime
+
+  * Need glue layer between runtimes and device API. Do not need
+    standard.
+  * Efficiency, ease-of-use
+  * Interoperability and access to native backend
+  * tool and debug support
+  * wide engagement by open source community
+  * 2023:Q3 first production release
+
+* Updates
+
+  * Continue development
+  * open source project, not competing standard
+  * 1st class support for OpenCL
+
+* Why not OpenCL 3.0? Concers about ...
+
+  * Vendor support for optional OpenCL 3.0 standard functionality
+  * Composability with existing code targeting non-OpenCL APIs
+  * Fragmenting the OpenCL ecosystem with non-conformant layered
+    implementations
+  * performance and complexity of layered functionality
+  * access to cutting-edge vendor specific features
+
+  Q: Why not address above with extensions?
+
+     Not possible for Q3:2023 target. Interesting to look at for
+     something later.
+
+* Feedback from OpenCL Working Group
+
+  * Do similar libraries already exist? e.g. libomptarget
+
+    * very openmp-specific
+
+  * Can we have a vulkan unified runtime adapter
+
+    * sounds interesting. technically possible, no current plans
+    * will require extensions to Vulkan or Unified Runtime. TBD
+
+* Q&A
+
+  * Q: What is relation to oneAPI specification?
+
+    Considering whether to publish as open source documentation or
+    spec
+
+  * Will this be useful to language runtime developers?
+
+    It is something that we wanted.
+
+
+  * What about device API developers? Thoughts on what should be
+    exposed...
+
+  * Tornado already has a common runtime. Why drop it and adopt
+    unified runtime.
+
+    If you already have something that works, then maybe
+    nothing. Unified runtime may support additional devices, will be
+    used in multiple products and battle tested.
+
+
 2022-9-15
 =========
 
