@@ -73,7 +73,7 @@ Upcoming oneAPI Community Forum Meetings
      - Language SIG
      - Virtual
      - Contact_
-   * - 1 March 2023, 10-11am US Central Time
+   * - 16 March 2023, 9-10:30am US Central Time
      - Hardware SIG
      - Virtual
      - Contact_
