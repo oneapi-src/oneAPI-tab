@@ -1,0 +1,139 @@
+=========================================
+Math Special Interest Group Meeting Notes
+=========================================
+
+2023-03-08
+==========
+
+Materials:
+
+* `General updates <../presentations/2023-03-08_Slides.pdf>`__
+* `Experiences integrating hipSYCL to oneMKL <../presentations/2023-03-08_balint_soproni_onemkl.pdf>`__
+
+Attendees:
+
+* Aksel Alpay (Heidelberg University)
+* Hartwig Anzt (UTK, KIT)
+* Andrew Barker (Intel)
+* Frank Brill (Cadence)
+* Terry Cojean (KIT)
+* Marius Cornea (Intel)
+* Romain Dolbeau (SiPearl)
+* Rachel Ertl (Intel)
+* Mehdi Goli (Codeplay)
+* Harshitha Gunalan (Intel)
+* Sarah Knepper (Intel)
+* Maria Kraynyuk (Intel)
+* Piotr Luszczek (UTK)
+* John Melonakos (Intel)
+* Mesut Meterelliyoz (Intel)
+* Kumudha Narasimhan (Codeplay)
+* Spencer Patty (Intel)
+* Pat Quillen (MathWorks)
+* George Silva (Intel)
+* Bálint Soproni (StreamHPC)
+* Shane Story (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Experiences integrating hipSYCL to oneMKL – Bálint Soproni 
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* Welcome to first Math Special Interest Group (Math SIG) meeting.
+* Participation is opening up to interested community members.
+* Goal is to bring positive change to oneAPI specification and implementations of oneMKL, in particular the `oneMKL interfaces project <https://github.com/oneapi-src/oneMKL>`__.
+* We will continue to post slides and notes from the meetings publicly `here <https://github.com/oneapi-src/oneAPI-tab>`__, so no confidential information or trade secrets should be shared during meetings.
+
+How should we be more open but not sharing confidential information?
+
+* This would mean that non-publicly available information like vendor roadmaps, etc., should not be shared.
+
+Bálint Soproni introduction:
+
+* Bálint is a master's student at Heidelberg University; he was a student assistant for a few years under supervision of Aksel Alpay, who is leading development of the Open SYCL project.
+* In 2021, Bálint was assigned the task to implement Open SYCL support for oneMKL. 
+* Since 2022, Bálint has been working at StreamHPC, with an opportunity to have some contributions to GROMACS.
+
+Open SYCL:
+
+* Open SYCL is the new name of hipSYCL; the name was changed recently.
+* It supports multiple compilation flows and has a performant CPU backend.
+* The design of Open SYCL is to leverage existing toolchains as much as possible, possibly with a thin layer of abstraction over these interfaces.
+* Bálint's task was to make sure the available oneMKL library compiles with Open SYCL, then add support to RNG and BLAS backends for cuBLAS, MKL CPU, and cuRAND via Open SYCL. Then it was to extend support for rocBLAS and rocRAND to target AMD GPUs.
+
+Implementation process:
+
+* The working process was to compile the repository with Open SYCL and get rid of any DPC++ specific parts of oneMKL, abstract the implementation-specific parts into smallest possible places.
+* Some issues that were in hipSYCL were exposed by oneMKL, so those were fixed.
+* Then implement AMD GPU libraries wrappers. This process was quite smooth, just copy-pasting wrappers to use the ROCm versions instead.
+
+Improvements during integration:
+
+* First difficulty that arose during integration steps: Open SYCL uses ``add_sycl_to_target`` function for cmake integration. This isn't available for DPC++, so it had to be added to oneMKL.
+* A cmake option was added to specify the SYCL implementation to use (``ONEMKL_SYCL_IMPLEMENTATION``). This design could be used slightly to autodetect the implementation.
+* Furthermore, improvements to generality had to be included. Half is an optional SYCL feature that was hardcoded into oneMKL and had to be worked around by querying if the actual device had half support. This was something that had to be added to oneMKL to support Open SYCL.
+* The backend interoperability had to be abstracted away. Instead of calling ``interop_task``, which is not standard SYCL, call ``onemkl_cublas_host_task`` to decide at compile time which interop to use.
+* Finally, some namespace declarations had to be worked around. Open SYCL only declares ``sycl::`` namespace in sycl/sycl.hpp and ``::cl::sycl`` in the legacy header CL/sycl.hpp. In DPC++, both namespaces are declared in both headers. The code relied on this behavior in a few places, using a namespace not guaranteed by the specification to be available. The user might include either of these headers from DPC++, so we had to include the given header in the library code. Otherwise we will have ambiguous namespace error if both user and library includes a different library.
+
+Runtime issues:
+
+* A few runtime issues were uncovered.
+* In oneMKL, after a Level 1 BLAS call, the ``CUBLAS_POINTER_MODE_DEVICE`` was set, but it was never reset back to host. This resulted in a segfault, and it was quite interesting that the oneMKL tests didn't catch this. In DPC++, a queue owns a backend stream, and since each test calls only one BLAS function, for each queue only one BLAS function was called. But in OpenSYCL, there is no strict relation between queues and backend streams, so multiple BLAS calls are made to the same stream, which exposed this problem.
+* There were missing synchronizations for a few lower-level BLAS functions (``iamin``, ``iamax``), which were exposed due to this different runtime model.
+* In rocRAND, there were issues skipping ahead for some generators, which existed for years, but were only uncovered with this integration. This was something that had to be fixed in rocRAND subsequently.
+
+Conclusion:
+
+* oneMKL could be a key quality of life feature for SYCL developers.
+
+  * There are boilerplate wrappers in GROMACS to support different FFT libraries: 8 files consisting of >1000 lines of code.
+
+* Testing with multiple compilers is beneficial since different underlying behavior can expose errors otherwise unnoticed.
+* Having a functional CI is very important - it happened multiple times that other changes had broken an Open SYCL implementation. It is very difficult to test every combination of backends and compilers before any larger pull request. There are a few people in Open SYCL group in Heidelberg working on that currently.
+
+Issues for adoption of oneMKL:
+
+* The following are based on experiences with GROMACS developers; people with less experience using oneMKL than Bálint. 
+* The naming of interfaces and products is very confusing.
+* Additional dependency that needs to be installed by the user, plus lots of cmake options that need to be set. Also it is possible to be able to set an unsupported combination of options.
+* Would want better adoption or support by community.
+* rocFFT and cuFFT are not always the best performing options. For GROMACS, some other FFT libraries gave better performance.
+
+Questions worth discussing:
+
+* Multiple kinds of backends for the same device would be beneficial and interesting.
+* AMD GPU could have rocFFT and VkFFT avaialable. Not sure if it is explicitly supported in oneMKL for user to choose which backend to use.
+* Could ``add_sycl_to_target`` be added to DPC++? This is something that has to be worked around in oneMKL and GROMACS - could be a quality of life improvement for oneMKL users and DPC++ users.
+
+Special thanks:
+
+* Aksel Alpay - advisor
+* Maria Kraynyuk and Mesut Meterelliyoz - helpful with upstreaming process and review efforts, time spent commenting and discussing issues
+* Sanchi Vaishnavi and Nils Friess - Open SYCL group, working on enabling CI and technically maintaining the Open SYCL side of things in oneMKL
+
+
+FFT was singled out as a problematic library. Is that GROMACS specific, as FFT is a low-level workhorse, or do you think other libraries may be problematic like this?
+
+* FFT domain is the most important in GROMACS and in every other molecular dynamics library I've been acquainted with. I imagine the same holds for BLAS and other domains for other applications. I raised an issue in GROMACS GitLab about integrating oneMKL into GROMACS (`#4744 <https://gitlab.com/gromacs/gromacs/-/issues/4744>`__). There are two main concerns. First, rocFFT and cuFFT technically are not enough; GROMACS needs best-performing libraries to be available. Second, the installation of oneMKL looks confusing, and the naming is quite confusing for users, leading to difficulty differentiating between Intel's oneMKL and the open sources that do not ship with oneAPI and that the user would need to install themselves. Experienced people even may not get it right.
+* Note that there is active development of Intel oneMKL FFT and cuFFT support in oneMKL open sources. They should be available very soon.
+
+We would like to have ``add_sycl_to_target`` available for all libraries. Did you implement this in DPC++  or did you include it in oneMKL? If it's in DPC++, we would be happy to use it.
+
+* In oneMKL, I had an if/else so in case of hipSYCL, it would do this. In GROMACS, they actually implemented this; see the `link <https://gitlab.com/gromacs/gromacs/-/blob/main/cmake/gmxManageSYCL.cmake#L480>`__ to part of GROMACS cmake. This would be something amazing to have in DPC++.
+* We have similar for SYCL BLAS, wrapping ``add_sycl_to_target``.
+* You can also look at the SYCL-CTS, which does something similar to support all implementations (but it does not call it ``add_sycl_to_target``): https://github.com/KhronosGroup/SYCL-CTS/blob/SYCL-2020/cmake/AdaptDPCPP.cmake
+
+Any thoughts about AMGx?
+
+* We have someone working on access, talking to application scientists who want to use that. It could be a good addition to oneMKL.
+* Are others in this group interested in this domain? I know a lot of customers want AMGx for Intel GPUs. I wonder if Nvidia would accept a SYCL contribution? We could invite Nvidia for a discussion. We can get more data offline and share.
+
+Regarding the discussion question about multiple backends for the same device, what is supported in oneMKL today?
+
+* We do not have priority of which backend to select. It is supposed to work, but it is something we need to define and provide details for readme and mechanism to set up priorities. Currently it is only CPU devices where we have multiple backends. Other cases either use a different compiler or different type of devices.
+
+HPC on Heterogeneous Hardware (H3) is holding a workshop in combination with ISC and is looking for contributions. Please see https://icl.utk.edu/~luszczek/conf/2023/h3/ if anyone is interested in submitting.
