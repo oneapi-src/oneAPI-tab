@@ -8,7 +8,7 @@ oneAPI specification defines the "Level Zero" interface that
 defines a hardware interface and recent discussions have also
 covered a new Unified Runtime proposal.
 
-The Hardware SIG is led by Cheol Kim.
+The Hardware SIG is led by Alastair Murray (Codeplay) and Will Damon (Intel).
 
 To find out how to join the Hardware SIG `get in touch. <https://www.oneapi.io/community/>`__
 
