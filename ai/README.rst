@@ -7,7 +7,7 @@ AI operations and interfaces. The oneAPI specification
 defines the oneDNN interface with building blocks for
 deep learning applications and frameworks.
 
-The AI SIG is led by Alison Richards.
+The AI SIG is led by Penporn Koanantakool (Google) and Jian Hui Lim (Intel).
 
 To find out how to join the AI SIG `get in touch`_.
 
