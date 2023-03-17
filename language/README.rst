@@ -9,7 +9,7 @@ group discusses how work done within the oneAPI open source
 implementations can contribute to the ISO C++ and SYCL
 specifications managed by ISO and Khronos.
 
-The language TAB is led by Gergana Slavova.
+The language TAB is led by Ruyman Reyes Castro <ruyman@codeplay.com>
 
 To find out how to join the Language SIG `get in touch. <https://www.oneapi.io/community/>`__
 
@@ -22,6 +22,73 @@ Potential Topics
 * Error handling
 * Function pointers revisited
 * oneDPL C++ standard library support
+
+2023-03-14
+==========
+
+* Rod Burns (Codeplay)
+* Ruyman Reyes (Codeplay/Intel)
+* Juan Fumero (Manchester)
+* Brodman, James (Intel)
+* Harms, Kevin (ANL)
+* Kotselidis Christos (Pierer-Innovation)
+* Spruit, Neil R (Intel)
+* Slavova, Gergana S (Intel)
+* Cohn, Robert S (Intel)
+* Arteaga Molina, Jaime A (Intel)
+* Xiong, Jianxin (Intel)
+* Gordon Brown (Codeplay)
+* Ronan Keryell (AMD)
+* Richards, Alison L (Intel)
+* Alex Pim (Imagination Technologies)
+* Ganapathi, Ravindra Babu (Intel)
+* Frank Brill (Cadence)
+* romain.dolbeau (Sipearl)
+* Wells, Alex M (Intel)
+* Mrozek, Michal (Intel)
+ 
+Introduction to the oneAPI Language SIG
+----------------------------------------
+
+Ruyman Reyes Castro (RRC)
+
+* `Slides <presentations/2023-03-14-oneAPI_SIG_Intro.pdf>`
+  * OneAPI Language SIG is evolution from oneAPI Language TAB
+  * Main focus is feedback into SYCL language and C++ ISO interaction
+  * Looking into ideas from other languages and how they apply to SYCL/C++
+  * Please send topics, suggested agendas
+
+Juan Jose Fumero (JJF): "TornadoVM: Multi Backend Hardware Acceleration Framework for Java"
+
+* `Slides <presentations/2023-03-14-TornadoVM>`
+  * TornadoVM is a programming model and API for accelerator offloading
+  * Supports multiple backends, including Level Zero, OpenCL and CUDA
+  * Relies on Graal and Graal IR for compiler and bytecode optimization
+  * Defines a common IR format that then is lowered to target IR (PTX, SPIR-V, OpenCL C)
+  * Long list of feedback for Level Zero API design based on experience interacting with
+    level zero via JNI
+  * RRC: That feedback is better directed to the HW SIG where the right Level Zero and
+    Unified Runtime people is, but many thanks.
+  * Q&A:
+    * GS: Do you support other targets beyond SPIRV?
+    * JJF: We support SPIRV on Level Zero API. We use a third party JAVA library
+      to generate the SPIRV. We support OpenCL but not SPIR-V. OpenCL SPIR-V should work.
+    * RRC: Your matrix multiplication slide shows you only add annotation but you
+      perform loop swap optimization, do you have enough semantic information to 
+      trigger that optimization from the Java IR?
+    * JJF: It is not highligted on the slides but we use a custom type for the 
+      matrix type so we know is a 2D and we control the layout
+    * RRC: Your Task Graph API is similar to what is being designed for SYCL-Graphs,
+      so would be good to have your feedback there, will conntect you to the 
+      right people
+    * JJF: I am not aware of the SYCL-Graph approach but happy to collborate
+
+
+Post-meeting actions:
+* RRC connected JJF with oneAPI HW SIG to pass on the feedback
+* RRC connected JJF with team working on SYCL Graphs to discuss ideas 
+  for the proposal
+
 
 2022-10-26
 ==========
