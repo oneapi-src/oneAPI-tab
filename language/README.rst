@@ -52,7 +52,7 @@ Introduction to the oneAPI Language SIG
 
 Ruyman Reyes Castro (RRC)
 
-* `Slides <presentations/2023-03-14-oneAPI_SIG_Intro.pdf>`
+* oneAPI Language SIG Introduction
   * OneAPI Language SIG is evolution from oneAPI Language TAB
   * Main focus is feedback into SYCL language and C++ ISO interaction
   * Looking into ideas from other languages and how they apply to SYCL/C++
@@ -60,7 +60,7 @@ Ruyman Reyes Castro (RRC)
 
 Juan Jose Fumero (JJF): "TornadoVM: Multi Backend Hardware Acceleration Framework for Java"
 
-* `Slides <presentations/2023-03-14-TornadoVM>`
+* `Slides <presentations/2023-03-14-TornadoVM.pdf>`
   * TornadoVM is a programming model and API for accelerator offloading
   * Supports multiple backends, including Level Zero, OpenCL and CUDA
   * Relies on Graal and Graal IR for compiler and bytecode optimization
