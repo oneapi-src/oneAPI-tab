@@ -19,7 +19,7 @@ Meeting Notes
 2022-03-15
 ==========
 
-`Meeting notes <meeting-notes-2023-03-15.pdf>`__
+`Meeting notes <presentations/meeting-notes-2023-03-15.pdf>`__
 
 `Hugging face <presentations/Hugginface_Intel_Model_Opti_Julien_Simon_Matrix_Yao_2023_3_15.pdf>`__
 
