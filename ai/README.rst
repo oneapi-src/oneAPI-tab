@@ -16,7 +16,7 @@ To find out how to join the AI SIG `get in touch`_.
 Meeting Notes
 =============
 
-2022-03-15
+2023-03-15
 ==========
 
 `Meeting notes <presentations/meeting-notes-2023-03-15.pdf>`__
