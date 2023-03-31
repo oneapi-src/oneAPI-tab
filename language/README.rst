@@ -72,6 +72,7 @@ Juan Jose Fumero (JJF): "TornadoVM: Multi Backend Hardware Acceleration Framewor
   * RRC: That feedback is better directed to the HW SIG where the right Level Zero and
     Unified Runtime people is, but many thanks.
   * Q&A:
+  
     * GS: Do you support other targets beyond SPIRV?
     * JJF: We support SPIRV on Level Zero API. We use a third party JAVA library
       to generate the SPIRV. We support OpenCL but not SPIR-V. OpenCL SPIR-V should work.
