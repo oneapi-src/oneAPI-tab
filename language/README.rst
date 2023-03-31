@@ -53,6 +53,7 @@ Introduction to the oneAPI Language SIG
 Ruyman Reyes Castro (RRC)
 
 * oneAPI Language SIG Introduction
+
   * OneAPI Language SIG is evolution from oneAPI Language TAB
   * Main focus is feedback into SYCL language and C++ ISO interaction
   * Looking into ideas from other languages and how they apply to SYCL/C++
