@@ -75,22 +75,21 @@ Acceleration Framework for Java"
   Level Zero and Unified Runtime people is, but many thanks.
 * Q&A:
 
-    * GS: Do you support other targets beyond SPIRV?
-    * JJF: We support SPIRV on Level Zero API. We use a third party
-      JAVA library to generate the SPIRV. We support OpenCL but not
-      SPIR-V. OpenCL SPIR-V should work.
-    * RRC: Your matrix multiplication slide shows you only add
-      annotation but you perform loop swap optimization, do you have
-      enough semantic information to trigger that optimization from
-      the Java IR?
-    * JJF: It is not highligted on the slides but we use a custom type
-      for the matrix type so we know is a 2D and we control the layout
-    * RRC: Your Task Graph API is similar to what is being designed
-      for SYCL-Graphs, so would be good to have your feedback there,
-      will conntect you to the right people
-    * JJF: I am not aware of the SYCL-Graph approach but happy to
-      collborate
-
+  * GS: Do you support other targets beyond SPIRV?
+  * JJF: We support SPIRV on Level Zero API. We use a third party
+    JAVA library to generate the SPIRV. We support OpenCL but not
+    SPIR-V. OpenCL SPIR-V should work.
+  * RRC: Your matrix multiplication slide shows you only add
+    annotation but you perform loop swap optimization, do you have
+    enough semantic information to trigger that optimization from
+    the Java IR?
+  * JJF: It is not highligted on the slides but we use a custom type
+    for the matrix type so we know is a 2D and we control the layout
+  * RRC: Your Task Graph API is similar to what is being designed
+    for SYCL-Graphs, so would be good to have your feedback there,
+    will conntect you to the right people
+  * JJF: I am not aware of the SYCL-Graph approach but happy to
+    collborate
 
 Post-meeting actions:
 
