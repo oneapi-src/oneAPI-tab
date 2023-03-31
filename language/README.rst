@@ -61,7 +61,8 @@ Ruyman Reyes Castro (RRC)
 
 Juan Jose Fumero (JJF): "TornadoVM: Multi Backend Hardware Acceleration Framework for Java"
 
-* `Slides <presentations/2023-03-14-TornadoVM.pdf>`
+* `Slides <presentations/2023-03-14-TornadoVM.pdf>`__
+
   * TornadoVM is a programming model and API for accelerator offloading
   * Supports multiple backends, including Level Zero, OpenCL and CUDA
   * Relies on Graal and Graal IR for compiler and bytecode optimization
