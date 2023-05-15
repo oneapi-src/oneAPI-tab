@@ -53,6 +53,9 @@ the oneAPI specification.
 * `Math <math>`__ - This groups covers topics related to math
   operations.
 
+* `Image <image>`__ - This groups covers topics related to image
+  processing operations.
+
 * `AI <ai>`__ - This group covers topics related to AI operations.
 
 * `Hardware <hardware>`__ - This group covers topics related to the
