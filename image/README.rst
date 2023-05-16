@@ -3,32 +3,34 @@ oneAPI Community Forum Image SIG
 ================================
 
 The Image SIG hosts discussions and presentations for fundamental
-image processing routines for use in high-performance computing,
-engineering, financial, and other applications.
+image processing routines for high-performance computing, engineering,
+financial, and other applications.
 
-The SIG focuses its discussion on the oneAPI Image Processing Library
-(oneIPL), an extensive library of ready-to-use, highly-optimized image
+This SIG discusses the oneAPI Image Processing Library (oneIPL),
+currently in the planning and spec development stage. Its goal is to
+become an extensive library of ready-to-use, highly optimized image
 processing functions. As part of oneAPI, oneIPL is designed to allow
-execution on a wide variety of computational devices: CPUs, GPUs, and
-other accelerators. The functionality is subdivided into several
-domains: filers, geometry transformations, color and type
-conversions. Its royalty-free APIs help developers:
+execution on various computational devices: CPUs, GPUs, and other
+accelerators. The functionality is subdivided into several domains:
+filers, geometry transformations, and color and type conversions.
 
-1. Take advantage of vectorization and SIMD (single instruction, multiple
-data) instructions on CPU and GPU.
+Its royalty-free APIs help developers:
 
-2. Take advantage of CPU threading and GPU SIMT (single instruction,
-multiple threads).
+1. Use vectorization and SIMD (single instruction, multiple data)
+   instructions on CPU and GPU.
+
+2. Use CPU threading and GPU SIMT (single instruction, multiple
+   threads).
 
 3. Improve the performance of computation-intensive applications with
-pipelines involving image processing and other operations provided as
-DPC++ kernel or oneAPI libraries.
+   pipelines involving image processing and other operations provided
+   as DPC++ kernel or oneAPI libraries.
 
 In addition to domain-specific functionality, the Image SIG may also
 discuss overall design features like the execution model, memory
 model, or error handling. At times, the open source oneIPL Interfaces
-project, which is an implementation of the oneIPL specification, may
-also be discussed.
+project, which implements the oneIPL specification, may also be
+discussed.
 
 The Image SIG is led by John Melonakos.
 
