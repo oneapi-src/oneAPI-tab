@@ -1,0 +1,144 @@
+=========================================
+Math Special Interest Group Meeting Notes
+=========================================
+
+2023-05-17
+==========
+
+Materials:
+
+* `General updates <../presentations/2023-05-17_Slides.pdf>`__
+* `Support of Discrete Fourier Transforms domain in oneMKL interfaces <../presentations/2023-05-17_Finlay_Marno_onemkl.pdf>`__
+
+Attendees:
+
+* Hartwig Anzt (UTK, KIT)
+* Romain Biessy (Codeplay)
+* Hugh Bird (Codeplay)
+* Frank Brill (Cadence)
+* Rod Burns (Codeplay)
+* Tadej Ciglaric (Codeplay)
+* Terry Cojean (KIT)
+* Marius Cornea (Intel)
+* Atharva Dubey (Codeplay)
+* Mehdi Goli (Codeplay)
+* Sarah Knepper (Intel)
+* Piotr Luszczek (UTK)
+* Finlay Marno (Codeplay)
+* John Melonakos (Intel)
+* Kumudha Narasimhan (Codeplay)
+* Pat Quillen (MathWorks)
+* George Silva (Intel)
+* Shane Story (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Support of Discrete Fourier Transforms (DFT) domain in oneMKL interfaces - Finlay Marno
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* The Math Special Interest Group is open for others to join, so please feel free to extend invitations to people from your own or other organizations.
+* DFT domain was added to the open source oneMKL interfaces project, with support for Intel® oneMKL and NVIDIA cuFFT backends. This will be today's main topic.
+* SYCL-BLAS (a pure SYCL, open-source BLAS implementation) was added as a backend, supporting all hardware (x86 CPU and Intel/NVIDIA/AMD GPUs). SYCL-BLAS will be the topic of a future Math SIG meeting.
+
+Finlay Marno introduction:
+
+* Finlay is a software engineer at Codeplay.
+* Things the talk will be about: project goals and why FFTs (Fast Fourier Transforms) are important; some features of other FFT interfaces; a little example of oneMKL and rundown of parameters at runtime; and some difficulties with implementation and specification.
+
+Goal:
+
+* Cross-platform SYCL DFT interface via existing implementations. We want as little overhead as possible for backends compared to using them natively and to conform to the specification as much as possible.
+
+Why we care about FFTs:
+
+* FFTs are very important, used all over science and engineering. The naïve implementation of DFT has a run-time complexity of O(N^2), but FFTs can be computed in O(N log(N)) and can be computed efficiently on GPUs.
+* Quite common to pose a problem as a DFT to quickly solve it.
+
+General features of FFT interface:
+
+* When we look at other FFT interfaces like cuFFT or rocFFT or the Intel oneMKL product, generally you create a plan or description of the problem. You may have an N sized transform that will be in-place and you will be doing some number of them at the same time.
+* You'll plan or describe the problem, and then libraries can dynamically generate the code for that specific problem or pre-calculate data for some of it.
+* You can re-use this configuration again and again, as it hopefully will have generated an optimal solution for the hardware you are using.
+
+Example:
+
+* Start with a description of the problem - ``oneapi::mkl::dft::descriptor``. This example is for single precision, complex domain. Then we say we're going to use it on this SYCL queue, on the device. Then we compute it.
+
+Parameters:
+
+* First we have Read-Only Parameters
+
+  * They are part of the descriptor, defined only at construction time, or are about the commit status. Sometimes it's possible to use real domain, doing real to complex or complex to real. The dimension, the length of each dimension in elements, the precisions, and whether the descriptor has been committed are all examples of read-only parameters.
+
+* Then we've broken it down into more obvious parameters
+
+  * Forward and backward scale - just a scalar multiplication of the output.
+  * The number of transforms - how many times we'll do the same transform at once.
+  * Placement - in-place or not in-place, pretty simple.
+  * Workspace - you can request to allow or not allow additional workspace to be used.
+  * Ordering - a lot of algorithms depend on reordering inputs; as long as it is consistent, it can be fine (e.g., convolution with FFTs).
+  * Transpose - output is transposed.
+  * Packed format - in the real-to-complex transform that was mentioned, the frequency domain has some symmetry that it can take advantage of.
+  * Note that workspace, ordering, and transpose are not supported by any backend at this time.
+
+* Less obvious parameters
+
+  * COMPLEX_STORAGE - only applies for complex-to-complex transforms; can be either COMPLEX_COMPLEX or REAL_REAL. COMPLEX_COMPLEX: one array storing real then imaginary, real then imaginary, for all elements. REAL_REAL has 2 arrays, one for all real values and one for all imaginary values.
+  * REAL_STORAGE - only applies to real-to-complex transforms; can be REAL_REAL.
+  * CONJUGATE_EVEN_STORAGE - only applies to real-to-complex transforms; can be COMPLEX_COMPLEX. More on that symmetry mentioned previously: the output for real-to-complex transforms have conjugate symmetry, so only floor(N/2)+1 elements are needed for a 1 dimensional transform. For higher-level transforms, it is always the contiguous dimension that is shortened. So 32x16x8 -> 32x16x5 (since 8/2 + 1 = 5)
+  * FWD/BWD_DISTANCE - Distance in elements between each transform. If you have real-to-complex, you need to keep in mind the contiguous dimension for conjugate even form, so a 16x8 transform would need to have a BWD_DISTANCE of at least 16*5.
+  * INPUT/OUTPUT_STRIDES - strides are more like multipliers to find index into the array to read an element. For a 3D transform with strides {s0,s1,s2,s3}, s0 is like an offset. An 8x8x8 tightly-packed transform will have strides 0,64,8,1. 1 means 1 step between each element; 8 between each row; 64 between each plane. Need to account for conjugate even form for real-to-complex transforms.
+
+4 different compute forward examples:
+
+* We will go over different function signatures for compute_forward.
+* Compute Forward 1 - In-place transform, could be real-to-complex or complex-to-complex. This is a little example of parameters you might use to have a completely tightly packed transform for this API.
+* Compute Forward 2 - In-place again, but with REAL_REAL storage. You have an array of real values and an array of imaginary values.
+* Compute forward 3 - Out of place, COMPLEX_COMPLEX storage.
+* Compute forward 4 - Out of place, with an in array of reals and in array of imaginaries, and similarly for out arrays.
+* Compute backward and USM APIs also are supported for all of the given examples.
+
+Supported backends:
+
+* Intel oneMKL product on x86 CPU and Intel GPU
+* NVIDIA cuFFT on NVIDIA GPU
+
+Backend difficulties:
+
+* cuFFT and MKLCPU use input/output distance. We got around this by creating two backend specific plans/descriptors, one for each direction. You can create as many plans as needed. This created a bit of an issue for MKLCPU backend when the strides were invalid for one of the directions - so we may expect one plan to fail. This is not ideal, but it'll sort through for now.
+* In the design of cuFFT, they decided that users can do their own output scaling, so that's something that couldn't be matched on cuFFT. Currently it throws a not-supported exception for scaling with non-1 values. We may add a SYCL kernel to do this, but then we may want to give some warning that people may want to integrate scaling into their own kernels instead.
+
+Some comments about the specification after trying to implement:
+
+* We use input/output strides in the specification but also forward/backward distance - this is a bit inconsistent. The argument for using forward/backward is you can just create one descriptor. But a lot of the backends we're trying to target use input/output strides. Is it supposed to be easier for the user or for using the backends?
+* Another thing that caused some difficulties is compile time dispatch when linking with multiple backends at once. In oneMKL, across all interfaces, there is runtime and compile time dispatch. In runtime, it will inspect the queue and choose the function from a pointer table for each backend. The downside is that there can only be one backend per device type at a time. You couldn't have both rocFFT and cuFFT backend for nvidiagpu in one build - this is how the library was designed and applies to all domains, not just DFT.
+* Compile time dispatch takes an extra parameter to the function, which would give it a unique function signature, allowing the compiler to inline if it wants and makes things easier for the compiler.
+* For the DFT interface, there isn't a backend selector - each backend defines a symbol with the same name and arguments, so you could have some conflicts and not sure which backend you end up with. RNG backend has a similar situation that is handled by using a pointer to some implementation - dynamic dispatching. This does work, but it doesn’t fit the intent of the compiler inlining, and it's dynamic dispatch instead of at compile time.
+* Descriptor lifetime needs some clarity. If you destroy the descriptor while it is queued, there is no description of what will happen. In code, native destructor is usually called immediately, but there could be some reference counting on the runtime that keeps things aligned.
+
+Future timeline:
+
+* rocFFT support is aimed for end of June, as well as adding more tests.
+
+Acknowledgements:
+
+* Intel team helped a lot with code reviews and helping with questions, and Intel engineers did the Intel CPU backend.
+
+Request for sizes/configurations:
+
+* We are interested in sizes and configurations of interest; please email: sycl@codeplay.com
+* This information can be hard to come by for libraries and other software that serves the needs of many users, like Matlab. Some only care about power-of-2 sizes while others have very specific sizes.
+
+Any plan to sort of align the specification between cuFFT and Intel?
+
+* We haven't been part of specification discussions at this time.
+* Please raise any issues and contribute to discussions at the oneAPI specification repository: https://github.com/oneapi-src/oneAPI-spec
+
+Are bfloat16 and half and things like that supported?
+
+* No, just single and double. No mention of that in the specification.
+* cuFFT has support for that, but it may be more specific.
