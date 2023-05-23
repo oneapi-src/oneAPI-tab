@@ -45,3 +45,4 @@ Meeting notes:
 | `October 5, 2022 <minutes/2022_10_05_Minutes.rst>`__
 | `December 14, 2022 <https://oneapi-src.github.io/oneAPI-tab/meeting-notes/cross-tab.pdf>`__
 | `March 8, 2023 <minutes/2023_03_08_Minutes.rst>`__
+| `May 17, 2023 <minutes/2023_05_17_Minutes.rst>`__
