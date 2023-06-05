@@ -76,11 +76,11 @@ Upcoming oneAPI Community Forum Meetings
      - Math SIG
      - Virtual
      - Contact_
-   * - 30 May 2023, 10am-11am US Central Time
+   * - 7 June 2023, 10am-11am US Central Time
      - Language SIG
      - Virtual
      - Contact_
-   * - 14 June 2023, 8am-9:30am US Central Time
+   * - 28 June 2023, 8am-9:30am US Central Time
      - AI SIG
      - Virtual
      - Contact_
@@ -88,7 +88,7 @@ Upcoming oneAPI Community Forum Meetings
      - Image SIG
      - Virtual
      - Contact_
-   * - TBD
+   * - 22 June 2023, 9am-10:30 US Central Time
      - Hardware SIG
      - Virtual
      - Contact_
