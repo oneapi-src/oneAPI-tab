@@ -80,7 +80,7 @@ Upcoming oneAPI Community Forum Meetings
      - Language SIG
      - Virtual
      - Contact_
-   * - 14 June 2023, 8am-9:30am US Central Time
+   * - 27 June 2023, 8am-9:30am US Central Time
      - AI SIG
      - Virtual
      - Contact_
