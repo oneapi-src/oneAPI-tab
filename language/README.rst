@@ -61,33 +61,33 @@ Potential Topics
 Joint Matrix: A Unified SYCL Extension for Matrix Hardware Programming
 ------------------------------------------------------------------------
 
-Dounia Khaldi, 
+Dounia Khaldi,
 `Slides <presentations/2023-06-07-DK-matrix-oneapi-language.pdf.pdf>`_
 
 * Great community reception, with contributions to MLIR dialects upstream
-* Different levels of abstraction are exposed to different users. 
-  Joint matrix is aim for the middle. 
-  Breaks down gemm into primitives, its low level, 
+* Different levels of abstraction are exposed to different users.
+  Joint matrix is aim for the middle.
+  Breaks down gemm into primitives, its low level,
   but its portable across targets.
-* This presentation will cover both the SPIR-V and the SYCL extension, 
+* This presentation will cover both the SPIR-V and the SYCL extension,
   both are needed for different targets
-* Joint matrix relies in various abstractions for Code generation 
+* Joint matrix relies in various abstractions for Code generation
   (PTX ISA, SPIRV, GPU intrinsics..)
-* Joint matrix is not a replacement of the framework and the libraries, 
-  this is useful when implementing new operations 
+* Joint matrix is not a replacement of the framework and the libraries,
+  this is useful when implementing new operations
   or optimizing unexpected combinations of operations
-* This is also useful for library developers, 
+* This is also useful for library developers,
   they need to write code that is portable
-* Intel PVC has two stacks with slides, each slide has 16 XE core, 
+* Intel PVC has two stacks with slides, each slide has 16 XE core,
   8 vector engines and 8 XMX engines (GEMM accelerators)
-* Intel Xeon codenamed Sapphire Rapids have AMX extensions, 
+* Intel Xeon codenamed Sapphire Rapids have AMX extensions,
   which are GEMM accelerators
 * NVIDIA and other hardware vendors have their own GEMM accelerators
 * You would need a lot of different intrinsics to target all of them
-* The SYCL Matrix extension is an experimental SYCL API at this point 
+* The SYCL Matrix extension is an experimental SYCL API at this point
   so it may change from one release to the other
-* The joint matrix has a type of group, only subgroup is supported. 
-  Use is the matrix A,B or accumulator for GEMM, 
+* The joint matrix has a type of group, only subgroup is supported.
+  Use is the matrix A,B or accumulator for GEMM,
   then you specify the shape (Rows, columns) and the layout.
 * There are various operations supported, fill, load, store
 * (Slide shows an example of using the extension)
@@ -96,19 +96,19 @@ Dounia Khaldi,
 * Q (Ronan): can you do negative strides or is just unsigned?
 * A: Stride is a positive number.
 * Same example and source can run across Intel CPU, GPU and NVIDIA GPU.
-* Additional functions to pass row/col. This is Intel specific, 
+* Additional functions to pass row/col. This is Intel specific,
   NVIDIA cannot support this on tensorcores
 * Q(Ruyman): Any restrictions on element wise operations supported?
 * A(Douina): No restriction, any SYCL kernel code is valid
-* Size combinations are different between AMX and XMX, 
+* Size combinations are different between AMX and XMX,
   and even between generations of XMX. NVIDIA Has different numbers.
 * How do we write portable code? There is a query interface, static and dynamic
-* Static queries require hardware architecture checks. 
+* Static queries require hardware architecture checks.
   Basic code is similar between SYCL joint matrix and CUDA Fragments
-* CUDA code migration to SYCL is simple as it is very close to the 
+* CUDA code migration to SYCL is simple as it is very close to the
   wmma operations
 * Joint matrix extension in MLIR generates SPIR-V code for multiple backends
-* Currently: Full support of SYCL joint matrix extension 
+* Currently: Full support of SYCL joint matrix extension
   on AMX, XMX and NVIDIA Tensor Cores
 * Next steps: Standarization of joint matrix on SYCL and SPIR-V
 
@@ -118,32 +118,32 @@ Joint matrix in NVIDIA Tensor Cores
 Mehdi Goli, `Slides <presentations/2023-06-07_JointMatrix_NVIDIA.pdf.pdf>`
 
 * Gemms are used everywhere and its very important we optimize those
-* Presentation about Joint Matrix Performance analysis, 
+* Presentation about Joint Matrix Performance analysis,
   showing support for SM72 and SM80 (Jetson and Ampere)
-* we use the joint matrix extension on both, 
+* we use the joint matrix extension on both,
   we can achieve 97% of cuDNN on Jetson
-* On SM80 / A100 we use different sizes and see mixed results 
-  (very good on small sizes, really bad on large sizes) 
+* On SM80 / A100 we use different sizes and see mixed results
+  (very good on small sizes, really bad on large sizes)
   performance comparison with cutlas and cudnn.
-* SYCL-BLAS Half and TF32 performance is slightly better for small sizes but 
+* SYCL-BLAS Half and TF32 performance is slightly better for small sizes but
   gets much worse for bigger sizes performance comparison with cutlas and cudnn
-* NVIDIA uses ldmatrix and cp.async (Shared Store From Global Load) to get 
-  higher performance. 
+* NVIDIA uses ldmatrix and cp.async (Shared Store From Global Load) to get
+  higher performance.
   These instructions allow to bypass the cache and apply prefetching
-* Tensorcore support has evolved across different NVIDIA architectures, 
-  and they have added new instructions that support some advanced 
+* Tensorcore support has evolved across different NVIDIA architectures,
+  and they have added new instructions that support some advanced
   features using a different part of the PTX ISA (wmma vs mma).
-* WMMA is a higher level instruction that mapps to multiple HMMA instructions 
+* WMMA is a higher level instruction that mapps to multiple HMMA instructions
   on the SASS.
-* MMA instructions map to a single hmma wherever possible, 
-  or backwards compatible breaks down to multiple hmma instructions 
+* MMA instructions map to a single hmma wherever possible,
+  or backwards compatible breaks down to multiple hmma instructions
   for previous geneerations
-* WMMA is exposed in CUDA and what we use today for joint_matrix extension, 
+* WMMA is exposed in CUDA and what we use today for joint_matrix extension,
   whereas MMA is what cutlas and other use via hard-coding assembly.
 * Results from NVIDIA suggest WMMA is slower than MMA.
-* The performance gap from our joint matrix numbers is due to the 
+* The performance gap from our joint matrix numbers is due to the
   lack of cp.async and needs to be added to DPCPP.
-* Need somehow to expose the mma instruction to DPCPP so that we can fix 
+* Need somehow to expose the mma instruction to DPCPP so that we can fix
   the performance gap.
 * Q(Ruyman) you mean supporting it within joint_matrix extension?
 * A(Mehdi):  Yes should be possible
@@ -152,20 +152,20 @@ Mehdi Goli, `Slides <presentations/2023-06-07_JointMatrix_NVIDIA.pdf.pdf>`
 * Q(Geoff): Why don't we load this on local memory?
 * A(Mehdi): Is not supported in our backend
 * Q(Geoff):  If we preload the stuff in SLM wouldnt be get more performance?
-* A(Mehdi): Our backend does not supported it, this is one of the key factor 
+* A(Mehdi): Our backend does not supported it, this is one of the key factor
   on the performance problems we see.
 * Q(Dounia) Are there technical challenges on the implementation
-* A(Mehdi): Its a lot of different configurations and maintenance to the 
+* A(Mehdi): Its a lot of different configurations and maintenance to the
   backend. Individual mapping of builtins is difficult.
-* A(Dounia): ATS and PVC  sizes are different, thats why we have the query. 
-  Implementaiton is bigger but its transparent, 
+* A(Dounia): ATS and PVC  sizes are different, thats why we have the query.
+  Implementaiton is bigger but its transparent,
   the user have to type which hardware they have.
-* Q(Geoff): Any matrix multiplication should tile itself onto SLM but seems 
-  its not the case? why joint matrix should be 3 times slower? 
-  they have a nice feature to do it on the ISA 
+* Q(Geoff): Any matrix multiplication should tile itself onto SLM but seems
+  its not the case? why joint matrix should be 3 times slower?
+  they have a nice feature to do it on the ISA
   but you can do that yourself right?
-* A(Mehdi): They use a different instruction to implement the loading 
-  that gives better performance, 
+* A(Mehdi): They use a different instruction to implement the loading
+  that gives better performance,
   we cannot use that instruction in DPC++ backend yet
 
 (Meeting adjourned, out of time)
