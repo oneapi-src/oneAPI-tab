@@ -158,7 +158,8 @@ Mehdi Goli, `Slides <presentations/2023-06-07_JointMatrix_NVIDIA.pdf.pdf>`
 * A(Mehdi): Its a lot of different configurations and maintenance to the 
   backend. Individual mapping of builtins is difficult.
 * A(Dounia): ATS and PVC  sizes are different, thats why we have the query. 
-  Implementaiton is bigger but its transparent, the user have to type which hardware they have.
+  Implementaiton is bigger but its transparent, 
+  the user have to type which hardware they have.
 * Q(Geoff): Any matrix multiplication should tile itself onto SLM but seems 
   its not the case? why joint matrix should be 3 times slower? 
   they have a nice feature to do it on the ISA 
