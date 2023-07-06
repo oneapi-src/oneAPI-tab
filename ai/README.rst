@@ -16,6 +16,13 @@ To find out how to join the AI SIG `get in touch`_.
 Meeting Notes
 =============
 
+2023-06-28
+==========
+
+`Meeting notes <presentations/2023-06-28-JAX-PJRT-Intel-GPU-meeting-note.pdf>`__
+
+`Accelerate JAX on Intel GPUs via PJRT <presentations/2023-06-28-JAX-PJRT-Intel-GPU.pdf>`__
+
 2023-03-15
 ==========
 
