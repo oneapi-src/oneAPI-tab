@@ -72,7 +72,7 @@ Upcoming oneAPI Community Forum Meetings
      - Meeting Type
      - Location
      - How to join
-   * - 17 May 2023, 9am-10am US Central Time
+   * - 12 July 2023, 9am-10am US Central Time
      - Math SIG
      - Virtual
      - Contact_
