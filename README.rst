@@ -13,16 +13,16 @@ More information can be found at oneapi.io_.
 
 This repository hosts notes and presentation materials from the
 oneAPI Community Forum meetings.  The meetings are open and comprised
-of experts from industry, government, and academia that help guide
+of industry, government, and academia experts who help guide
 the oneAPI specification.
 
 The policies and governance processes are also available on this repo.
 
 The community is invited to join the meetings, review the `oneAPI
 Specification`_, and read the information in this repo. Contributions
-can be made by joining the Special Interest Groups (SIGs) or by
+can be made by joining the Special Interest Groups (SIGs) or 
 posting comments or questions as GitHub issues. General questions can
-go to this repo and issues specific to parts of the specification can
+go to this repo, and issues specific to parts of the specification can
 go to the `Specification repo`_.
 
 To be notified of new meeting notes, become a watcher of this repo. If
@@ -72,16 +72,8 @@ Upcoming oneAPI Community Forum Meetings
      - Meeting Type
      - Location
      - How to join
-   * - 12 July 2023, 9am-10am US Central Time
-     - Math SIG
-     - Virtual
-     - Contact_
    * - 7 June 2023, 10am-11am US Central Time
      - Language SIG
-     - Virtual
-     - Contact_
-   * - 21 June 2023, 10am-11am US Central Time
-     - Image SIG
      - Virtual
      - Contact_
    * - 22 June 2023, 9am-10am Central Time
@@ -90,6 +82,14 @@ Upcoming oneAPI Community Forum Meetings
      - Contact_
    * - 28 June 2023, 8am-9:30am US Central Time
      - AI SIG
+     - Virtual
+     - Contact_
+   * - 12 July 2023, 9am-10am US Central Time
+     - Math SIG
+     - Virtual
+     - Contact_
+   * - 24 August 2023, 10am-11am US Central Time
+     - Image SIG
      - Virtual
      - Contact_
 
@@ -107,13 +107,13 @@ GitHub as a PDF. Here is the procedure.
 Edit the meeting notes in Google Docs. If you want to publish a
 presentation, upload a PDF to GitHub. For example, here is the
 directory that contains presentations for the cross-tab:
-presentations_. Select *Add file*, then *Upload files*. After the file
-is uploaded, click on its name to view and then copy the URL from your
-browser to the google doc.
+presentations_. Select *Add file*, then *Upload files*. After uploading
+the file, click on its name to view and copy the URL from your
+browser to the Google Doc.
 
 When meeting notes are complete, publish them to GitHub as a
 PDF. Mirroring is triggered automatically once a day. If you do not
-want to wait, go to `mirror workflow`_, and select *Run workflow* and
+want to wait, select `mirror workflow`_, select *Run workflow*, and
 then *Run workflow*. When you see the green check, it is
 published. Look at `mirroring yaml`_ to get the URL. For example, see
 `Cross-tab PDF`_.
