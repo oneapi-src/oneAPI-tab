@@ -20,7 +20,7 @@ The policies and governance processes are also available on this repo.
 
 The community is invited to join the meetings, review the `oneAPI
 Specification`_, and read the information in this repo. Contributions
-can be made by joining the Special Interest Groups (SIGs) or 
+can be made by joining the Special Interest Groups (SIGs) or
 posting comments or questions as GitHub issues. General questions can
 go to this repo, and issues specific to parts of the specification can
 go to the `Specification repo`_.
