@@ -15,6 +15,109 @@ To find out how to join the Hardware SIG `get in touch. <https://www.oneapi.io/c
 Meeting Notes
 =============
 
+2023-06-22
+=========
+
+Agenda
+------
+
+* Consistent timestamp reporting in Level Zero, Matias Cabral
+* Level Zero port for TornadoVM + the SPIR-V code gen, Juan Fumero
+* Tiles-as-devices model in Level Zero, Jaime Arteaga
+* Level Zero and Unified Runtime general updates, Jaime Arteaga Molina, Alastair Murray
+
+Attendees
+---------
+
+.. list-table::
+
+
+   * - Alison L Richards, Intel
+     - Jaime Arteaga Molina, Intel
+     - Michal Mrozek, Intel
+   * - Alastair Murray, Codeplay
+     - Brice Videau, Intel
+     - Matias Cabral, Intel
+   * - Juan Fumero, The University of Manchester
+     - Kenneth Benzie, Codeplay
+     - Ben Ashbaugh, Intel
+   * - Brice Goglin
+     - John Daniel Holmes, Intel
+     - Ruyman Reyes, Codeplay
+   * - Kevin Harms, ANL
+     - Xinmin Tian, Intel
+     - Rod Burns, Codeplay
+   * - Brandon Yates, Intel
+     - DorotheeX Marie Clotilde Balas, Intel
+     -
+
+Consistent timestamp reporting in Level Zero
+--------------------------------------------
+
+* Inconsistency of metrics units for timestamps in
+  Level Zero specification.
+* Proposal: Explicit definition of timestamps on ns
+  and resolutions in frequency.
+
+Level Zero port for TornadoVM + the SPIR-V code gen
+---------------------------------------------------
+
+* Work on extending TornadoVM to run on oneAPI stack,
+  focusing on Level Zero.
+* Current acces to heterogeneous systems is fragmented
+  with different stack for CPU and GPU.
+* What if access to these hardware could be done from
+  existing high-level programming languages.
+* TornadoVM translates for instance Java Bytecode
+  into CUDA, OpenCL, or SPIRV.
+* Translation is done by using ACC annotations.
+* TaskGraphs methods are used to identify functions
+  to accelerate.
+* Found that for some workloads, suggested group size
+  returned by L0 driver is not as optimal as the one
+  found heuristically by application.
+* Garbage Collector needs to be controlled to avoid
+  failures when dealing with memory moved to an accelerator.
+* Some suggestions for L0:
+  * Migration counters.
+  * Async exception support.
+  * Device aggregation.
+  * Improvements to suggested group size returned by L0.
+
+Tiles-as-devices model in Level Zero
+------------------------------------
+
+* L0 adding support for new device models.
+  * Mainly aimed at multi-tiled architectures
+  * New environment variable: ZE_FLAT_DEVICE_HIERARCHY
+    * Mode 0: Cards-as-devices model
+    * Mode 1: Tiles-as-devices model (no access to root device)
+    * Mode 2: Tiles-as-devices model (with access to root device)
+  * Objective is to provide applications with ability to
+    select best configuration for a given workload, especially
+    when using architectures where access between tiles is
+    more costly than local access.
+  * Changes and new APIs to be added as part of L0 v1.7.
+
+
+Level Zero and Unified Runtime general updates
+----------------------------------------------
+
+* UR Adapters have been merged to the SYCL runtime.
+* License was previously MIT and now being changed to Apache
+  to make it friendlier with LLVM.
+* Current UR version is v0.6 and closing to be tagging next
+  version.
+* All development happening in public UR repo.
+* Experimental features being added as well, such us
+  Command Buffers for graphs and USM import/export.
+* Developers looking to move to UR can build the loader
+  from the UR repo and the adapters from intel/llvm
+  and use the UR interfaces.
+* Application links to UR loader, which would load the
+  UR adapters, which then load the corresponding drivers.
+
+
 2022-11-3
 =========
 
@@ -48,8 +151,8 @@ Attendees
      - Zack Waters, Intel
      -
 
-oneAPI Coummunity Forum
------------------------
+oneAPI Community Forum
+----------------------
 
 * TABs changing to SIGs
 
