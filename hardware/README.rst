@@ -80,6 +80,7 @@ Level Zero port for TornadoVM + the SPIR-V code gen
 * Garbage Collector needs to be controlled to avoid
   failures when dealing with memory moved to an accelerator.
 * Some suggestions for L0:
+
   * Migration counters.
   * Async exception support.
   * Device aggregation.
@@ -96,12 +97,15 @@ Level Zero port for TornadoVM + the SPIR-V code gen
 Tiles-as-devices model in Level Zero
 ------------------------------------
 
-* L0 adding support for new device models.
+* L0 adding support for new device models
+
   * Mainly aimed at multi-tiled architectures
   * New environment variable: ZE_FLAT_DEVICE_HIERARCHY
 
     * Mode 0: Cards-as-devices model
+
     * Mode 1: Tiles-as-devices model (no access to root device)
+
     * Mode 2: Tiles-as-devices model (with access to root device)
 
   * Objective is to provide applications with ability to
