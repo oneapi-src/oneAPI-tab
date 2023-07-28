@@ -49,7 +49,7 @@ Attendees
      - Xinmin Tian, Intel
      - Rod Burns, Codeplay
    * - Brandon Yates, Intel
-     - DorotheeX Marie Clotilde Balas, Intel
+     - Dorothee Marie Clotilde Balas, Intel
      -
 
 Consistent timestamp reporting in Level Zero
@@ -65,7 +65,7 @@ Level Zero port for TornadoVM + the SPIR-V code gen
 
 * Work on extending TornadoVM to run on oneAPI stack,
   focusing on Level Zero.
-* Current acces to heterogeneous systems is fragmented
+* Current access to heterogeneous systems is fragmented
   with different stack for CPU and GPU.
 * What if access to these hardware could be done from
   existing high-level programming languages.
@@ -84,6 +84,14 @@ Level Zero port for TornadoVM + the SPIR-V code gen
   * Async exception support.
   * Device aggregation.
   * Improvements to suggested group size returned by L0.
+  * Questions:
+
+    * Unified runtime would be more useful to this
+      project as a standard?
+
+      To convince Java community to use this software
+      stack a standard is more appealing. Easier to justify
+      a standard because not controlled by one party.
 
 Tiles-as-devices model in Level Zero
 ------------------------------------
@@ -101,6 +109,28 @@ Tiles-as-devices model in Level Zero
     when using architectures where access between tiles is
     more costly than local access.
   * Changes and new APIs to be added as part of L0 v1.7.
+  * Questions:
+
+    * How is memory allocated between the different modes?
+
+      In mode 0 get device handle and allocations
+      split between two sub-devices (tiles), or could get
+      sub-device and memory will be allocated on that tile.
+      In mode 1 get handle to a tile as device (no sub-devices)
+      and memory is allocated on that tile. No magic.
+
+    * Is ZE_FLAT_DEVICE_HIERARCHY an environment variable?
+
+      Yes.
+
+    * Specification spec will say that mode 1 in the default?
+
+      Up for debate, specification may say that default
+      is implementation defined.
+
+    * In Mode 2 can't do an allocation on root device?
+
+      Yes, you can.zeDeviceGet will return all tiles.
 
 
 Level Zero and Unified Runtime general updates
@@ -109,7 +139,7 @@ Level Zero and Unified Runtime general updates
 * UR Adapters have been merged to the SYCL runtime.
 * License was previously MIT and now being changed to Apache
   to make it friendlier with LLVM.
-* Current UR version is v0.6 and closing to be tagging next
+* Current UR version is v0.6 and close to be tagging next
   version.
 * All development happening in public UR repo.
 * Experimental features being added as well, such us
