@@ -55,6 +55,8 @@ Attendees
 Consistent timestamp reporting in Level Zero
 --------------------------------------------
 
+`Slides <presentations/L0_timestamps_units.pdf>`__
+
 * Inconsistency of metrics units for timestamps in
   Level Zero specification.
 * Proposal: Explicit definition of timestamps on ns
@@ -62,6 +64,8 @@ Consistent timestamp reporting in Level Zero
 
 Level Zero port for TornadoVM + the SPIR-V code gen
 ---------------------------------------------------
+
+`Slides <presentations/TornadoVM-oneAPIHardwareSIG-June23.pdf>`__
 
 * Work on extending TornadoVM to run on oneAPI stack,
   focusing on Level Zero.
@@ -96,6 +100,8 @@ Level Zero port for TornadoVM + the SPIR-V code gen
 
 Tiles-as-devices model in Level Zero
 ------------------------------------
+
+`Slides <presentations/tiles-as-devices-l0-sig.pdf>`__
 
 * L0 adding support for new device models
 
@@ -139,6 +145,8 @@ Tiles-as-devices model in Level Zero
 
 Level Zero and Unified Runtime general updates
 ----------------------------------------------
+
+`Slides <presentations/Unified-Runtime-for-oneAPI-HW-SIG-062223.pdf>`__
 
 * UR Adapters have been merged to the SYCL runtime.
 * License was previously MIT and now being changed to Apache
