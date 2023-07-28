@@ -16,7 +16,7 @@ Meeting Notes
 =============
 
 2023-06-22
-=========
+==========
 
 Agenda
 ------
@@ -24,7 +24,8 @@ Agenda
 * Consistent timestamp reporting in Level Zero, Matias Cabral
 * Level Zero port for TornadoVM + the SPIR-V code gen, Juan Fumero
 * Tiles-as-devices model in Level Zero, Jaime Arteaga
-* Level Zero and Unified Runtime general updates, Jaime Arteaga Molina, Alastair Murray
+* Level Zero and Unified Runtime general updates,
+  Jaime Arteaga Molina, Alastair Murray
 
 Attendees
 ---------
@@ -90,9 +91,11 @@ Tiles-as-devices model in Level Zero
 * L0 adding support for new device models.
   * Mainly aimed at multi-tiled architectures
   * New environment variable: ZE_FLAT_DEVICE_HIERARCHY
+
     * Mode 0: Cards-as-devices model
     * Mode 1: Tiles-as-devices model (no access to root device)
     * Mode 2: Tiles-as-devices model (with access to root device)
+
   * Objective is to provide applications with ability to
     select best configuration for a given workload, especially
     when using architectures where access between tiles is
