@@ -1,0 +1,87 @@
+=========================================
+Math Special Interest Group Meeting Notes
+=========================================
+
+2023-07-12
+==========
+
+Materials:
+
+* `General updates <../presentations/2023-07-12_Slides.pdf>`__
+* `Integrating SYCL-BLAS into oneMKL <../presentations/2023-07-12_oneMKL-PortBLAS.pdf>`__
+
+Attendees:
+
+* Alejandro Acosta (Codeplay)
+* Andrew Barker (Intel)
+* Frank Brill (Cadence)
+* Ouadie El Farouki (Codeplay)
+* Mehdi Goli (Codeplay)
+* Paolo Gorlani (Codeplay)
+* Sarah Knepper (Intel)
+* Piotr Luszczek (UTK)
+* John Melonakos (Intel)
+* Kumudha Narasimhan (Codeplay)
+* Helen Parks (Intel)
+* Pat Quillen (MathWorks)
+* Alison Richards (Intel)
+* Nicolò Scipione (Codeplay)
+* Shane Story (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Integrating SYCL-BLAS into oneMKL - Ouadie El Farouki
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* The Image Special Interest Group was launched, focused on oneAPI Image Processing Library. This and other SIGs are open for others to join, so please feel free to extend invitations to people from your own or other organizations.
+* rocFFT was added as a backend for DFT domain in the open source oneMKL interfaces project.
+* Additional functionality was added for several different backends.
+
+SYCL-BLAS as a oneMKL backend - Ouadie El Farouki:
+
+* Paolo, Nicolò and Alejandro are colleagues that are happy to answer questions.
+* Motivations of BLAS (Basic Linear Algebra Subprograms): reusability through a common interface and exploring hardware capabilities for efficiency and accuracy.
+* There are extensions of BLAS including batched operations.
+* 2 categories of BLAS libraries: open source and proprietary. Proprietary are often fine-tuned for specific hardware while the open source ones may be more portable.
+
+SYCL-BLAS:
+
+* SYCL-BLAS is a SYCL and C++ based BLAS implementation started in 2015 by Codeplay. There have been more than 40 developers, with many papers published about it.
+* It follows modern C++ specifications and can be used as a header-only library. It uses template meta-programming. SYCL-BLAS was developed to be the reference SYCL-based implementation; it can be compiled by different SYCL compilers and run on any SYCL compatible device.
+* Performance and portability is achieved in SYCL-BLAS through template meta-programming.
+* Choose SYCL_COMPILER, the TUNING_TARGET for the device to tune it for (so it picks the right template parameters for the given device), the SYCL_TARGET and SYCL_ARCH for computational purposes.
+* Auto-tuning - given the problem size on the target device, the auto-tuner will choose the best configuration and return the optimal kernel parameters (tiling size, cache line, work group size, etc.).
+* As examples of ongoing use-cases of SYCL-BLAS, it is used as an optional backend for SYCL-DNN. It is used experimentally for a JPEG-Compression application that uses the tuning of the GEMM operator in the JPEG compression algorithm.
+
+SYCL-BLAS and oneMKL:
+
+* oneMKL is the open source implementation of the oneMKL specification, which is part of the 10 core specifications of oneAPI. oneMKL is broken into different domains, including BLAS. oneMKL interfaces support multiple devices through third party libraries. There may be multiple libraries that map to a given device.
+* For the BLAS domain, Intel oneMKL, NVIDIA cuBLAS, and AMD rocBLAS are backends. SYCL-BLAS is a portable backend that can handle all of those devices. If we come to support other devices, they will be supported by the SYCL-BLAS backend as well.
+* You can specify SYCL-BLAS backend when building oneMKL, but you can't choose SYCL-BLAS with other backends; the others need to be disabled.
+* There are two usage models inherent to oneMKL: run-time dispatching (don't need to give the backend at compile-time; it is chosen at run-time), or compile-time dispatching - the backend is specified as a template parameter.
+* A concise example of compile-time dispatching is given in the slides, where the device and backend are selected, buffers are prepared, and computation is launched.
+
+Future plans:
+
+* A pull request is already open for full support of USM.
+* Working on row-major support.
+* Increasing operator implementation (currently ~60%).
+* Supporting complex type for operators that support it.
+
+Update: to emphasize its portability feature, SYCL-BLAS will be renamed as portBLAS.
+
+How big is your search space for auto-tuning BLAS, and how long does it take to scan it? How does the scanning of the search space to get optimal performance work?
+
+* We have a set of configurations for each device target, which are put into a json file. Some of them are experimental hints that include the optimal configuration for that device. The user inputs the problem size. There is a very basic, exhaustive, brute force search over all configurations that are available for the operation (especially gemm). It launches different gemm kernels and sorts the results based on performance. It prints all configurations along with their profiling results.
+
+Since this can be used as a header-only library, what is the compilation time?
+
+* Not long. oneMKL enables the default, reference backend (not all configurations). There is a guide for enabling different backends.
+
+How does performance compare to proprietary libraries?
+
+* This is work in progress; we want a benchmark to measure this.
