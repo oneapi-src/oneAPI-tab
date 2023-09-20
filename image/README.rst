@@ -76,14 +76,17 @@ journey.
 
 The Image SIG is led by John Melonakos.
 
-To find out how to join the Image SIG `get in touch. <https://www.oneapi.io/community/>`__
+Upcoming Meetings
+=================
 
+To join the Image SIG, email oneapi@codeplay.com to register for our quarterly meetings. You will be added to the
+mailing list and notified of upcoming events.
 
-Meeting notes and presentations:
-================================
+Previous Meetings
+=================
 
-| June 21, 2023 [`presentation <presentations/2023-06-21_Slides.pdf>`__]
-| February 17, 2022 [`notes <minutes/2022_02_17_Minutes.rst>`__, `presentation <presentations/2022-02-17_Slides.pdf>`__]
-| February 3, 2022 [`notes <minutes/2022_02_03_Minutes.rst>`__, `presentation <presentations/2022-02-03_Slides.pdf>`__]
-| December 16, 2021 [`notes <minutes/2021_12_16_Minutes.rst>`__, `presentation <presentations/2021-12-16_Slides.pdf>`__]
-| November 29, 2021 [`notes <minutes/2021_11_29_Minutes.rst>`__, `presentation <presentations/2021-11-20_Slides.pdf>`__]
+| June 21, 2023 - `presentation <presentations/2023-06-21_Slides.pdf>`__
+| February 17, 2022 - `notes <minutes/2022_02_17_Minutes.rst>`__, `presentation <presentations/2022-02-17_Slides.pdf>`__
+| February 3, 2022 - `notes <minutes/2022_02_03_Minutes.rst>`__, `presentation <presentations/2022-02-03_Slides.pdf>`__
+| December 16, 2021 - `notes <minutes/2021_12_16_Minutes.rst>`__, `presentation <presentations/2021-12-16_Slides.pdf>`__
+| November 29, 2021 - `notes <minutes/2021_11_29_Minutes.rst>`__, `presentation <presentations/2021-11-20_Slides.pdf>`__
