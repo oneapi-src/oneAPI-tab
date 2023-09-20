@@ -36,9 +36,9 @@ Purpose of the Group
 ====================
 
 The Image Special Interest Group (Image SIG) is committed to the collaborative
-development, understanding, and promotion of the open standard oneIPL. We aim to
-build a comprehensive image-processing library to set a new standard for image
-processing in the oneAPI ecosystem.
+development, understanding, and promotion of the open standard oneIPL. We aim
+to build a comprehensive image-processing library to set a new standard for
+image processing in the oneAPI ecosystem.
 
 1. Collaborate: Gather key industry stakeholders to contribute to the oneIPL
    standard. Engineers and software developers from across the industry will
@@ -57,9 +57,9 @@ Strategy for Achieving Goals
 To achieve these goals, the following strategic approach will be taken:
 
 1. Community Building: Foster a vibrant and active community of engineers and
-   software developers that meets regularly to discuss, debate, and determine
-   the direction of oneIPL. This will be achieved through online events and a
-   clear communication channel for group members.
+   software developers who meet regularly to discuss, debate, and determine the
+   direction of oneIPL. This will be achieved through online events and a clear
+   communication channel for group members.
 
 2. Open Collaboration: Promote an open-source mindset to enable active
    contributions from all members. The group will focus on collaboration,
@@ -74,8 +74,8 @@ To achieve these goals, the following strategic approach will be taken:
 4. Regular Updates and Reviews: Schedule periodic meetings for group members to
    share their experiences, progress, and challenges with the oneIPL
    library. These sessions will act as a platform for knowledge sharing,
-   brainstorming solutions, and shaping the roadmap for the future of the oneIPL
-   specification.
+   brainstorming solutions, and shaping the roadmap for the future of the
+   oneIPL specification.
 
 5. Integration with the oneAPI Ecosystem: Work closely with the broader oneAPI
    community to ensure the oneIPL library seamlessly integrates with the other
@@ -85,8 +85,8 @@ To achieve these goals, the following strategic approach will be taken:
 Through this purpose and strategic approach, the Image Special Interest Group
 will shape the future of image processing via the oneIPL image processing
 library in alignment with the broader goals of the oneAPI ecosystem. We believe
-in the power of collaborative innovation to drive the future of image processing
-and look forward to contributing to this journey.
+in the power of collaborative innovation to drive the future of image
+processing and look forward to contributing to this journey.
 
 ---
 
@@ -96,13 +96,18 @@ Upcoming Meetings
 =================
 
 To join the Image SIG, email oneapi@codeplay.com to register for our quarterly
-meetings. You will be added to the mailing list and notified of upcoming events.
+meetings. You will be added to the mailing list and notified of upcoming
+events.
 
 Previous Meetings
 =================
 
 | June 21, 2023 - `presentation <presentations/2023-06-21_Slides.pdf>`__
-| February 17, 2022 - `notes <minutes/2022_02_17_Minutes.rst>`__, `presentation <presentations/2022-02-17_Slides.pdf>`__
-| February 3, 2022 - `notes <minutes/2022_02_03_Minutes.rst>`__, `presentation <presentations/2022-02-03_Slides.pdf>`__
-| December 16, 2021 - `notes <minutes/2021_12_16_Minutes.rst>`__, `presentation <presentations/2021-12-16_Slides.pdf>`__
-| November 29, 2021 - `notes <minutes/2021_11_29_Minutes.rst>`__, `presentation <presentations/2021-11-20_Slides.pdf>`__
+| February 17, 2022 - `notes <minutes/2022_02_17_Minutes.rst>`__, \
+ `presentation <presentations/2022-02-17_Slides.pdf>`__
+| February 3, 2022 - `notes <minutes/2022_02_03_Minutes.rst>`__, \
+ `presentation <presentations/2022-02-03_Slides.pdf>`__
+| December 16, 2021 - `notes <minutes/2021_12_16_Minutes.rst>`__, \
+ `presentation <presentations/2021-12-16_Slides.pdf>`__
+| November 29, 2021 - `notes <minutes/2021_11_29_Minutes.rst>`__, \
+ `presentation <presentations/2021-11-20_Slides.pdf>`__
