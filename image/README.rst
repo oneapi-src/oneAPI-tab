@@ -24,14 +24,14 @@ Its royalty-free APIs help developers:
 
 In addition to domain-specific functionality, the Image SIG may also discuss overall design features like the execution
 model, memory model, or error handling. At times, the open source oneIPL Interfaces project, which implements the oneIPL
-specification, may also be discussed.
+specification may also be discussed.
 
 Purpose of the Group
 ====================
 
 The Image Special Interest Group (Image SIG) is committed to the collaborative development, understanding, and promotion
-of the open standard oneIPL. We aim to build a comprehensive image processing library that will set a new standard for
-image processing in the oneAPI ecosystem.
+of the open standard oneIPL. We aim to build a comprehensive image-processing library to set a new standard for image
+processing in the oneAPI ecosystem.
 
 1. Collaborate: Gather key industry stakeholders to contribute to the oneIPL standard. Engineers and software developers
    from across the industry will share insights, knowledge, and resources to collaboratively shape the future of the
@@ -49,15 +49,15 @@ To achieve these goals, the following strategic approach will be taken:
 
 1. Community Building: Foster a vibrant and active community of engineers and software developers that meets regularly
    to discuss, debate, and determine the direction of oneIPL. This will be achieved through online events and a clear
-   channel of communication for group members.
+   communication channel for group members.
 
-2. Open Collaboration: Promote an open-source mindset to enable active contribution from all members. The group will
+2. Open Collaboration: Promote an open-source mindset to enable active contributions from all members. The group will
    focus on collaboration, maintaining a transparent process where all members have access to resources and are
    encouraged to provide input on development.
 
-3. Training and Education: Organize training sessions, workshops, and webinars aimed at educating members and the
-   broader oneAPI ecosystem about the features, advantages, and potential of the oneIPL library. This will also be an
-   opportunity to gather feedback and requirements from end-users.
+3. Training and Education: Organize training sessions, workshops, and webinars to educate members and the broader oneAPI
+   ecosystem about the features, advantages, and potential of the oneIPL library. This will also be an opportunity to
+   gather feedback and requirements from end users.
 
 4. Regular Updates and Reviews: Schedule periodic meetings for group members to share their experiences, progress, and
    challenges with the oneIPL library. These sessions will act as a platform for knowledge sharing, brainstorming
@@ -65,7 +65,7 @@ To achieve these goals, the following strategic approach will be taken:
 
 5. Integration with the oneAPI Ecosystem: Work closely with the broader oneAPI community to ensure the oneIPL library
    seamlessly integrates with the other elements of the oneAPI ecosystem. This will help ensure the standard is
-   accessible, beneficial, and valuable to the entire community.
+   accessible, beneficial, and valuable to the community.
 
 Through this purpose and strategic approach, the Image Special Interest Group will shape the future of image processing
 via the oneIPL image processing library in alignment with the broader goals of the oneAPI ecosystem. We believe in the
@@ -82,8 +82,8 @@ To find out how to join the Image SIG `get in touch. <https://www.oneapi.io/comm
 Meeting notes and presentations:
 ================================
 
-| June 21, 2023 [`presentation <presentations/2023-06-21_Slides.pdf>`]__
-| February 17, 2022 [`notes <minutes/2022_02_17_Minutes.rst>`, `presentation <presentations/2022-02-17_Slides.pdf>`]__
-| February 3, 2022 [`notes <minutes/2022_02_03_Minutes.rst>`, `presentation <presentations/2022-02-03_Slides.pdf>`]__
-| December 16, 2021 [`notes <minutes/2021_12_16_Minutes.rst>`, `presentation <presentations/2021-12-16_Slides.pdf>`]__
-| November 29, 2021 [`notes <minutes/2021_11_29_Minutes.rst>`, `presentation <presentations/2021-11-20_Slides.pdf>`]__
+| June 21, 2023 [<`presentation <presentations/2023-06-21_Slides.pdf>`]__
+| February 17, 2022 [<`notes <minutes/2022_02_17_Minutes.rst>`, `presentation <presentations/2022-02-17_Slides.pdf>`]__
+| February 3, 2022 [<`notes <minutes/2022_02_03_Minutes.rst>`, `presentation <presentations/2022-02-03_Slides.pdf>`]__
+| December 16, 2021 [<`notes <minutes/2021_12_16_Minutes.rst>`, `presentation <presentations/2021-12-16_Slides.pdf>`]__
+| November 29, 2021 [<`notes <minutes/2021_11_29_Minutes.rst>`, `presentation <presentations/2021-11-20_Slides.pdf>`]__
