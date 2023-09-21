@@ -95,6 +95,8 @@ The Image SIG is led by John Melonakos.
 Upcoming Meetings
 =================
 
+The next Image SIG will be held on December 14, 2023, from 10am to 11am CST.
+
 To join the Image SIG, email oneapi@codeplay.com to register for our quarterly
 meetings. You will be added to the mailing list and notified of upcoming
 events.
@@ -102,6 +104,7 @@ events.
 Previous Meetings
 =================
 
+| September 21, 2023 - `presentation <presentations/2023-09-21_Slides.pdf>`__
 | June 21, 2023 - `presentation <presentations/2023-06-21_Slides.pdf>`__
 | February 17, 2022 - `notes <minutes/2022_02_17_Minutes.rst>`__, \
  `presentation <presentations/2022-02-17_Slides.pdf>`__
