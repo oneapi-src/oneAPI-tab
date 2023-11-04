@@ -8,13 +8,13 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout gh-pages
+    - name: BramwelIanAuku
       uses: actions/checkout@v3
-      with:
+      with:Githubandapi
         ref: gh-pages
         path: gh-pages
-    - name: Publish to github pages
-      run: |
+    - name: BramwelIanAuku
+      run: |publish snd run code
         rm -rf gh-pages/*
         touch gh-pages/.nojekyll
         mkdir -p gh-pages/meeting-notes
@@ -22,8 +22,8 @@ jobs:
 
         curl -s -L -o meeting-notes/cross-tab.pdf https://docs.google.com/document/d/1CQ7gqc9wgFecLY7x81Y2l363zSykHNkqERg4_2sbgQs/export?format=pdf
 
-        git config user.name github-actions
-        git config user.email github-actions@github.com
+        git config user.name Bramwelian 
+        git config user.email ianbramwel573@gmail.com
         git add .
         # Ignore errors because no updates returns an error status.
         git commit --reset-author --amend -m "Update from github actions"
