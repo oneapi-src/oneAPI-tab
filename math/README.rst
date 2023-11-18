@@ -47,3 +47,4 @@ Meeting notes:
 | `March 8, 2023 <minutes/2023_03_08_Minutes.rst>`__
 | `May 17, 2023 <minutes/2023_05_17_Minutes.rst>`__
 | `July 12, 2023 <minutes/2023_07_12_Minutes.rst>`__
+| `September 20, 2023 <minutes/2023_09_20_Minutes.rst>`__
