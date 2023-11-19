@@ -1,0 +1,149 @@
+=========================================
+Math Special Interest Group Meeting Notes
+=========================================
+
+2023-09-20
+==========
+
+Materials:
+
+* `Discussion on sparse BLAS APIs <../presentations/2023-09-20_oneMKL-Sparse.pdf>`__
+* `value_or_pointer type for scalar parameters in BLAS APIs <../presentations/2023-09-20_Slides-value_or_pointer.pdf>`__
+
+Attendees:
+
+* Hartwig Anzt (UTK, KIT)
+* Andrew Barker (Intel)
+* Romain Biessy (Codeplay)
+* Gajanan Choudhary (Intel)
+* Tadej Ciglaric (Codeplay)
+* Terry Cojean (KIT)
+* Mehdi Goli (Codeplay)
+* Sarah Knepper (Intel)
+* Piotr Luszczek (UTK)
+* John Melonakos (Intel)
+* Kumudha Narasimhan (Codeplay)
+* Nicolas Offermans (Intel)
+* Spencer Patty (Intel)
+* Alison Richards (Intel)
+* Shane Story (Intel)
+* Muhammad Tanvir (Codeplay)
+
+Agenda:
+
+* Welcoming remarks
+* Updates from last meeting
+* Discussion on sparse BLAS APIs - Romain Biessy
+* value_or_pointer type for scalar parameters in BLAS APIs - Andrew Barker
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* The Unified Acceleration Foundation was created; please join the Math SIG Mailing List if you haven't already: https://lists.uxlfoundation.org/g/Math-SIG
+* SYCL-BLAS was renamed to portBLAS.
+* Additional functionality was added for several different backends in the open source oneMKL interfaces project.
+* Enabling sparse BLAS domain with MKLCPU backend is in progress.
+
+Discussion on sparse BLAS APIs - Romain Biessy:
+
+* Romain is a software engineer at Codeplay who worked on integrating DFT domain into oneMKL interface and, more recently, is looking at sparse BLAS. We need to think how to integrate cuSPARSE backend, and what changes we'll need to make to the specification.
+* Today's discussion is mainly about differences between oneMKL sparse and cuSPARSE/rocSPARSE APIs, but also about changes that affect all backends.
+
+Missing sycl::queue in init_matrix_handle
+
+* The init_matrix_handle function is the very first function that you call.
+* In the current specification, it doesn't have a sycl::queue, which means that it can't dispatch to a backend. There are very few functions that don't dispatch to a backend, so it's a bit of an outlier.
+* This was originally done on purpose with the assumption that each interface would have its own matrix handle type. This brings a question for MKLCPU and MKLGPU backend - we also need to call this function on the backend, so if we don't dispatch at this stage, we'll need to do it later.
+* Suggestion is to add SYCL queue as first argument to be more consistent. It makes sense to dispatch this function to the backend.
+
+cuSPARSE/rocSPARSE specification differences
+
+* oneMKL interfaces are meant to allow users to transition from other vendor's libraries to oneMKL. Unlike dense BLAS APIs, there is no consensus on sparse BLAS APIs. For instance, cuSPARSE and rocSPARSE changed their APIs two years ago.
+* cuSPARSE has a global handle, which is an opaque pointer that needs to be initialized by the user and is used for every cuSPARSE function. The closest construct in oneMKL would be the sycl::queue. There is the exact same issue for oneMKL BLAS and cuBLAS. There was a concern on the cost, which seems relatively low. User cannot free these resources as easily.
+* If we wanted to change this, one way would be to add a global handle. Essentially it would just contain the SYCL queue; maybe it could replace the SYCL queue in the interface. However, it may be a weird design because it changes the interface compared to other domains.
+* This is the first time this suggestion is being discussed. This is a fundamental difference between oneMKL and CUDA libraries. There are individual global handles for each CUDA library; this is not part of SYCL.
+* The Math SIG acknowledged that there can be a benefit of having a global handle you can pass around. However, they recognized that not everyone is happy with the way it is done in CUDA.
+* The Math SIG recommends to avoid having too many global states.
+
+Optimize_* mismatch
+
+* There are optimize functions you call before the actual compute function.
+* cuSPARSE gives more freedom: the user needs to query scratchpad for size; the user needs to allocate buffer for compute and then free later.
+* In oneMKL, allocations are done internally.
+* If we keep the current API, then as a workaround we would need to store these buffers and sizes in the matrix handle (as this is the only type that is getting passed around between optimize functionality and computation), and the user loses the ability of when to free these resources.
+* Calling the optimize functions in cuSPARSE is mandatory; it is only optional in oneMKL. We would need to either have an extra cost or remember that the optimize function was already called, if we advertise it as being optional.
+* If we wanted to match cuSPARSE, we would need lots of parameters for the operation added to the optimize function.
+* oneMKL interface always returns buffer_size of 0, but there is an allocation. There is a question whether the project should support this feature, whether people want this feature.
+* There are operation-specific handles that are passed in in CUDA where these buffers are stored - not in the matrix handle, but in the operation handle, at least for trsv.
+* It is not recommended to map the optimize APIs to the buffer_size query APIs, because optimize is supposed to perform optimizations if the backend library chooses to do it. cuSPARSE doesn't talk about making certain optimizations to buffer_size. We'd have to add APIs for this; we would need a separate API for buffer_size. cuSPARSE would probably not do anything except for trsv/trsm, but oneMKL backend might use that.
+
+* In theory, the x and y arrays have no bearings on the optimizations being prepared, but in some cases they are required for CUDA, likely done to match other functions.
+* For some of the APIs, documentation mentions that a null pointer can be passed.
+* The oneMKL LAPACK domain has a scratchpad_size function for each computational function, but the scratchpad_size functions do not take arrays holding matrices or vectors. So the current optimize functions are consistent with the oneMKL LAPACK domain in that regard.
+
+Matrix handle
+
+* cuSPARSE has const and non-const matrix handle types, likely only added for readability. We don't think it would affect the user application, but it may not be as clear. We are not entirely sure we need this in oneMKL.
+* There are some pieces to this that get tricky. At some future time, we want to add a function like sort_matrix. Its job would be to change user-provided data. The const applies to the handle, which is only user-data. In the Intel oneMKL backend, we do library allocations internally, so the const-ness applies only to the user-provided data. We would have APIs that modify the user-provided data. Even the messaging of how to make const on the matrix handle type is caveat-ed: only for user-provided data, not on the internals.
+* cuSPARSE's generic APIs don't have APIs that modify user data. They have a legacy API for sorting, but unsure if it accepts a const matrix handle or only does out-of-place sorting,
+* The general recommendation would be to not add in const unless there is real value for it. We will need to explain in documentation the thinking behind this, what's okay, what's not okay - how to handle things.
+
+Different algorithms
+
+* cuSPARSE has the ability to choose an algorithm, which lets you tune for your workload or know whether the operation is deterministic. There is no equivalent in oneMKL. For the backends we support, we could add this and document how they map, and the suggestion is to make it just a hint for the backend.
+* There is concern that some users may rely on the hint, even if it is documented as just a hint for the library.
+* The default could be deterministic, or it could error out and require the user to select something else.
+
+Other differences
+
+* There are some other differences, some more minor. Main point is that cuSPARSE is a slightly lower level API than oneMKL sparse, and it is easier to support more backends with a lower-level API. But it may be that users want higher-level API.
+* The slides cover more details.
+
+* NVIDIA has changed their APIs over and over again as problems are run into; we don't want to do that in oneMKL.
+* Sparse BLAS API is much more challenging than a dense BLAS API.
+* Hartwig Anzt is organizing a workshop prior to SC23, to try to find some common ground between vendors and users for defining a standard for sparse BLAS. With C++, a lot more flexibility is available. If anyone is interested in participating in a discussion on standardizing sparse BLAS: https://icl.utk.edu/workshops/sparseblas2023/index.html
+
+Is there a preference between a library doing internal allocations versus requiring the user to allocate?
+
+* cuSPARSE doesn't perform internal allocations; the user must allocate. oneMKL doesn't want the user to worry about this and so does the internal allocations for you.
+* With the user controlling allocations, the user can allocate once and then use it again. If the library controls, you can't reuse. So there is more flexibility with the user allocations.
+
+
+value_or_pointer type for scalar parameters in BLAS APIs - Andrew Barker
+
+Motivation
+
+* Scalar parameters in BLAS routines are usually named alpha/beta. In oneMKL interfaces, they are usually passed by value. We are proposing allowing either value or pointer to be passed to these functions.
+* Main advantage: data for scalars could be on device; e.g., using the result from performing a dot product on device.
+* This change would match cuBLAS behavior for device scalars.
+* If we make this change, you could just use the result from dot as the scalar in your axpy, for example.
+
+Minimize changes for existing users
+
+* While allowing pointers to be used, we want to keep existing code for users using oneMKL interfaces to still work. Existing users wouldn't need to change anything in their code. We would also allow mixing scalar and pointer parameters.
+* We are proposing this just for USM interfaces; they are used more often, and the idea of pointers makes more sense. Something like this would make sense for other domains, like sparse BLAS, but we are only proposing for dense BLAS.
+
+Proposed implementation
+
+* We wouldn't expect users to use the wrapper class value_or_pointer directly in their code. But it needs to be user-visible in header files.
+* If pointers are raw pointers (malloc), there can be issues with SYCL dependencies. If they are USM-managed pointers, it's fine.
+* The slide gives an example of what declaration to gemv would look like after making this change.
+* Partial idea of how wrapper class could be implemented, templated on type. If is_convertible - call a BLAS function on complex-valued values, but pass scalar like 2.7 and it would work.
+
+Summary
+
+* Main motivation is to allow device-side data, but this also makes it closer to cuBLAS APIs as well. In the Intel oneMKL product, we're moving forward with these changes. PR for the specification is up to provide feedback, or tell me now.
+* The same issue exists in sparse. Main one would be avoid synchronizing. Otherwise if one device, user would launch/submit a bunch of kernels without waiting on them, but if it's expected to be on the host, it needs to synchronize. Wait, then submit again. More costs than just memory transfer. We really need something like this.
+
+What happens if we have 2 different APIs, one taking pointers one scalars?
+
+* We could use overloads, but it would take a lot of them. It is possible.
+
+What is the value in having wrapper on scalars not pointers?
+
+* Users may expect some types that should be converted, like shared_ptr.
+* We need to think how something like shared_ptr might work.  I thought you were talking about different types of pointer.
+
+What about buffer support?
+
+* The current proposal does not support it for buffer APIs, though we could do something with buffers.
