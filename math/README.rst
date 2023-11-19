@@ -48,3 +48,4 @@ Meeting notes:
 | `May 17, 2023 <minutes/2023_05_17_Minutes.rst>`__
 | `July 12, 2023 <minutes/2023_07_12_Minutes.rst>`__
 | `September 20, 2023 <minutes/2023_09_20_Minutes.rst>`__
+| `October 25, 2023 <minutes/2023_10_25_Minutes.rst>`__
