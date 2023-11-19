@@ -1,0 +1,128 @@
+=========================================
+Math Special Interest Group Meeting Notes
+=========================================
+
+2023-10-25
+==========
+
+Materials:
+
+* `Discussion on Discrete Fourier Transform APIs <../presentations/2023-10-25_Slides.pdf>`__
+
+Attendees
+
+* Hartwig Anzt (UTK, KIT)
+* Andrew Barker (Intel)
+* Romain Biessy (Codeplay)
+* Hugh Bird (Codeplay)
+* Gajanan Choudhary (Intel)
+* Tadej Ciglaric (Codeplay)
+* Terry Cojean (KIT)
+* Raphael Egan (Intel)
+* Sarah Knepper (Intel)
+* Piotr Luszczek (UTK)
+* Finlay Marno (Codeplay)
+* John Melonakos (Intel)
+* Rob Mueller-Albrecht (Intel)
+* Kumudha Narasimhan (Codeplay)
+* Helen Parks (Intel)
+* Spencer Patty (Intel)
+
+Agenda:
+
+* Welcoming remarks
+* UXL/Math SIG Mailing Lists
+* Updates from last meeting
+* Discussion on Discrete Fourier Transform APIs - Raphael Egan
+* Wrap-up and next steps
+
+Updates from last meeting:
+
+* Please join the Math SIG Mailing List if you haven't already: https://lists.uxlfoundation.org/g/Math-SIG.
+* Starting around December 1, we will switch to use the UXL mailing list and event notification process.
+* oneMKL RNG device API has been added to the oneAPI spec, as well as introducing value_or_pointer wrapper for BLAS USM scalar parameters.
+* Adding RNG device API to the oneMKL interfaces is in progress, as is enabling the sparse BLAS domain with MKLCPU backend.
+
+Discussion on Discrete Fourier Transform APIs - Raphael Egan
+
+* There are some changes we are intending to implement soon for closed-source oneMKL, and aligning the spec with those changes is in progress.
+* This presentation is for us to present the proposed changes to you and have a discussion, so we can resolve any concerns in the current proposal.
+* We will briefly set an overview for this presentation to see the motivation for this change. We will show how the upcoming changes are addressed by illustrating with a consistent example.
+
+Motivation:
+
+* The Discrete Fourier Transform is defined by a very ugly formula. If you look at this formula in detail, the exponents sign in the twiddle factor can take two values (+1 or - 1).
+* When playing with complex data (where x is complex itself), it doesn't have a consequence since y is complex as well. But if x is from the real domain, you have complex y values, but it satisfies some relationships so you only need to store about half the data.
+* You have an implicit type that is real in the forward domain, but complex in the backward domain. This is a rather particular application, but it has serious consequences.
+* Even if you are playing with complex transforms but have non-unit strides, what we will talk about is very relevant.
+* For any well-defined transform in one direction, one can design the corresponding transform in the other direction, consistent with the fundamental roundtrip identity.
+* If you do a forward transform followed by a backward transform, you recover your original data.
+
+Current configuration parameters and issues:
+
+* The way the user communicates to oneMKL about the data layout is by providing the strides within a multi-dimensional signal. The stride that defines the distance between successive elements in a given data set.
+* For distances, we require users to set by domain (forward and backward separately), regardless of the direction they compute. But for strides, we require this to be set by input/output, which can be confusing sometimes.
+* This was a choice in designing the original SYCL API that departed from classical C/Fortran APIs. The original motivation was to make sure every 1D real descriptor could still do forward and backward transform even in batched cases. The stride being set differently was overlooked. There are 2D or 3D real transforms that then have issues - as illustrated next.
+* A 1D real transform of length X, batched M times, is pretty simple. Only need to define distance; default offset and strides are used. We need to define distances, which the SYCL API allows us to set by domain. It's always well defined. We know where we're going from and where we're going to.
+* For a 2D real transform of size YxX, batched M times, due to the nature of real transform and that we're going from real to complex data (storing about half due to complex conjugacy), we need to explicitly set the offset and strides. Additionally, they are different in the forward and backward domain.
+* Currently in the SYCL API, the user is required to use two different descriptors (for performance, to avoid re-committing). Another drawback in current design is that if you consider descriptor for forward direction, there are still some backward domain things that need to be set, or else it is ill-defined.
+* We can't make sense of strides for backward dimension by the current settings.
+* Any app that would end up requiring to configure the strides in a non-default way, where they are different between the forward and backward domain, would face these bottlenecks. oneMKL in particular comes with an extra head scratcher: you can't set default values for real descriptor. Either you need to re-commit every time you reverse direction, or use two descriptors - resulting in a larger than necessary memory footprint.
+
+On initial slide x and y were in/out vectors. Now they represent lengths?
+
+* m/n are small tensor - could have used better notation.
+
+What is X/2 if X is not divisible by 2? Is it for selecting real/imaginary components individually?
+
+* X is expected to have integer division. That's why we add 1.
+
+Is X the length in complex values?
+
+* In the forward domain, it would be real. For backward domain, it would be in complex.
+
+What about real-to-real?
+
+* Real-to-real isn't really supported. We chose not to present due to additional complexity.
+
+Upcoming changes to address these issues:
+
+* Instead of requiring users to set strides in input/output, set them instead by domain. This is just like what is currently done for batch distances.
+* What is struck through in "red" will enter a deprecation period, where user will get a warning and be advised to use new APIs. We don't want to support mix-and-matching of parameters; for example, configuring descriptor using both input strides and backward_strides isn't supported.
+* Now it will be what you would expect for a batched in-place real-to-complex transform.
+
+* Back to the 2D batched example: we are now setting strides by domain. Strides and distances are well defined regardless of compute direction. Internally we have all the info needed to make sure descriptor is configured for both forward and backward successfully. So if you do a round-trip transformation, you recover the original input data consistently.
+
+* We are currently working on specification changes. The original intention was to target these new changes for the spec v1.3 cut off.
+
+* The Math SIG agrees it is a good change.
+
+What is status of closed-source oneMKL APIs, for C/Fortran and SYCL? Do they already support forward/backward strides?
+
+* Classic C and Fortran APIs don't currently support strides and distances to be set by domain.
+* The changes to the SYCL APIs are targeted to the oneMKL 2024.1 release.
+
+If the spec if changed, when would we implement this in the oneMKL interfaces? Would we wait for the Intel oneMKL closed source library to be updated?
+
+* The vision is to implement sometime in 2024, after it is available in closed source. The former, input/output strides will enter a deprecation period for closed-source oneMKL.
+
+How long it will be in the spec but not implemented?
+
+* We don't foresee a lot of implementation changes, but are worried about users. We don't think it would be a big change.
+
+* Currently in the open source interfaces, for CPU we are creating two descriptors, one for each direction. However, one will make sense but one won't. With these changes, both are expected to make sense in the end.
+
+cuFFT and rocFFT go with input/output. There's some benefit with the commit time - only 1 kernel. Could you do one kernel and implement with forward and backward strides? Or two commits and twice the commit time?
+
+* For real transforms in cuFFT, unless I'm mistaken, there are two different descriptors: r2c and c2r.
+* So that means you would still have to specify direction when you create descriptor.
+
+What if you only want to do one direction?
+
+* That was a considered alternative. But that would have required significant changes to other APIs to ensure undefined behavior goes away. It would be clearly defined at commit which direction would be used. For some other API either it requires compute direction to be explicitly set beforehand or the names of the APIs themselves are direction-specific (r2c, c2r, etc.).
+
+Is it not possible to create a single kernel?
+
+* It's likely possible, but may have performance implications. A lot of the kernels are constrained by build-time constants (JIT-time constants), including direction.
+* To make kernel more general, it would become a compute-time constant. This is not a huge change, but it's not insignificant. No guarantee that it would perform just as well.
+* It's a tradeoff for convenience for user, tradeoff in performance at commit time, and overall footprint.
