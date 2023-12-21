@@ -5,6 +5,17 @@
     This repository is now deprecated since the forum has moved to the UXL Foundation
     Find the latest up to date information on the projects here_
 
++---------------------------------+
+|        !IMPORTANT!              |
+|                                 |
+| This repository is now          |
+| deprecated since the forum has  |
+| moved to the UXL Foundation     |
+|  Find the latest up to date     |
+| information on the projects     |
+| here_                           |
++---------------------------------+
+
 ================================
  oneAPI Community Forum
 ================================
