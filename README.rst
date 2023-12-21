@@ -1,17 +1,13 @@
 .. image:: https://github.com/oneapi-src/oneAPI-tab/actions/workflows/checks.yaml/badge.svg
    :target: https://github.com/oneapi-src/oneAPI-tab/actions
 
-.. warning::
-    This repository is now deprecated since the forum has moved to the UXL Foundation
-    Find the latest up to date information on the projects here_
-
 +---------------------------------+
 |        !IMPORTANT!              |
 |                                 |
 | This repository is now          |
 | deprecated since the forum has  |
 | moved to the UXL Foundation     |
-|  Find the latest up to date     |
+| Find the latest up to date     |
 | information on the projects     |
 | here_                           |
 +---------------------------------+
