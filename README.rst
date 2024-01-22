@@ -1,7 +1,8 @@
 .. image:: https://github.com/oneapi-src/oneAPI-tab/actions/workflows/checks.yaml/badge.svg
    :target: https://github.com/oneapi-src/oneAPI-tab/actions
 
-
+.. image:: https://www.bestpractices.dev/projects/8324/badge
+   :target: https://www.bestpractices.dev/projects/8324
 +---------------------------------+
 |        !IMPORTANT!              |
 |                                 |
